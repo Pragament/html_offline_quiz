@@ -1,153 +1,227 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QuizMaster — Start a session</title>
-  <meta name="description" content="Set up a trilingual English / Telugu / Hindi quiz session for one student or a whole class.">
-  <link rel="stylesheet" href="assets/home.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Test — QuizMaster</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font: 14px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      margin: 0; padding: 16px;
+      background: #f4f6fb; color: #1b2233;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.4rem; margin: 0 0 4px; }
+    .subtitle { color: #5a6478; font-size: .9rem; margin: 0 0 16px; }
+
+    /* Summary table */
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: .88rem; }
+    th, td { padding: 6px 10px; border: 1px solid #d9dEEA; text-align: left; }
+    th { background: #e8ecff; font-weight: 600; }
+    tr:nth-child(even) { background: #f7f8fc; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* Question cards */
+    .q-card {
+      background: #fff; border: 1px solid #d9dEEA; border-radius: 10px;
+      padding: 14px 16px; margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(20,30,60,.06);
+    }
+    .q-header { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+    .badge {
+      display: inline-block; font-size: .76rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 999px;
+    }
+    .badge-type { background: #e8ecff; color: #3d5afe; }
+    .badge-cat  { background: #e3f6ee; color: #12805c; }
+    .badge-tag  { background: #f0f3fa; color: #5a6478; }
+    .q-id   { font-size: .76rem; color: #a3adc2; font-family: monospace; }
+    .q-text { font-weight: 600; margin: 4px 0; }
+    .q-detail { font-size: .85rem; color: #5a6478; }
+    .q-detail strong { color: #1b2233; }
+    .correct { color: #12805c; font-weight: 600; }
+    .pair { display: flex; gap: 8px; margin: 2px 0; }
+    .pair span { flex: 1; }
+    .pair .arrow { flex: 0 0 24px; text-align: center; color: #a3adc2; }
+
+    .load-error {
+      background: #fdeaee; border: 1px solid #d32f4a; border-radius: 10px;
+      padding: 16px; margin: 20px 0;
+    }
+    .load-error h2 { color: #d32f4a; margin: 0 0 8px; font-size: 1.1rem; }
+    .load-error code { background: #fff; padding: 1px 5px; border-radius: 4px; font-size: .85em; }
+
+    .status { padding: 16px; background: #e8ecff; border-radius: 10px; margin-bottom: 16px; }
+    .status.error { background: #fdeaee; }
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#setup">Skip to setup</a>
+  <div class="wrap">
+    <h1>🧪 Generator Test</h1>
+    <p class="subtitle">Loads all source files, runs all 14 generators, and prints 20 generated questions.</p>
+    <div id="output"><div class="status">Loading data…</div></div>
+  </div>
 
-  <header class="page-header">
-    <div class="wrap">
-      <h1>🎓 QuizMaster</h1>
-      <p class="tagline">Learn English with Telugu &amp; Hindi support · Class 1–10</p>
-      <p class="source-note" id="sourceNote" role="status">Loading question data…</p>
-    </div>
-  </header>
+  <script src="../assets/data-loader.js"></script>
+  <script src="../assets/quiz-generator.js"></script>
+  <script>
+    (function () {
+      'use strict';
 
-  <main class="wrap" id="setup">
+      var out = document.getElementById('output');
 
-    <!-- Restore banner: shown only when a previous config exists -->
-    <div class="banner" id="restoreBanner" hidden>
-      <p id="restoreBannerText">A previous session setup was found.</p>
-      <div class="banner-actions">
-        <button type="button" class="btn btn-sm" id="restoreBtn">Restore it</button>
-        <button type="button" class="btn btn-sm btn-ghost" id="dismissRestoreBtn">Start fresh</button>
-      </div>
-    </div>
+      DataLoader.loadAll('../').then(function (result) {
+        if (!result.ok) {
+          DataLoader.renderError(out, result.errors);
+          return;
+        }
 
-    <form id="sessionForm" novalidate>
+        var data = result.data;
+        var html = [];
 
-      <!-- ─────────────────────────── Quiz setup ─────────────────────────── -->
-      <section class="card">
-        <h2>1 · Quiz setup</h2>
+        html.push('<div class="status">Data loaded via <strong>' + result.method + '</strong>.</div>');
 
-        <div class="field-row">
-          <div class="field">
-            <label for="classSelect">Class <span class="req" aria-hidden="true">*</span></label>
-            <select id="classSelect" name="class" required></select>
-            <p class="hint">Questions and cheatsheets are written per class.</p>
-          </div>
-        </div>
+        // Generate for both class 5 and class 8
+        var classes = [5, 8];
+        var allGenerated = [];
 
-        <fieldset class="group" id="languageGroup">
-          <legend>Languages <span class="req" aria-hidden="true">*</span></legend>
-          <p class="hint">Every question is shown in each language you pick. Pick at least one.</p>
-          <div class="chip-row" id="languageChips"></div>
-          <p class="error" id="languageError" role="alert" hidden></p>
-        </fieldset>
-      </section>
+        classes.forEach(function (cls) {
+          var generated = QuizGenerator.generateAll(data, cls);
+          allGenerated = allGenerated.concat(generated);
 
-      <!-- ─────────────────────────── Categories ─────────────────────────── -->
-      <section class="card">
-        <div class="card-head">
-          <h2>2 · Categories</h2>
-          <div class="bulk">
-            <button type="button" class="btn btn-sm btn-ghost" data-bulk="categories" data-action="all">Select all</button>
-            <button type="button" class="btn btn-sm btn-ghost" data-bulk="categories" data-action="none">Clear</button>
-          </div>
-        </div>
-        <p class="hint">Leave everything unticked to include <strong>all</strong> categories.</p>
-        <div class="check-grid" id="categoryGrid"></div>
-      </section>
+          // Count by type
+          var byType = {};
+          var bySource = {};
+          generated.forEach(function (q) {
+            byType[q.type] = (byType[q.type] || 0) + 1;
+            var src = q.source ? q.source.generator : 'static';
+            bySource[src] = (bySource[src] || 0) + 1;
+          });
 
-      <!-- ────────────────────────────── Tags ────────────────────────────── -->
-      <section class="card">
-        <div class="card-head">
-          <h2>3 · Tags</h2>
-          <div class="bulk">
-            <button type="button" class="btn btn-sm btn-ghost" data-bulk="tags" data-action="none">Clear</button>
-          </div>
-        </div>
-        <p class="hint">Optional. A question matches if it carries <em>any</em> selected tag.</p>
+          html.push('<h2>Class ' + cls + ' — ' + generated.length + ' generated questions</h2>');
 
-        <div class="tag-block">
-          <h3 class="tag-heading">Difficulty</h3>
-          <div class="chip-row" id="difficultyChips"></div>
-        </div>
+          // By-generator table
+          html.push('<table>');
+          html.push('<tr><th>Generator</th><th>Type</th><th class="num">Count</th></tr>');
+          var genKeys = Object.keys(bySource).sort();
+          genKeys.forEach(function (g) {
+            var sampleQ = generated.find(function (q) { return q.source && q.source.generator === g; });
+            var type = sampleQ ? sampleQ.type : '?';
+            html.push('<tr><td><code>' + g + '</code></td><td>' + type + '</td><td class="num">' + bySource[g] + '</td></tr>');
+          });
+          html.push('</table>');
 
-        <div class="tag-block">
-          <h3 class="tag-heading">Topic</h3>
-          <div class="chip-row" id="topicChips"></div>
-        </div>
+          // By-type summary
+          html.push('<table>');
+          html.push('<tr><th>Type</th><th class="num">Count</th></tr>');
+          Object.keys(byType).sort().forEach(function (t) {
+            html.push('<tr><td>' + t + '</td><td class="num">' + byType[t] + '</td></tr>');
+          });
+          html.push('</table>');
+        });
 
-        <div class="tag-block">
-          <h3 class="tag-heading">Custom tags</h3>
-          <div class="add-row">
-            <label class="sr-only" for="customTagInput">Add a custom tag</label>
-            <input type="text" id="customTagInput" placeholder="e.g. revision-week" autocomplete="off"
-                   pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="30">
-            <button type="button" class="btn btn-sm" id="addTagBtn">Add tag</button>
-          </div>
-          <p class="hint">Lowercase letters, numbers and hyphens. Press Enter to add.</p>
-          <p class="error" id="customTagError" role="alert" hidden></p>
-          <div class="chip-row" id="customChips"></div>
-        </div>
-      </section>
+        // Show first 20 questions (interleaved from both classes)
+        html.push('<h2>First 20 generated questions (detail view)</h2>');
+        var shown = allGenerated.slice(0, 20);
 
-      <!-- ─────────────────────────── Students ───────────────────────────── -->
-      <section class="card">
-        <div class="card-head">
-          <h2>4 · Students</h2>
-          <button type="button" class="btn btn-sm" id="addStudentBtn">+ Add student</button>
-        </div>
-        <p class="hint" id="studentModeHint">
-          One student on this device. Add more if a group is sharing it.
-        </p>
-        <div id="studentList"></div>
-        <p class="error" id="studentsError" role="alert" hidden></p>
-      </section>
+        shown.forEach(function (q, i) {
+          html.push('<div class="q-card">');
 
-      <!-- ─────────────────────────── Action bar ─────────────────────────── -->
-      <div class="action-bar">
-        <div class="summary" id="summary" aria-live="polite"></div>
-        <div class="action-buttons">
-          <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
-          <a class="btn" id="cheatsheetLink" href="cheatsheet.html">Cheatsheet</a>
-          <button type="submit" class="btn btn-primary" id="startBtn" disabled>Start Quiz</button>
-        </div>
-      </div>
-    </form>
+          // Header badges
+          html.push('<div class="q-header">');
+          html.push('<span class="badge badge-type">' + q.type + '</span>');
+          html.push('<span class="badge badge-cat">' + q.category + '</span>');
+          (q.tags || []).forEach(function (t) {
+            html.push('<span class="badge badge-tag">#' + t + '</span>');
+          });
+          html.push('</div>');
 
-    <!-- Hand-off preview: replaced by the real quiz engine in Phase 3 -->
-    <section class="card handoff" id="handoffPanel" hidden>
-      <div class="card-head">
-        <h2>Session saved</h2>
-        <button type="button" class="btn btn-sm btn-ghost" id="closeHandoffBtn">Close</button>
-      </div>
-      <p class="hint">
-        Written to <code>localStorage["quizSessionConfig"]</code> and logged to the console.
-        Phase 3 replaces <code>handOffToQuizEngine()</code> in <code>assets/home.js</code>.
-      </p>
-      <pre id="handoffJson" tabindex="0"></pre>
-    </section>
-  </main>
+          // ID
+          html.push('<div class="q-id">' + q.id + ' &nbsp;·&nbsp; class ' + q.class + '</div>');
 
-  <!-- Template cloned for each student card -->
-  <template id="studentTemplate">
-    <article class="student-card" data-student>
-      <div class="student-head">
-        <h3 class="student-title">Student <span data-role="index">1</span></h3>
-        <button type="button" class="btn btn-sm btn-danger" data-role="remove">Remove</button>
-      </div>
-      <div class="student-fields" data-role="fields"></div>
-    </article>
-  </template>
+          // Question text
+          html.push('<div class="q-text">' + (q.text ? q.text.en : '(no text)') + '</div>');
+          if (q.text && q.text.te) {
+            html.push('<div class="q-detail">' + q.text.te + '</div>');
+          }
 
-  <script src="assets/home.js"></script>
+          // Type-specific rendering
+          if (q.type === 'mcq') {
+            var opts = q.options;
+            var letters = 'ABCDEFGH';
+            html.push('<div class="q-detail" style="margin-top:6px">');
+            for (var j = 0; j < opts.en.length; j++) {
+              var mark = (j === q.correctAnswer) ? ' class="correct"' : '';
+              html.push('<div' + mark + '>' + letters[j] + '. ' + opts.en[j] +
+                        (j === q.correctAnswer ? ' ✓' : '') + '</div>');
+            }
+            html.push('</div>');
+          }
+
+          else if (q.type === 'true-false') {
+            html.push('<div class="q-detail" style="margin-top:6px">');
+            html.push('Answer: <span class="correct">' + String(q.correctAnswer) + '</span>');
+            html.push('</div>');
+          }
+
+          else if (q.type === 'flip-card') {
+            html.push('<div class="q-detail" style="margin-top:6px">');
+            html.push('<strong>Front:</strong> ' + (q.options.front ? q.options.front.en : '—') + '<br>');
+            html.push('<strong>Choices:</strong>');
+            var choices = q.options.choices;
+            var letters2 = 'ABCDEFGH';
+            for (var k = 0; k < choices.en.length; k++) {
+              var mark2 = (k === q.correctAnswer) ? ' class="correct"' : '';
+              html.push('<div' + mark2 + '>' + letters2[k] + '. ' + choices.en[k] +
+                        (k === q.correctAnswer ? ' ✓' : '') + '</div>');
+            }
+            html.push('</div>');
+          }
+
+          else if (q.type === 'match-pairs') {
+            html.push('<div class="q-detail" style="margin-top:6px">');
+            var left = q.options.left;
+            var right = q.options.right;
+            for (var m = 0; m < left.en.length; m++) {
+              // Find the correct right partner for left[m]
+              var rightIdx = -1;
+              (q.correctAnswer || []).forEach(function (pair) {
+                if (pair[0] === m) rightIdx = pair[1];
+              });
+              html.push('<div class="pair">' +
+                '<span>' + left.en[m] + '</span>' +
+                '<span class="arrow">→</span>' +
+                '<span class="correct">' + (rightIdx >= 0 ? right.en[rightIdx] : '?') + '</span>' +
+                '</div>');
+            }
+            html.push('</div>');
+          }
+
+          // Explanation
+          if (q.explanation && q.explanation.en) {
+            html.push('<div class="q-detail" style="margin-top:6px;font-style:italic">' +
+                      '💡 ' + q.explanation.en + '</div>');
+          }
+
+          html.push('</div>');
+        });
+
+        // Grand total
+        html.push('<div class="status" style="margin-top:20px">');
+        html.push('<strong>Grand total:</strong> ' + allGenerated.length + ' generated questions');
+        html.push(' (Class 5: ' + QuizGenerator.generateAll(data, 5).length +
+                  ', Class 8: ' + QuizGenerator.generateAll(data, 8).length + ')');
+        html.push('</div>');
+
+        out.innerHTML = html.join('\n');
+
+      }).catch(function (err) {
+        out.innerHTML = '<div class="status error">Fatal error: ' + (err.message || String(err)) + '</div>';
+        console.error(err);
+      });
+    })();
+  </script>
     <!-- Offline Data Fallbacks (Injected by build_offline.py) -->
   <script type="application/json" data-file="data/en-te-hi-questions.json">
 {

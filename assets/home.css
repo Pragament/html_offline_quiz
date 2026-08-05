@@ -1,0 +1,420 @@
+/* QuizMaster homepage — framework-free, mobile-first (360px and up). */
+
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #f0f3fa;
+  --border: #d9dEEA;
+  --border-strong: #b9c2d6;
+  --text: #1b2233;
+  --text-muted: #5a6478;
+  --primary: #3d5afe;
+  --primary-hover: #2f49d8;
+  --primary-soft: #e8ecff;
+  --danger: #d32f4a;
+  --danger-soft: #fdeaee;
+  --success: #12805c;
+  --success-soft: #e3f6ee;
+  --focus: #1b6ef3;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(20, 30, 60, .06), 0 6px 20px rgba(20, 30, 60, .06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151d;
+    --surface: #1a1f2b;
+    --surface-2: #222836;
+    --border: #313a4d;
+    --border-strong: #445067;
+    --text: #e9edf6;
+    --text-muted: #a3adc2;
+    --primary: #7b8cff;
+    --primary-hover: #93a1ff;
+    --primary-soft: #262f4d;
+    --danger: #ff7b90;
+    --danger-soft: #3a2129;
+    --success: #4ed6a5;
+    --success-soft: #16302a;
+    --focus: #7b8cff;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .28);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: 0 0 96px;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Telugu", "Noto Sans Devanagari", sans-serif;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── Accessibility helpers ─────────────────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 0 0 var(--radius-sm) 0;
+  z-index: 20;
+}
+.skip-link:focus { left: 0; }
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+
+.page-header {
+  background: linear-gradient(135deg, #3d5afe, #6a3dfe);
+  color: #fff;
+  padding: 28px 0 24px;
+  margin-bottom: 20px;
+}
+.page-header h1 { margin: 0; font-size: 1.6rem; letter-spacing: -.01em; }
+.tagline { margin: 6px 0 0; opacity: .92; font-size: .95rem; }
+
+.source-note {
+  margin: 12px 0 0;
+  font-size: .82rem;
+  opacity: .9;
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  padding: 5px 12px;
+  display: inline-block;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 16px;
+  margin-bottom: 16px;
+}
+.card h2 { margin: 0 0 4px; font-size: 1.05rem; letter-spacing: .01em; }
+
+.card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.bulk { display: flex; gap: 6px; }
+
+.hint { margin: 4px 0 12px; color: var(--text-muted); font-size: .86rem; }
+
+.error {
+  margin: 8px 0 0;
+  color: var(--danger);
+  font-size: .84rem;
+  font-weight: 500;
+}
+
+.req { color: var(--danger); }
+
+/* ── Fields ────────────────────────────────────────────────────────────── */
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.field { display: flex; flex-direction: column; min-width: 0; }
+.field label { font-size: .84rem; font-weight: 600; margin-bottom: 5px; }
+
+input[type="text"],
+input[type="tel"],
+select {
+  width: 100%;
+  font: inherit;
+  font-size: .95rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 10px 11px;
+  min-height: 44px;              /* comfortable tap target */
+}
+select { cursor: pointer; }
+
+input:disabled, select:disabled { opacity: .6; }
+
+input[aria-invalid="true"] {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.field-error {
+  margin: 5px 0 0;
+  font-size: .78rem;
+  color: var(--danger);
+  min-height: 1em;
+}
+
+.group { border: 0; padding: 0; margin: 16px 0 0; }
+.group legend { font-size: .84rem; font-weight: 600; padding: 0; }
+
+/* ── Chips (languages, tags) ───────────────────────────────────────────── */
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip { position: relative; display: inline-flex; }
+.chip input {
+  position: absolute;
+  opacity: 0;
+  width: 100%; height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.chip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: .88rem;
+  min-height: 42px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.chip input:checked + span {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+.chip input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+.chip span:hover { border-color: var(--primary); }
+
+.chip .native { opacity: .85; font-size: .82rem; }
+.chip input:checked + span .native { opacity: .95; }
+
+.tag-block { margin-top: 14px; }
+.tag-heading {
+  margin: 0 0 8px;
+  font-size: .76rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+
+.chip-remove {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 0 0 2px;
+  cursor: pointer;
+  opacity: .75;
+}
+.chip-remove:hover { opacity: 1; }
+
+.add-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.add-row input { flex: 1 1 200px; min-width: 0; }
+
+/* ── Checkbox grid (categories) ────────────────────────────────────────── */
+
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  background: var(--surface-2);
+  cursor: pointer;
+  font-size: .88rem;
+  min-height: 44px;
+  transition: background .12s, border-color .12s;
+}
+.check:hover { border-color: var(--primary); }
+.check input { width: 18px; height: 18px; margin: 1px 0 0; flex: none; accent-color: var(--primary); }
+.check:has(input:checked) { background: var(--primary-soft); border-color: var(--primary); }
+.check:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* ── Students ──────────────────────────────────────────────────────────── */
+
+.student-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  margin-bottom: 12px;
+  background: var(--surface-2);
+}
+
+.student-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.student-title { margin: 0; font-size: .95rem; }
+
+.student-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  padding: 11px 16px;
+  min-height: 44px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, opacity .12s;
+}
+.btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+
+.btn-sm { padding: 7px 12px; min-height: 38px; font-size: .84rem; }
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+
+.btn-ghost { background: transparent; border-color: transparent; color: var(--text-muted); }
+.btn-ghost:hover:not(:disabled) { background: var(--surface-2); }
+
+.btn-danger { color: var(--danger); border-color: transparent; background: transparent; }
+.btn-danger:hover:not(:disabled) { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* .btn on an <a> (e.g. the Cheatsheet link) needs the button box explicitly. */
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* ── Action bar ────────────────────────────────────────────────────────── */
+
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px 14px;
+  margin: 4px 0 16px;
+}
+.summary { font-size: .84rem; color: var(--text-muted); flex: 1 1 220px; min-width: 0; }
+.summary strong { color: var(--text); }
+.summary .blocked { color: var(--danger); font-weight: 600; }
+.summary .ready { color: var(--success); font-weight: 600; }
+
+.action-buttons { display: flex; gap: 8px; flex: 0 0 auto; }
+
+/* ── Banner ────────────────────────────────────────────────────────────── */
+
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--success-soft);
+  border: 1px solid var(--success);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+.banner p { margin: 0; font-size: .88rem; }
+.banner-actions { display: flex; gap: 8px; }
+
+/* ── Hand-off preview ──────────────────────────────────────────────────── */
+
+.handoff pre {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  overflow-x: auto;             /* long JSON lines scroll, page never does */
+  font-size: .8rem;
+  line-height: 1.45;
+  margin: 0;
+  max-height: 340px;
+}
+code {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: .84em;
+}
+
+/* ── Narrow phones ─────────────────────────────────────────────────────── */
+
+@media (max-width: 420px) {
+  .page-header { padding: 20px 0 18px; }
+  .page-header h1 { font-size: 1.35rem; }
+  .card { padding: 15px 13px; }
+  .check-grid { grid-template-columns: 1fr; }
+  .student-fields { grid-template-columns: 1fr; }
+  .action-buttons { width: 100%; }
+  .action-buttons .btn { flex: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
