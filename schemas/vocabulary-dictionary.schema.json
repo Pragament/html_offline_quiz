@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quizmaster.local/schemas/vocabulary-dictionary.schema.json",
+  "title": "en-te-hi-vocabulary-dictionary.json",
+  "description": "Word list used to generate vocabulary questions at runtime. `generators` are declarative recipes; `entries` are pure data. A generator emits question objects conforming to questions.schema.json.",
+  "type": "object",
+  "required": ["schemaVersion", "fileType", "languages", "idPrefix", "generators", "entries"],
+  "additionalProperties": false,
+  "allOf": [{ "$ref": "common.schema.json#/$defs/envelope" }],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "type": "string" },
+    "fileType": { "const": "vocabulary-dictionary" },
+    "languages": { "type": "array" },
+    "updated": { "type": "string" },
+    "description": { "type": "string" },
+    "idPrefix": {
+      "description": "Prefix for ids of questions generated from this file.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "generators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "common.schema.json#/$defs/generatorSpec" }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["id", "classes", "word", "meaning", "tags", "categoryHint"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "classes": { "$ref": "common.schema.json#/$defs/classList" },
+        "word": {
+          "description": "The headword. `en` is the word being taught; `te` and `hi` are its translations, so this field can serve both directions of a translation drill.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "partOfSpeech": { "$ref": "common.schema.json#/$defs/partOfSpeech" },
+        "meaning": {
+          "description": "A short definition — longer than the translation, used as the option text for meaning questions.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "example": {
+          "description": "One sentence using the word. Also used as the stem of fill-in-the-blank generators.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "tags": { "$ref": "common.schema.json#/$defs/tags" },
+        "categoryHint": {
+          "description": "Category stamped on questions generated from this entry unless the generator overrides it.",
+          "$ref": "common.schema.json#/$defs/category"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "$schema": "../schemas/proverbs.schema.json",
+  "schemaVersion": "1.0.0",
+  "fileType": "proverbs",
+  "languages": ["en", "te", "hi"],
+  "updated": "2026-08-01",
+  "description": "Class-tagged proverbs. Three generators: meaning mcq, cloze completion mcq, and an aggregate match-pairs question built from four entries at once.",
+  "idPrefix": "gen-prv",
+  "generators": [
+    {
+      "id": "proverb-meaning-mcq",
+      "questionType": "mcq",
+      "category": "Idioms & Expressions",
+      "addTags": ["generated", "proverbs"],
+      "weight": 2,
+      "prompt": {
+        "en": "What does the proverb \"{{proverb.en}}\" mean?",
+        "te": "\"{{proverb.en}}\" అనే సామెతకు అర్థం ఏమిటి?",
+        "hi": "\"{{proverb.en}}\" कहावत का क्या अर्थ है?"
+      },
+      "answer": { "path": "meaning" },
+      "distractors": { "count": 3, "from": { "path": "meaning" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" }
+    },
+    {
+      "id": "proverb-completion-mcq",
+      "questionType": "mcq",
+      "category": "Phrase Learning",
+      "addTags": ["generated", "proverbs", "completion"],
+      "requires": ["cloze", "blankWord"],
+      "prompt": {
+        "en": "Complete the proverb: \"{{cloze.en}}\"",
+        "te": "సామెతను పూర్తి చేయండి: \"{{cloze.en}}\"",
+        "hi": "कहावत पूरी कीजिए: \"{{cloze.en}}\""
+      },
+      "answer": { "path": "blankWord", "display": { "en": "en", "te": "en", "hi": "en" } },
+      "distractors": {
+        "count": 3,
+        "from": { "path": "blankWord", "display": { "en": "en", "te": "en", "hi": "en" } },
+        "scope": "siblings",
+        "pool": "same-class", "poolFallback": "widen"
+      },
+      "explanation": {
+        "en": "Full proverb: {{proverb.en}} — {{meaning.en}}",
+        "te": "పూర్తి సామెత: {{proverb.en}} — {{meaning.te}}",
+        "hi": "पूरी कहावत: {{proverb.en}} — {{meaning.hi}}"
+      }
+    },
+    {
+      "id": "proverb-meaning-match",
+      "questionType": "match-pairs",
+      "category": "Idioms & Expressions",
+      "addTags": ["generated", "proverbs", "matching"],
+      "prompt": {
+        "en": "Match each proverb with its meaning.",
+        "te": "ప్రతి సామెతను దాని అర్థంతో జతపరచండి.",
+        "hi": "प्रत्येक कहावत को उसके अर्थ से मिलाइए।"
+      },
+      "aggregate": {
+        "count": 4,
+        "minCount": 3,
+        "left": { "path": "proverb", "display": { "en": "en", "te": "en", "hi": "en" } },
+        "right": { "path": "meaning" }
+      }
+    }
+  ],
+  "entries": [
+    {
+      "id": "prv-actions-words",
+      "classes": [5],
+      "proverb": {
+        "en": "Actions speak louder than words.",
+        "te": "మాటల కంటే చేతలే గొప్పవి.",
+        "hi": "कर्म शब्दों से अधिक बोलते हैं।"
+      },
+      "meaning": {
+        "en": "What a person does matters more than what they promise.",
+        "te": "ఒక వ్యక్తి ఏమి చేస్తాడో అది అతను ఇచ్చే మాట కంటే ముఖ్యం.",
+        "hi": "व्यक्ति जो करता है वह उसके वादों से अधिक मायने रखता है।"
+      },
+      "cloze": {
+        "en": "Actions speak louder than ___.",
+        "te": "మాటల కంటే ___ గొప్పవి.",
+        "hi": "कर्म ___ से अधिक बोलते हैं।"
+      },
+      "blankWord": { "en": "words", "te": "చేతలే", "hi": "शब्दों" },
+      "tags": ["values", "daily", "intermediate"],
+      "categoryHint": "Idioms & Expressions"
+    },
+    {
+      "id": "prv-practice-perfect",
+      "classes": [5],
+      "proverb": {
+        "en": "Practice makes perfect.",
+        "te": "అభ్యాసమే పరిపూర్ణతకు మార్గం.",
+        "hi": "अभ्यास से ही निपुणता आती है।"
+      },
+      "meaning": {
+        "en": "Doing something repeatedly is what makes you good at it.",
+        "te": "ఒక పనిని పదే పదే చేయడం వల్లే అందులో నైపుణ్యం వస్తుంది.",
+        "hi": "किसी काम को बार-बार करने से ही उसमें कुशलता आती है।"
+      },
+      "cloze": {
+        "en": "Practice makes ___.",
+        "te": "అభ్యాసమే ___ కు మార్గం.",
+        "hi": "अभ्यास से ही ___ आती है।"
+      },
+      "blankWord": { "en": "perfect", "te": "పరిపూర్ణత", "hi": "निपुणता" },
+      "tags": ["school", "values", "beginner"],
+      "categoryHint": "Idioms & Expressions"
+    },
+    {
+      "id": "prv-honesty-policy",
+      "classes": [5, 6],
+      "proverb": {
+        "en": "Honesty is the best policy.",
+        "te": "నిజాయితీయే ఉత్తమ విధానం.",
+        "hi": "ईमानदारी सबसे अच्छी नीति है।"
+      },
+      "meaning": {
+        "en": "Telling the truth brings better results than lying, even when it is hard.",
+        "te": "కష్టమైనా నిజం చెప్పడం అబద్ధం చెప్పడం కంటే మంచి ఫలితాలను ఇస్తుంది.",
+        "hi": "कठिन होने पर भी सच बोलना झूठ बोलने से बेहतर परिणाम देता है।"
+      },
+      "cloze": {
+        "en": "Honesty is the best ___.",
+        "te": "నిజాయితీయే ఉత్తమ ___.",
+        "hi": "ईमानदारी सबसे अच्छी ___ है।"
+      },
+      "blankWord": { "en": "policy", "te": "విధానం", "hi": "नीति" },
+      "tags": ["values", "beginner"],
+      "categoryHint": "Idioms & Expressions"
+    },
+    {
+      "id": "prv-stitch-in-time",
+      "classes": [8],
+      "proverb": {
+        "en": "A stitch in time saves nine.",
+        "te": "సమయానికి వేసిన ఒక కుట్టు తొమ్మిది కుట్లను ఆదా చేస్తుంది.",
+        "hi": "समय पर किया गया एक टाँका नौ टाँकों से बचाता है।"
+      },
+      "meaning": {
+        "en": "Fixing a small problem early prevents a much bigger one later.",
+        "te": "చిన్న సమస్యను ముందే సరిచేస్తే తర్వాత పెద్ద సమస్య రాకుండా ఉంటుంది.",
+        "hi": "छोटी समस्या को समय रहते ठीक कर लेने से बाद की बड़ी समस्या टल जाती है।"
+      },
+      "cloze": {
+        "en": "A stitch in time saves ___.",
+        "te": "సమయానికి వేసిన ఒక కుట్టు ___ కుట్లను ఆదా చేస్తుంది.",
+        "hi": "समय पर किया गया एक टाँका ___ टाँकों से बचाता है।"
+      },
+      "blankWord": { "en": "nine", "te": "తొమ్మిది", "hi": "नौ" },
+      "tags": ["values", "advanced"],
+      "categoryHint": "Idioms & Expressions"
+    },
+    {
+      "id": "prv-will-way",
+      "classes": [8],
+      "proverb": {
+        "en": "Where there is a will, there is a way.",
+        "te": "సంకల్పం ఉంటే మార్గం ఉంటుంది.",
+        "hi": "जहाँ चाह, वहाँ राह।"
+      },
+      "meaning": {
+        "en": "If you are determined enough, you will find a method to succeed.",
+        "te": "గట్టి పట్టుదల ఉంటే విజయానికి మార్గం దొరుకుతుంది.",
+        "hi": "यदि दृढ़ संकल्प हो तो सफल होने का रास्ता मिल ही जाता है।"
+      },
+      "cloze": {
+        "en": "Where there is a ___, there is a way.",
+        "te": "___ ఉంటే మార్గం ఉంటుంది.",
+        "hi": "जहाँ ___, वहाँ राह।"
+      },
+      "blankWord": { "en": "will", "te": "సంకల్పం", "hi": "चाह" },
+      "tags": ["values", "advanced"],
+      "categoryHint": "Idioms & Expressions"
+    },
+    {
+      "id": "prv-book-cover",
+      "classes": [8],
+      "proverb": {
+        "en": "Don't judge a book by its cover.",
+        "te": "పుస్తకాన్ని దాని ముఖచిత్రాన్ని బట్టి అంచనా వేయకు.",
+        "hi": "किताब को उसके आवरण से मत आँको।"
+      },
+      "literal": {
+        "en": "Don't judge a book by its cover.",
+        "te": "పుస్తకాన్ని దాని పైఅట్టను చూసి తీర్పు చెప్పకు.",
+        "hi": "किताब का मूल्यांकन उसके ऊपरी पन्ने से मत करो।"
+      },
+      "meaning": {
+        "en": "Do not form an opinion about someone or something from appearance alone.",
+        "te": "కేవలం పైరూపాన్ని చూసి ఎవరి గురించైనా, దేని గురించైనా అభిప్రాయం ఏర్పరచుకోవద్దు.",
+        "hi": "केवल बाहरी रूप देखकर किसी के बारे में राय मत बनाइए।"
+      },
+      "cloze": {
+        "en": "Don't judge a book by its ___.",
+        "te": "పుస్తకాన్ని దాని ___ బట్టి అంచనా వేయకు.",
+        "hi": "किताब को उसके ___ से मत आँको।"
+      },
+      "blankWord": { "en": "cover", "te": "ముఖచిత్రాన్ని", "hi": "आवरण" },
+      "tags": ["values", "advanced"],
+      "categoryHint": "Idioms & Expressions"
+    }
+  ]
+}
