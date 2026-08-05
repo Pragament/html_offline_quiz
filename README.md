@@ -26,6 +26,8 @@ vocabulary, synonym, antonym, proverb and phrase dictionaries.
   vocabulary, phrases, pronunciation tips), reachable before *and* after a quiz.
 - **Runtime question generation** — declarative generators in each source file turn
   dictionary entries into questions; adding content needs no code changes.
+- **Endless mode** (optional) — keeps generating fresh questions until the student
+  stops, instead of a fixed-length bank. Leave it off for a comparable test.
 - **Saved locally** — session setup and results persist in `localStorage`, written
   after every question so a closed tab doesn't lose a turn.
 - **Responsive** — verified with no horizontal scrolling down to 360 px.
@@ -44,7 +46,7 @@ vocabulary, synonym, antonym, proverb and phrase dictionaries.
 | `assets/` | CSS and the framework-free JS modules (see below). |
 | `data/` | Question bank, generator sources, cheatsheet content. |
 | `schemas/` | JSON Schemas for every data file. |
-| `tools/` | `validate_data.py` (data checks), `build_offline.py` (offline build), plus small `check_*.py` helpers. |
+| `tools/` | `server.py` (dev server), `validate_data.py` (data checks), `build_offline.py` (offline build), plus small `check_*.py` helpers. |
 | `test/generators-test.html` | Dev harness: previews what each generator produces. |
 | `test_home.html` | Dev harness: catches JS errors thrown by the setup page. |
 | `legacy/quizmaster-v1.html` | The original single-file prototype, kept for reference. |
@@ -70,18 +72,26 @@ For development, serving the folder is preferable, because then the pages read
 `data/` live instead of the embedded copies:
 
 ```bash
-py -3 -m http.server 8123
+py -3 tools/server.py
 ```
 
-Then open <http://localhost:8123/>. The header badge on the setup page tells you
-which source it used.
+That serves the project root on <http://localhost:8000> and opens your browser at
+it. Stop it with Ctrl+C. It can be run from any directory — it resolves the project
+root from its own location — so `py -3 tools/server.py` works the same from the repo
+root or from inside `tools/`.
+
+Any static server does the job if you prefer, e.g. `py -3 -m http.server 8000` from
+the project root. Either way, the header badge on the setup page tells you whether it
+read `data/` or fell back to the embedded copies.
 
 ### Using it
 
 1. Pick class, languages, categories and tags.
-2. Add one student, or several if a group is sharing the device.
-3. **Start Quiz** — or **Cheatsheet** to browse the reference sheet first.
-4. Answer, skip, or end the quiz early at any point to see results.
+2. Choose the quiz length: leave **Endless mode** off for a fixed bank where every
+   student answers the same number, or turn it on for practice that never runs out.
+3. Add one student, or several if a group is sharing the device.
+4. **Start Quiz** — or **Cheatsheet** to browse the reference sheet first.
+5. Answer, skip, or end the quiz early at any point to see results.
 
 ### After editing anything in `data/`
 
@@ -120,6 +130,15 @@ the five source files, de-duplicates by id, applies the category and tag filters
 shuffles with a seed derived from the student index — so each student on a shared
 device gets a different order. Class 5 currently yields 50 questions (5 hand-written,
 45 generated).
+
+**Endless mode.** A question is not just a word — it is a word plus the options shown
+with it. Each generator is seeded from its entry id, so it normally yields one fixed
+question per entry. Endless mode re-runs the generators with an incrementing `variant`
+folded into that seed, producing different distractors and (where `pick` is `random`) a
+different correct answer each time. New questions are appended when the bank drops to
+five remaining, and a content fingerprint stops anything repeating while an unused
+combination exists. Class 5 has about 1,000 such combinations; once they are gone the
+engine re-serves the questions seen longest ago rather than stopping.
 
 **Storage keys.**
 
@@ -161,24 +180,38 @@ Two shapes, easy to confuse:
 
 ## 📊 Current status
 
-**Working and verified:** the full setup → quiz → results → cheatsheet flow; all five
-question types interactive and scored; scoring, timer, skip and end-early; category,
-tag and language filtering; multi-student turns with separate scores and timers;
-results persistence across a reload; the empty-class error path; and 360 px layout.
+**Working and verified** by an end-to-end audit: the full setup → quiz → results →
+cheatsheet flow; all five question types interactive, with `+3` / `−1` / `0` confirmed
+for each and no scoring discrepancies over ~90 answered questions; the timer;
+category, tag and language filtering; endless mode; multi-student turns with separate
+banks, scores and timers; results persistence across a reload; all 10 cheatsheet
+sections on both classes; the empty-class and zero-answer edge cases; and no
+horizontal scrolling at 360 px in either colour scheme.
+
+A static check also runs over the project — duplicate ids, JS referencing DOM ids that
+do not exist on the page, undefined CSS variables, embedded offline data drifting from
+`data/`, and broken links — all currently clean.
 
 **Known gaps:**
 
 - **Content only exists for Class 5 and Class 8.** The other eight classes produce
   "No questions available". This is the main thing to work on, and it needs no code —
   add entries to the data files.
-- **"Unlimited questions" is not implemented.** Each generator makes one pass over its
-  entries, so the bank is finite and the quiz stops when it is exhausted. Making it
-  genuinely endless means recycling entries with fresh distractor combinations.
+- **Endless mode gives variety, not new content.** The quiz never runs out, but the
+  variations are built from the same entries — roughly 17 items for Class 5. A student
+  meets every concept in the first 20–40 questions; after that it is drilling the same
+  material with different wrong options. More entries is still the real fix.
 - **Results are not exportable.** They persist locally but there is no CSV/JSON
   download, and starting a new session overwrites the previous session's
   question-level detail (its summary survives in the history).
 - **The cheatsheet is deliberately not reachable during a quiz**, since it lists the
   very words the questions ask about.
+- **Only MCQ questions are keyboard-accessible.** MCQ options are real `<button>`
+  elements, but flip-card, true-false, drag-drop and match-pairs are `<div>`s with
+  click handlers — no `tabindex`, no `role`, not in the tab order. A keyboard-only or
+  screen-reader user can answer roughly half a bank and cannot operate the rest. Fixing
+  it means swapping those elements for buttons (or adding `tabindex` + `role` + an
+  Enter/Space handler) in `assets/quiz-renderers.js`.
 
 ---
 
@@ -205,6 +238,32 @@ section, admission number and parent phone are optional but format-checked.
 form reads them from there, and the validator rejects anything outside it.
 
 ---
+
+## 🎨 Styling
+
+**`assets/home.css` owns the theme.** It defines every colour, radius and shadow as a
+custom property on `:root`, with a `prefers-color-scheme: dark` block overriding the
+same names. Every page loads it first, then adds a page-specific sheet:
+
+```html
+<link rel="stylesheet" href="assets/home.css">   <!-- theme, always first -->
+<link rel="stylesheet" href="assets/quiz.css">   <!-- quiz + cheatsheet -->
+```
+
+`quiz.css` was written against a different set of names (`--bg-body`, `--text-main`,
+`--primary-color`, …) which never existed, so its rules were silently invalid and the
+quiz page ignored the theme entirely. Those names are now **aliases** declared in
+`home.css` and pointing at the real tokens, so both pages share one palette and dark
+mode works everywhere.
+
+When adding styles, use the semantic tokens — `--bg`, `--surface`, `--text`,
+`--border`, `--primary`, `--success`, `--danger`, `--warning-soft` — rather than raw
+hex, or the rule will not follow dark mode. `--brand-1` / `--brand-2` are the header
+gradient and deliberately stay the same in both schemes, since that banner is what
+makes the pages read as one app.
+
+No web fonts: the type stack is `system-ui` with Telugu and Devanagari fallbacks, so
+nothing is fetched over the network and the pages look the same offline.
 
 ## 🧠 Technologies
 

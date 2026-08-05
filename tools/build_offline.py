@@ -48,8 +48,11 @@ def embed_json_in_html(html_path, data_files=None):
     injection = '\n'.join(script_tags) + '\n\n'
     
     # Remove existing injected blocks if they exist to avoid duplication
+    # The leading [ \t]* matters: without it the indentation before the marker
+    # survives each removal and the block creeps two spaces further right on
+    # every build, so the file never stops showing up as changed.
     html = re.sub(
-        r'<!-- Offline Data Fallbacks \(Injected by build_offline\.py\) -->.*?<!-- End Offline Data -->\s*',
+        r'[ \t]*<!-- Offline Data Fallbacks \(Injected by build_offline\.py\) -->.*?<!-- End Offline Data -->\s*',
         '',
         html,
         flags=re.DOTALL
