@@ -1,0 +1,11 @@
+# Claude Code tooling (local dev-server config, not part of the app)
+.claude/
+
+# Python bytecode from tools/
+__pycache__/
+*.py[cod]
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
