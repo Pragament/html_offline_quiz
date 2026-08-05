@@ -317,7 +317,7 @@
   border-radius: 12px;
 }
 .flip-card-front {
-  background: linear-gradient(135deg, var(--primary-light), #fff);
+  background: linear-gradient(135deg, var(--primary-light), var(--bg-panel));
   border: 2px dashed var(--primary-color);
   display: flex;
   flex-direction: column;
@@ -450,7 +450,7 @@
 .mp-item.pair-0 { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
 .mp-item.pair-1 { border-color: #3b82f6; background: #eff6ff; color: #1e40af; }
 .mp-item.pair-2 { border-color: #10b981; background: #ecfdf5; color: #065f46; }
-.mp-item.pair-3 { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+.mp-item.pair-3 { border-color: #f59e0b; background: var(--warning-soft); color: var(--warning-text); }
 .mp-item.pair-4 { border-color: #8b5cf6; background: #f5f3ff; color: #5b21b6; }
 
 .mp-canvas {
@@ -620,14 +620,46 @@
 
 
 /* --- Cheatsheet --- */
+/* Wears the same brand gradient as the setup page header, so the cheatsheet
+   reads as part of the same app rather than a separate screen. Children below
+   are re-tinted for white-on-gradient. */
 .sticky-header {
   position: sticky;
   top: 0;
-  background: var(--bg-body);
+  background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+  color: #fff;
   z-index: 10;
   padding: 1rem 1rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 0;
 }
+.sticky-header .page-title { color: #fff; }
+
+.sticky-header .btn-icon {
+  color: #fff;
+  background: rgba(255, 255, 255, .16);
+  border: 0;
+}
+.sticky-header .btn-icon:hover { background: rgba(255, 255, 255, .3); }
+
+.sticky-header .class-badge {
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
+}
+.sticky-header .class-badge select {
+  background: transparent;
+  color: #fff;
+  border: 0;
+  font: inherit;
+  min-height: 0;
+  padding: 0 2px;
+  cursor: pointer;
+}
+/* The dropdown list itself renders on the OS surface, not the gradient. */
+.sticky-header .class-badge select option { color: var(--text-main); background: var(--bg-panel); }
+
+.sticky-header .tab-btn { color: rgba(255, 255, 255, .78); }
+.sticky-header .tab-btn:hover { color: #fff; }
+.sticky-header .tab-btn.active { color: #fff; border-bottom-color: #fff; }
 .header-inner {
   display: flex;
   align-items: center;
@@ -757,7 +789,7 @@
 
 /* Cheatsheet Tips */
 .cs-tip-card {
-  background: #fffbeb; border: 1px solid #fde68a;
+  background: var(--warning-soft); border: 1px solid var(--warning-border);
   border-left: 4px solid #f59e0b;
   padding: 1.25rem; border-radius: 8px;
   margin-bottom: 1rem;

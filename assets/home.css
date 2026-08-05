@@ -16,9 +16,37 @@
   --success: #12805c;
   --success-soft: #e3f6ee;
   --focus: #1b6ef3;
+  --primary-2: #6a3dfe;          /* second stop of the progress gradient */
+  /* Brand banner. Deliberately NOT re-themed in dark mode — the header is a
+     fixed brand surface on every page, which is what ties them together. */
+  --brand-1: #3d5afe;
+  --brand-2: #6a3dfe;
   --radius: 12px;
   --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgba(20, 30, 60, .08);
   --shadow: 0 1px 2px rgba(20, 30, 60, .06), 0 6px 20px rgba(20, 30, 60, .06);
+
+  --warning-soft: #fffbeb;
+  --warning-border: #fde68a;
+  --warning-text: #92400e;
+}
+
+/* ── Aliases for quiz.css ───────────────────────────────────────────────
+   quiz.css was written against a different naming scheme, and none of those
+   names existed — every rule using them was invalid, which is why the quiz
+   page did not inherit this theme. Mapping them here keeps both pages on one
+   palette, dark mode included, without rewriting quiz.css. */
+:root {
+  --bg-body:         var(--bg);
+  --bg-panel:        var(--surface);
+  --text-main:       var(--text);
+  --border-color:    var(--border);
+  --primary-color:   var(--primary);
+  --primary-light:   var(--primary-soft);
+  --secondary-color: var(--primary-2);
+  --success-color:   var(--success);
+  --danger-color:    var(--danger);
+  --shadow-md:       var(--shadow);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,7 +66,13 @@
     --success: #4ed6a5;
     --success-soft: #16302a;
     --focus: #7b8cff;
+    --primary-2: #a07bff;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .28);
+
+    --warning-soft: #2e2612;
+    --warning-border: #5a4a1c;
+    --warning-text: #fcd34d;
   }
 }
 
@@ -93,7 +127,7 @@ body {
 /* ── Header ────────────────────────────────────────────────────────────── */
 
 .page-header {
-  background: linear-gradient(135deg, #3d5afe, #6a3dfe);
+  background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
   color: #fff;
   padding: 28px 0 24px;
   margin-bottom: 20px;

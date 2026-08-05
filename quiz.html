@@ -9,9 +9,8 @@
   <link rel="stylesheet" href="assets/quiz.css">
   
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Fonts come from the system stack in home.css: no external request, so the
+       page renders identically offline and matches the setup page. -->
 </head>
 <body class="quiz-body">
 
@@ -176,7 +175,7 @@
   <script src="assets/quiz-engine.js"></script>
   <script src="assets/cheatsheet.js"></script>
   <script src="assets/quiz-results.js"></script>
-    <!-- Offline Data Fallbacks (Injected by build_offline.py) -->
+  <!-- Offline Data Fallbacks (Injected by build_offline.py) -->
   <script type="application/json" data-file="data/en-te-hi-questions.json">
 {
   "$schema": "../schemas/questions.schema.json",
