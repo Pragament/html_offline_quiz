@@ -125,10 +125,63 @@
 
   // --- Bank Building & Shuffling ---
 
+  // Endless mode state. `variant` is the generator re-roll counter: variant 0 is
+  // the original one-pass bank, and each higher variant re-seeds the generators
+  // so the same entries yield different distractors. `seenKeys` stops the same
+  // question coming round twice while any unseen combination remains.
+  var ENDLESS_TOPUP_AT = 5;     // top up when this many questions are left
+  var ENDLESS_MAX_TRIES = 12;   // consecutive empty variants before giving up
+  var variant = 0;
+  var seenKeys = {};
+  var recycleCursor = 0;
+
+  /** Content fingerprint: two questions with the same one are the same question,
+   *  even if they came from different variants and carry different ids. */
+  function questionKey(q) {
+    var opts = q.options || {};
+    var optText = opts.en || (opts.choices && opts.choices.en) ||
+                  (opts.tokens && opts.tokens.en) ||
+                  (opts.left && opts.left.en) || [];
+    return [
+      q.type,
+      (q.text && q.text.en) || '',
+      JSON.stringify(optText),
+      JSON.stringify(q.correctAnswer)
+    ].join('|');
+  }
+
+  function passesFilters(q) {
+    if (config.categories.length > 0 && config.categories.indexOf(q.category) === -1) {
+      return false;
+    }
+    if (config.tags.length > 0) {
+      var qTags = q.tags || [];
+      for (var i = 0; i < config.tags.length; i++) {
+        if (qTags.indexOf(config.tags[i]) !== -1) return true;
+      }
+      return false;
+    }
+    return true;
+  }
+
+  function generatorData() {
+    return {
+      vocabulary: allData.vocabulary,
+      synonyms: allData.synonyms,
+      antonyms: allData.antonyms,
+      proverbs: allData.proverbs,
+      phrases: allData.phrases
+    };
+  }
+
   function buildQuestionBank(studentIndex) {
     var cls = config.class;
     var allQuestions = [];
-    
+
+    variant = 0;
+    seenKeys = {};
+    recycleCursor = 0;
+
     // 1. Static questions (en-te-hi-questions.json)
     // NOTE: the questions file uses `questions` + a singular `class`. Only the five
     // generator SOURCE files use `entries` + a `classes` array — see DATA-SCHEMA.md.
@@ -141,57 +194,89 @@
     }
     
     // 2. Generated questions
-    var genData = {
-      vocabulary: allData.vocabulary,
-      synonyms: allData.synonyms,
-      antonyms: allData.antonyms,
-      proverbs: allData.proverbs,
-      phrases: allData.phrases
-    };
     if (window.QuizGenerator) {
-      allQuestions = allQuestions.concat(QuizGenerator.generateAll(genData, cls));
+      allQuestions = allQuestions.concat(QuizGenerator.generateAll(generatorData(), cls, 0));
     }
-    
-    // 3. Deduplicate by ID
-    var seen = {};
+
+    // 3. Deduplicate by content fingerprint, recording what has been used so
+    //    endless top-ups can avoid repeating any of it.
     var unique = [];
     allQuestions.forEach(function(q) {
-      if (!seen[q.id]) {
-        seen[q.id] = true;
+      var key = questionKey(q);
+      if (!seenKeys[key]) {
+        seenKeys[key] = true;
         unique.push(q);
       }
     });
-    
+
     // 4. Apply Filters (Categories & Tags)
-    var filtered = unique.filter(function(q) {
-      if (config.categories.length > 0 && config.categories.indexOf(q.category) === -1) {
-        return false;
-      }
-      if (config.tags.length > 0) {
-        var hasMatch = false;
-        var qTags = q.tags || [];
-        for (var i = 0; i < config.tags.length; i++) {
-          if (qTags.indexOf(config.tags[i]) !== -1) {
-            hasMatch = true;
-            break;
-          }
-        }
-        if (!hasMatch) return false;
-      }
-      return true;
-    });
+    var filtered = unique.filter(passesFilters);
 
     // 5. Shuffle differently for each student (use student index as part of seed)
     var seedStr = 'quiz-' + cls + '-' + studentIndex;
     var rng = window.QuizGenerator ? window.QuizGenerator._createRng(seedStr) : Math.random;
     var shuffled = window.QuizGenerator ? window.QuizGenerator._seededShuffle(filtered, rng) : filtered.sort(function() { return 0.5 - Math.random(); });
     
-    // 6. Limit to maxQuestions
-    if (config.maxQuestions > 0 && shuffled.length > config.maxQuestions) {
+    // 6. Limit to maxQuestions (endless mode never truncates)
+    if (!config.endless && config.maxQuestions > 0 && shuffled.length > config.maxQuestions) {
       shuffled = shuffled.slice(0, config.maxQuestions);
     }
-    
+
     return shuffled;
+  }
+
+  // --- Endless supply ---
+
+  /** Generate one more variant and append whatever is genuinely new.
+   *  Returns how many questions were added. */
+  function appendVariant(studentIndex) {
+    if (!window.QuizGenerator) return 0;
+
+    variant++;
+    var batch = QuizGenerator.generateAll(generatorData(), config.class, variant);
+
+    var fresh = [];
+    batch.forEach(function (q) {
+      var key = questionKey(q);
+      if (seenKeys[key]) return;
+      if (!passesFilters(q)) return;
+      seenKeys[key] = true;
+      fresh.push(q);
+    });
+
+    if (!fresh.length) return 0;
+
+    var rng = QuizGenerator._createRng('quiz-' + config.class + '-' + studentIndex + '-v' + variant);
+    questionBank = questionBank.concat(QuizGenerator._seededShuffle(fresh, rng));
+    return fresh.length;
+  }
+
+  /** Re-serve the questions seen longest ago. Only reached once every possible
+   *  combination has been exhausted, which takes ~1000 questions per class. */
+  function recycleOldest() {
+    if (!questionBank.length) return 0;
+    var take = Math.min(ENDLESS_TOPUP_AT * 2, questionBank.length);
+    var batch = [];
+    for (var i = 0; i < take; i++) {
+      batch.push(questionBank[recycleCursor % questionBank.length]);
+      recycleCursor++;
+    }
+    questionBank = questionBank.concat(batch);
+    return batch.length;
+  }
+
+  /** Keep the bank ahead of the student. No-op outside endless mode. */
+  function ensureSupply() {
+    if (!config.endless) return;
+
+    var remaining = questionBank.length - currentQuestionIndex - 1;
+    if (remaining > ENDLESS_TOPUP_AT) return;
+
+    for (var tries = 0; tries < ENDLESS_MAX_TRIES; tries++) {
+      if (appendVariant(currentStudentIndex) > 0) return;
+    }
+    // Every combination is used up — fall back to spaced repetition.
+    recycleOldest();
   }
 
 
@@ -204,6 +289,7 @@
     isAnswering = false;
     
     questionBank = buildQuestionBank(studentIndex);
+    ensureSupply();   // tops up immediately if filters left the bank very short
     
     els.loaderScreen.classList.add('hidden');
     
@@ -257,6 +343,15 @@
   function updateProgress() {
     var current = currentQuestionIndex + 1;
     var total = questionBank.length;
+
+    if (config.endless) {
+      // There is no meaningful total, so show the count alone and let the bar
+      // cycle every 10 questions purely as motion, not as progress-to-an-end.
+      els.progressText.textContent = 'Question ' + current;
+      els.progressBarFill.style.width = (((current - 1) % 10) + 1) * 10 + '%';
+      return;
+    }
+
     els.progressText.textContent = 'Question ' + current + ' of ' + total;
     var pct = (current / total) * 100;
     els.progressBarFill.style.width = pct + '%';
@@ -534,6 +629,7 @@
 
   function nextQuestion() {
     currentQuestionIndex++;
+    ensureSupply();   // no-op unless endless mode is on
     if (currentQuestionIndex < questionBank.length) {
       renderCurrentQuestion();
     } else {
@@ -542,15 +638,23 @@
   }
 
   function endQuiz() {
-    if (confirm('Are you sure you want to end the quiz early? Unanswered questions will be counted as skipped.')) {
-      // Mark remaining as skipped. `isAnswering` is still true when the current
-      // question has already been answered or skipped but "Next" was not pressed —
-      // starting the loop at currentQuestionIndex would count that one twice.
-      var res = sessionResults[currentStudentIndex];
-      var firstUnanswered = isAnswering ? currentQuestionIndex + 1 : currentQuestionIndex;
-      for (var i = firstUnanswered; i < questionBank.length; i++) {
-        res.skipped++;
-        recordHistory(questionBank[i], null, false, true);
+    var prompt = config.endless
+      ? 'End the quiz and see your results?'
+      : 'Are you sure you want to end the quiz early? Unanswered questions will be counted as skipped.';
+
+    if (confirm(prompt)) {
+      // In endless mode there is no fixed set left to skip — the bank is just a
+      // buffer that keeps growing, so only what was actually shown counts.
+      if (!config.endless) {
+        // Mark remaining as skipped. `isAnswering` is still true when the current
+        // question has already been answered or skipped but "Next" was not pressed —
+        // starting the loop at currentQuestionIndex would count that one twice.
+        var res = sessionResults[currentStudentIndex];
+        var firstUnanswered = isAnswering ? currentQuestionIndex + 1 : currentQuestionIndex;
+        for (var i = firstUnanswered; i < questionBank.length; i++) {
+          res.skipped++;
+          recordHistory(questionBank[i], null, false, true);
+        }
       }
       endTurn();
     }

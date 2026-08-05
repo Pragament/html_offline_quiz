@@ -123,7 +123,7 @@
      'difficultyChips', 'topicChips', 'customChips', 'customTagInput', 'addTagBtn',
      'customTagError', 'studentList', 'studentsError', 'studentModeHint', 'addStudentBtn',
      'summary', 'startBtn', 'resetBtn', 'handoffPanel', 'handoffJson', 'closeHandoffBtn',
-     'studentTemplate', 'cheatsheetLink'].forEach(function (id) { el[id] = $(id); });
+     'studentTemplate', 'cheatsheetLink', 'endlessMode'].forEach(function (id) { el[id] = $(id); });
   }
 
   // ────────────────────────────── Data loading ──────────────────────────────
@@ -447,6 +447,7 @@
         .filter(function (c) { return languages.indexOf(c) !== -1; }),   // stable en/te/hi order
       categories: checkedValues('category'),   // [] means: no category filter
       tags: tags,                               // [] means: no tag filter
+      endless: !!(el.endlessMode && el.endlessMode.checked),
       students: [],
       deviceMode: 'shared'
     };
@@ -499,6 +500,7 @@
       (tags || 'all') + ' tag' + (tags === 1 ? '' : 's'),
       students + ' student' + (students === 1 ? '' : 's')
     ];
+    if (el.endlessMode && el.endlessMode.checked) parts.push('endless');
 
     var status = check.ok
       ? '<span class="ready">Ready to start</span>'
@@ -561,6 +563,7 @@
     if (!cfg) return;
 
     if (cfg.class) el.classSelect.value = String(cfg.class);
+    if (el.endlessMode) el.endlessMode.checked = !!cfg.endless;
 
     setChecked('language', cfg.languages || []);
     setChecked('category', cfg.categories || []);
@@ -592,6 +595,7 @@
     el.sessionForm.querySelectorAll('input[name="category"], input[name="tag"]')
       .forEach(function (i) { i.checked = false; });
     setChecked('language', ['en', 'te', 'hi']);
+    if (el.endlessMode) el.endlessMode.checked = false;
     state.customTags = [];
     renderCustomTags();
     renderClasses();

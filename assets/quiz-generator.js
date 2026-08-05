@@ -256,10 +256,17 @@
    * Generate questions for one entry using one per-entry generator.
    * Returns an array (may contain 0, 1, or 2 questions for true-false).
    */
-  function generatePerEntry(gen, entry, allEntries, sourceFile, selectedClass) {
+  function generatePerEntry(gen, entry, allEntries, sourceFile, selectedClass, variant) {
+    variant = variant || 0;
     var idPrefix = sourceFile.idPrefix || 'gen';
     var baseId   = idPrefix + '-' + gen.id + '-' + entry.id;
-    var seedStr  = baseId + '-class' + selectedClass;
+    // Variant 0 reproduces the original ids and seeds byte for byte. Higher
+    // variants re-roll the RNG, so the same entry yields a different correct
+    // answer (where `pick` is random) and a different set of distractors —
+    // that is what lets endless mode keep producing new questions.
+    var vSuffix  = variant ? '-v' + variant : '';
+    var qId      = baseId + vSuffix;
+    var seedStr  = baseId + '-class' + selectedClass + vSuffix;
     var rng      = createRng(seedStr);
 
     // Gate: skip entries that lack required fields
@@ -283,7 +290,7 @@
         ? expandTemplate(gen.explanation, entry, answerResolved.values) : null;
 
       questions.push({
-        id:            baseId + '-true',
+        id:            qId + '-true',
         class:         selectedClass,
         type:          'true-false',
         category:      gen.category,
@@ -299,7 +306,7 @@
       if (gen.falseStatement) {
         var falseText = expandTemplate(gen.falseStatement, entry, answerResolved.values);
         questions.push({
-          id:            baseId + '-false',
+          id:            qId + '-false',
           class:         selectedClass,
           type:          'true-false',
           category:      gen.category,
@@ -335,7 +342,7 @@
       ? expandTemplate(gen.explanation, entry, answerResolved.values) : null;
 
     var question = {
-      id:            baseId,
+      id:            qId,
       class:         selectedClass,
       type:          gen.questionType,
       category:      gen.category,
@@ -365,12 +372,14 @@
    * Generate one aggregate question (match-pairs) from multiple entries.
    * Returns an array of 0 or 1 questions.
    */
-  function generateAggregate(gen, allEntries, sourceFile, selectedClass) {
+  function generateAggregate(gen, allEntries, sourceFile, selectedClass, variant) {
+    variant = variant || 0;
     var idPrefix  = sourceFile.idPrefix || 'gen';
     var agg       = gen.aggregate;
     var count     = agg.count;
     var minCount  = agg.minCount || 3;
-    var seedStr   = idPrefix + '-' + gen.id + '-class' + selectedClass;
+    var vSuffix   = variant ? '-v' + variant : '';
+    var seedStr   = idPrefix + '-' + gen.id + '-class' + selectedClass + vSuffix;
     var rng       = createRng(seedStr);
 
     // Filter: entries must have left+right fields and satisfy `requires`
@@ -464,7 +473,7 @@
     var entryIds = picked.map(function (e) { return e.id; });
 
     return [{
-      id:            idPrefix + '-' + gen.id + '-class' + selectedClass,
+      id:            idPrefix + '-' + gen.id + '-class' + selectedClass + vSuffix,
       class:         selectedClass,
       type:          gen.questionType,
       category:      gen.category,
@@ -482,7 +491,8 @@
   /**
    * Run every generator in one source file.
    */
-  function generateFromSource(sourceFile, selectedClass) {
+  function generateFromSource(sourceFile, selectedClass, variant) {
+    variant = variant || 0;
     if (!sourceFile || !sourceFile.generators || !sourceFile.entries) return [];
 
     var allEntries   = sourceFile.entries;
@@ -498,13 +508,13 @@
       if (gen.aggregate) {
         // Aggregate generator — builds from multiple entries
         questions = questions.concat(
-          generateAggregate(gen, allEntries, sourceFile, selectedClass)
+          generateAggregate(gen, allEntries, sourceFile, selectedClass, variant)
         );
       } else {
         // Per-entry generator — one question per qualifying entry
         classEntries.forEach(function (entry) {
           questions = questions.concat(
-            generatePerEntry(gen, entry, allEntries, sourceFile, selectedClass)
+            generatePerEntry(gen, entry, allEntries, sourceFile, selectedClass, variant)
           );
         });
       }
@@ -520,13 +530,14 @@
    * @param {number} selectedClass  e.g. 5 or 8
    * @returns {Array} Array of question objects
    */
-  function generateAll(data, selectedClass) {
+  function generateAll(data, selectedClass, variant) {
+    variant = variant || 0;
     var sourceKeys = ['vocabulary', 'synonyms', 'antonyms', 'proverbs', 'phrases'];
     var all = [];
 
     sourceKeys.forEach(function (key) {
       if (data[key]) {
-        all = all.concat(generateFromSource(data[key], selectedClass));
+        all = all.concat(generateFromSource(data[key], selectedClass, variant));
       }
     });
 

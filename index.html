@@ -43,6 +43,18 @@
           </div>
         </div>
 
+        <fieldset class="group">
+          <legend>Quiz length</legend>
+          <p class="hint">
+            Endless keeps generating fresh questions until the student stops.
+            Turn it off for a fixed-length test where every student answers the same number.
+          </p>
+          <label class="check" for="endlessMode" style="max-width:520px">
+            <input type="checkbox" id="endlessMode" name="endless">
+            <span>Endless mode — never run out of questions</span>
+          </label>
+        </fieldset>
+
         <fieldset class="group" id="languageGroup">
           <legend>Languages <span class="req" aria-hidden="true">*</span></legend>
           <p class="hint">Every question is shown in each language you pick. Pick at least one.</p>
@@ -148,7 +160,7 @@
   </template>
 
   <script src="assets/home.js"></script>
-    <!-- Offline Data Fallbacks (Injected by build_offline.py) -->
+  <!-- Offline Data Fallbacks (Injected by build_offline.py) -->
   <script type="application/json" data-file="data/en-te-hi-questions.json">
 {
   "$schema": "../schemas/questions.schema.json",
