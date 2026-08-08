@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quizmaster.local/schemas/questions.schema.json",
+  "title": "en-te-hi-questions.json",
+  "description": "Hand-authored static question bank. Runtime-generated questions produced from the five source files MUST conform to this same question shape, so the two can be concatenated into one bank.",
+  "type": "object",
+  "required": ["schemaVersion", "fileType", "languages", "questions"],
+  "additionalProperties": false,
+  "allOf": [{ "$ref": "common.schema.json#/$defs/envelope" }],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "type": "string" },
+    "fileType": { "const": "questions" },
+    "languages": { "type": "array" },
+    "updated": { "type": "string" },
+    "description": { "type": "string" },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/question" }
+    }
+  },
+
+  "$defs": {
+    "question": {
+      "type": "object",
+      "required": ["id", "class", "type", "category", "tags", "text", "options", "correctAnswer"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Unique across the whole bank, static and generated. Convention: q-c<class>-<nnn> for static, gen-<source>-<generator>-<entry> for generated.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "class": { "$ref": "common.schema.json#/$defs/classNumber" },
+        "type": { "$ref": "common.schema.json#/$defs/questionType" },
+        "category": { "$ref": "common.schema.json#/$defs/category" },
+        "tags": { "$ref": "common.schema.json#/$defs/tags" },
+        "text": {
+          "description": "The question stem, shown in every language the student selected.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "options": {
+          "description": "Shape depends on `type` — see the allOf branches below."
+        },
+        "correctAnswer": {
+          "description": "Shape depends on `type`: mcq/flip-card = option index; true-false = boolean; drag-drop = ordered index array; match-pairs = array of [leftIndex, rightIndex] pairs."
+        },
+        "explanation": {
+          "description": "Optional. Shown after the student answers.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "source": {
+          "description": "Provenance. Absent or 'static' for hand-authored items; generators stamp 'generated' plus the source file they came from.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "enum": ["static", "generated"] },
+            "file": { "type": "string" },
+            "generatorId": { "type": "string" },
+            "entryId": { "type": "string" }
+          }
+        }
+      },
+
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "mcq" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "options": {
+                "description": "2-6 choices per language, index-aligned. Where the choice IS the English artefact under study (error correction, pronunciation, formal/informal drills) the te and hi arrays repeat the English string verbatim.",
+                "allOf": [{ "$ref": "common.schema.json#/$defs/localizedList" }],
+                "properties": {
+                  "en": { "minItems": 2, "maxItems": 6 },
+                  "te": { "minItems": 2, "maxItems": 6 },
+                  "hi": { "minItems": 2, "maxItems": 6 }
+                }
+              },
+              "correctAnswer": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "flip-card" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "options": {
+                "type": "object",
+                "required": ["front", "choices"],
+                "additionalProperties": false,
+                "properties": {
+                  "front": {
+                    "description": "Face shown before the card is flipped. Replaces the hard-coded 'Tap to reveal' string so the prompt is translated too.",
+                    "$ref": "common.schema.json#/$defs/localizedText"
+                  },
+                  "choices": {
+                    "allOf": [{ "$ref": "common.schema.json#/$defs/localizedList" }],
+                    "properties": {
+                      "en": { "minItems": 2, "maxItems": 6 },
+                      "te": { "minItems": 2, "maxItems": 6 },
+                      "hi": { "minItems": 2, "maxItems": 6 }
+                    }
+                  }
+                }
+              },
+              "correctAnswer": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "true-false" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "options": {
+                "description": "Exactly two labels: index 0 is the 'true' button, index 1 the 'false' button. Present so the buttons can be localized.",
+                "allOf": [{ "$ref": "common.schema.json#/$defs/localizedList" }],
+                "properties": {
+                  "en": { "minItems": 2, "maxItems": 2 },
+                  "te": { "minItems": 2, "maxItems": 2 },
+                  "hi": { "minItems": 2, "maxItems": 2 }
+                }
+              },
+              "correctAnswer": { "type": "boolean" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "drag-drop" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "options": {
+                "type": "object",
+                "required": ["tokens", "target"],
+                "additionalProperties": false,
+                "properties": {
+                  "tokens": {
+                    "description": "Draggable chunks, authored in scrambled order. Index i is the same chunk in all three languages; te/hi are glosses displayed under the English token, NOT independently orderable.",
+                    "allOf": [{ "$ref": "common.schema.json#/$defs/localizedList" }],
+                    "properties": {
+                      "en": { "minItems": 2, "maxItems": 8 },
+                      "te": { "minItems": 2, "maxItems": 8 },
+                      "hi": { "minItems": 2, "maxItems": 8 }
+                    }
+                  },
+                  "target": {
+                    "description": "The finished sentence, shown as feedback after the attempt.",
+                    "$ref": "common.schema.json#/$defs/localizedText"
+                  },
+                  "taskLanguage": {
+                    "description": "The language whose word order `correctAnswer` describes. Always 'en' for this app: Telugu and Hindi word order differs, so a single index order cannot be correct for all three.",
+                    "allOf": [{ "$ref": "common.schema.json#/$defs/languageCode" }],
+                    "default": "en"
+                  }
+                }
+              },
+              "correctAnswer": {
+                "description": "Token indices in correct order. Must be a permutation of 0..tokens.length-1.",
+                "type": "array",
+                "minItems": 2,
+                "uniqueItems": true,
+                "items": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "match-pairs" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "options": {
+                "type": "object",
+                "required": ["left", "right"],
+                "additionalProperties": false,
+                "properties": {
+                  "left": {
+                    "allOf": [{ "$ref": "common.schema.json#/$defs/localizedList" }],
+                    "properties": {
+                      "en": { "minItems": 2, "maxItems": 6 },
+                      "te": { "minItems": 2, "maxItems": 6 },
+                      "hi": { "minItems": 2, "maxItems": 6 }
+                    }
+                  },
+                  "right": {
+                    "description": "Authored in scrambled order so the file itself is not the answer key. May hold more items than `left` — the extras act as distractors.",
+                    "allOf": [{ "$ref": "common.schema.json#/$defs/localizedList" }],
+                    "properties": {
+                      "en": { "minItems": 2, "maxItems": 8 },
+                      "te": { "minItems": 2, "maxItems": 8 },
+                      "hi": { "minItems": 2, "maxItems": 8 }
+                    }
+                  }
+                }
+              },
+              "correctAnswer": {
+                "description": "[leftIndex, rightIndex] pairs. Every left index appears exactly once.",
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "integer", "minimum": 0 }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

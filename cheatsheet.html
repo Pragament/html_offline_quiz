@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cheatsheet — QuizMaster</title>
+  <meta name="description" content="Class reference sheet: grammar rules, vocabulary and phrases in English, Telugu and Hindi.">
+  <link rel="stylesheet" href="assets/home.css">
+  <link rel="stylesheet" href="assets/quiz.css">
+</head>
+<body class="quiz-body">
+
+  <div id="cheatsheet-screen">
+    <header class="page-header sticky-header">
+      <div class="header-inner">
+        <a id="btn-back" class="btn btn-icon" href="index.html" aria-label="Back to setup">←</a>
+        <h1 class="page-title mb-0">Cheatsheet</h1>
+        <div class="class-badge">
+          <label class="sr-only" for="cs-class-select">Class</label>
+          <select id="cs-class-select"></select>
+        </div>
+      </div>
+      <div id="cheatsheet-tabs" class="tabs-scrollable mt-2"></div>
+    </header>
+
+    <main id="cheatsheet-content" class="cheatsheet-main"></main>
+  </div>
+
+<script src="assets/data-loader.js"></script>
+  <script src="assets/cheatsheet.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var selectEl  = document.getElementById('cs-class-select');
+    var tabsEl    = document.getElementById('cheatsheet-tabs');
+    var contentEl = document.getElementById('cheatsheet-content');
+    var csData    = null;
+
+    function savedClass() {
+      try {
+        var cfg = JSON.parse(localStorage.getItem('quizSessionConfig'));
+        return cfg && cfg.class ? Number(cfg.class) : null;
+      } catch (e) { return null; }
+    }
+
+    function requestedClass() {
+      var m = /[?&]class=(\d+)/.exec(window.location.search);
+      return m ? Number(m[1]) : null;
+    }
+
+    function classesWithSheets() {
+      if (!csData || !csData.sheets) return [];
+      return csData.sheets.map(function (s) { return s.class; }).sort(function (a, b) { return a - b; });
+    }
+
+    function buildSelect(selected) {
+      var available = classesWithSheets();
+      selectEl.innerHTML = '';
+      for (var c = 1; c <= 10; c++) {
+        var opt = document.createElement('option');
+        opt.value = String(c);
+        opt.textContent = 'Class ' + c + (available.indexOf(c) === -1 ? ' \u00b7 none yet' : '');
+        selectEl.appendChild(opt);
+      }
+      selectEl.value = String(selected);
+    }
+
+    function show(classNumber) {
+      var sheet = window.Cheatsheet.findSheet(csData, classNumber);
+      if (!sheet) {
+        tabsEl.innerHTML = '';
+        contentEl.innerHTML = '<div class="cs-section active">' +
+          '<h2 class="cs-section-title">Nothing here yet</h2>' +
+          '<p class="cs-section-desc">No cheatsheet has been written for Class ' +
+          classNumber + ' yet. Try Class ' + (classesWithSheets().join(' or Class ') || '5') + '.</p></div>';
+        return;
+      }
+      window.Cheatsheet.render(sheet, tabsEl, contentEl);
+    }
+
+    function start(data) {
+      csData = data;
+      var initial = requestedClass() || savedClass() || classesWithSheets()[0] || 5;
+      buildSelect(initial);
+      show(initial);
+      selectEl.addEventListener('change', function () {
+        show(Number(selectEl.value));
+      });
+    }
+
+    DataLoader.loadOne('data/en-te-hi-cheatsheet.json', 'data/en-te-hi-cheatsheet.json')
+      .then(function (res) { start(res.data); })
+      .catch(function (err) {
+        contentEl.innerHTML = '<div class="cs-section active">' +
+          '<h2 class="cs-section-title">Could not load the cheatsheet</h2>' +
+          '<p class="cs-section-desc">Please open this page from the setup screen.</p></div>';
+        if (window.console) console.error('[QuizMaster] cheatsheet load failed:', err);
+      });
+  })();
+  </script>
+  <!-- Offline Data Fallbacks (Injected by build_offline.py) -->
+  <script type="application/json" data-file="data/en-te-hi-cheatsheet.json">
+{
+  "$schema": "../schemas/cheatsheet.schema.json",
+  "schemaVersion": "1.0.0",
+  "fileType": "cheatsheet",
+  "languages": ["en", "te", "hi"],
+  "updated": "2026-08-01",
+  "description": "Browsable reference sheets for Class 5 and Class 8. Five sections each, one of every section type.",
+  "sheets": [
+    {
+      "class": 5,
+      "title": {
+        "en": "Class 5 — English reference sheet",
+        "te": "5వ తరగతి — ఆంగ్ల సూచిక పత్రం",
+        "hi": "कक्षा 5 — अंग्रेज़ी संदर्भ पत्र"
+      },
+      "sections": [
+        {
+          "id": "c5-simple-present",
+          "type": "rules",
+          "category": "Grammar",
+          "title": {
+            "en": "Simple present tense",
+            "te": "సింపుల్ ప్రెజెంట్ కాలం",
+            "hi": "सिंपल प्रेज़ेंट काल"
+          },
+          "summary": {
+            "en": "Used for habits and facts that stay true.",
+            "te": "అలవాట్లకు, ఎప్పుడూ నిజమైన విషయాలకు వాడతారు.",
+            "hi": "आदतों और हमेशा सच रहने वाली बातों के लिए प्रयोग होता है।"
+          },
+          "quizLink": { "category": "Grammar", "tags": ["tenses", "beginner"] },
+          "items": [
+            {
+              "id": "c5-sp-1",
+              "rule": {
+                "en": "I / You / We / They + base verb",
+                "te": "I / You / We / They + మూల క్రియ",
+                "hi": "I / You / We / They + मूल क्रिया"
+              },
+              "examples": [
+                { "en": "They play cricket on Sunday.", "te": "They play cricket on Sunday.", "hi": "They play cricket on Sunday." }
+              ]
+            },
+            {
+              "id": "c5-sp-2",
+              "rule": {
+                "en": "He / She / It + verb + s",
+                "te": "He / She / It + క్రియ + s",
+                "hi": "He / She / It + क्रिया + s"
+              },
+              "examples": [
+                { "en": "She goes to school every day.", "te": "She goes to school every day.", "hi": "She goes to school every day." }
+              ],
+              "note": {
+                "en": "This -s is the mistake students make most often.",
+                "te": "విద్యార్థులు ఎక్కువగా పొరపాటు చేసేది ఈ -s దగ్గరే.",
+                "hi": "छात्र सबसे अधिक ग़लती इसी -s में करते हैं।"
+              }
+            },
+            {
+              "id": "c5-sp-3",
+              "rule": {
+                "en": "Negative: do not / does not + base verb",
+                "te": "నిషేధం: do not / does not + మూల క్రియ",
+                "hi": "नकारात्मक: do not / does not + मूल क्रिया"
+              },
+              "examples": [
+                { "en": "He does not eat mangoes.", "te": "He does not eat mangoes.", "hi": "He does not eat mangoes." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "c5-pronoun-table",
+          "type": "table",
+          "category": "Grammar",
+          "title": {
+            "en": "Pronouns with \"be\"",
+            "te": "\"be\" క్రియతో సర్వనామాలు",
+            "hi": "\"be\" के साथ सर्वनाम"
+          },
+          "quizLink": { "category": "Grammar", "tags": ["beginner", "pronouns"] },
+          "columns": [
+            { "en": "Pronoun", "te": "సర్వనామం", "hi": "सर्वनाम" },
+            { "en": "Present", "te": "వర్తమానం", "hi": "वर्तमान" },
+            { "en": "Past", "te": "భూతకాలం", "hi": "भूतकाल" }
+          ],
+          "rows": [
+            [
+              { "en": "I", "te": "నేను", "hi": "मैं" },
+              { "en": "am", "te": "am", "hi": "am" },
+              { "en": "was", "te": "was", "hi": "was" }
+            ],
+            [
+              { "en": "You / We / They", "te": "నువ్వు / మేము / వాళ్ళు", "hi": "तुम / हम / वे" },
+              { "en": "are", "te": "are", "hi": "are" },
+              { "en": "were", "te": "were", "hi": "were" }
+            ],
+            [
+              { "en": "He / She / It", "te": "అతను / ఆమె / అది", "hi": "वह / यह" },
+              { "en": "is", "te": "is", "hi": "is" },
+              { "en": "was", "te": "was", "hi": "was" }
+            ]
+          ]
+        },
+        {
+          "id": "c5-core-vocabulary",
+          "type": "vocab-list",
+          "category": "Vocabulary Building",
+          "title": {
+            "en": "Words to know",
+            "te": "తెలుసుకోవలసిన పదాలు",
+            "hi": "जानने योग्य शब्द"
+          },
+          "quizLink": { "category": "Vocabulary Building", "tags": ["intermediate"] },
+          "items": [
+            {
+              "term": { "en": "courage", "te": "ధైర్యం", "hi": "साहस" },
+              "partOfSpeech": "noun",
+              "example": {
+                "en": "She showed great courage during the flood.",
+                "te": "వరద సమయంలో ఆమె ఎంతో ధైర్యాన్ని చూపింది.",
+                "hi": "बाढ़ के समय उसने बहुत साहस दिखाया।"
+              },
+              "sourceId": "voc-courage"
+            },
+            {
+              "term": { "en": "gather", "te": "సేకరించు", "hi": "इकट्ठा करना" },
+              "partOfSpeech": "verb",
+              "sourceId": "voc-gather"
+            },
+            {
+              "term": { "en": "generous", "te": "ఉదారమైన", "hi": "उदार" },
+              "partOfSpeech": "adjective",
+              "sourceId": "voc-generous"
+            },
+            {
+              "term": { "en": "journey", "te": "ప్రయాణం", "hi": "यात्रा" },
+              "partOfSpeech": "noun",
+              "sourceId": "voc-journey"
+            }
+          ]
+        },
+        {
+          "id": "c5-everyday-phrases",
+          "type": "phrase-list",
+          "category": "Phrase Learning",
+          "title": {
+            "en": "Everyday phrases",
+            "te": "నిత్యజీవిత పదబంధాలు",
+            "hi": "रोज़मर्रा के वाक्यांश"
+          },
+          "quizLink": { "category": "Phrase Learning", "tags": ["daily"] },
+          "items": [
+            {
+              "phrase": { "en": "Excuse me", "te": "క్షమించండి", "hi": "सुनिए / माफ़ कीजिए" },
+              "meaning": {
+                "en": "a polite way to get attention or to pass by",
+                "te": "దృష్టిని ఆకర్షించడానికి లేదా పక్కనుంచి వెళ్ళడానికి మర్యాదపూర్వక మాట",
+                "hi": "ध्यान खींचने या पास से निकलने का विनम्र तरीका"
+              },
+              "register": "neutral",
+              "sourceId": "phr-excuse-me"
+            },
+            {
+              "phrase": { "en": "By the way", "te": "అన్నట్టు", "hi": "वैसे" },
+              "meaning": {
+                "en": "used to add something off the main topic",
+                "te": "ప్రధాన విషయం కాని దాన్ని జోడించడానికి",
+                "hi": "मुख्य विषय से हटकर कुछ जोड़ने के लिए"
+              },
+              "register": "informal",
+              "sourceId": "phr-by-the-way"
+            },
+            {
+              "phrase": { "en": "As soon as possible", "te": "వీలైనంత త్వరగా", "hi": "जितनी जल्दी हो सके" },
+              "meaning": {
+                "en": "at the earliest time you can manage",
+                "te": "సాధ్యమైనంత తొందరగా",
+                "hi": "जितना जल्दी संभव हो"
+              },
+              "register": "neutral",
+              "sourceId": "phr-asap"
+            }
+          ]
+        },
+        {
+          "id": "c5-speaking-tips",
+          "type": "tips",
+          "category": "Pronunciation Awareness",
+          "title": {
+            "en": "Sounds to watch",
+            "te": "గమనించవలసిన ధ్వనులు",
+            "hi": "ध्यान देने योग्य ध्वनियाँ"
+          },
+          "quizLink": { "category": "Pronunciation Awareness", "tags": ["beginner"] },
+          "items": [
+            {
+              "tip": {
+                "en": "\"v\" and \"w\" are different: van and won do not start alike.",
+                "te": "\"v\", \"w\" వేరు వేరు: van, won ఒకేలా మొదలవవు.",
+                "hi": "\"v\" और \"w\" अलग हैं: van और won की शुरुआत एक जैसी नहीं है।"
+              }
+            },
+            {
+              "tip": {
+                "en": "The -ed ending is often just a /t/ or /d/ sound, not a full syllable: walked = walkt.",
+                "te": "-ed చివర తరచుగా కేవలం /t/ లేదా /d/ ధ్వని మాత్రమే, పూర్తి అక్షరం కాదు: walked = walkt.",
+                "hi": "-ed का अंत अक्सर सिर्फ़ /t/ या /d/ ध्वनि होता है, पूरा अक्षर नहीं: walked = walkt।"
+              }
+            },
+            {
+              "tip": {
+                "en": "Say the final -s in plurals; books without the s sounds like book.",
+                "te": "బహువచనంలో చివరి -s ను స్పష్టంగా పలకండి; s లేకుంటే books అనేది book లా వినిపిస్తుంది.",
+                "hi": "बहुवचन में अंतिम -s बोलिए; s के बिना books, book जैसा सुनाई देता है।"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": 8,
+      "title": {
+        "en": "Class 8 — English reference sheet",
+        "te": "8వ తరగతి — ఆంగ్ల సూచిక పత్రం",
+        "hi": "कक्षा 8 — अंग्रेज़ी संदर्भ पत्र"
+      },
+      "sections": [
+        {
+          "id": "c8-tense-overview",
+          "type": "table",
+          "category": "Grammar",
+          "title": {
+            "en": "Tense overview",
+            "te": "కాలాల సమగ్ర పట్టిక",
+            "hi": "काल की सारणी"
+          },
+          "summary": {
+            "en": "The six tenses used most often in Class 8 writing.",
+            "te": "8వ తరగతి రచనలో ఎక్కువగా వాడే ఆరు కాలాలు.",
+            "hi": "कक्षा 8 के लेखन में सबसे अधिक प्रयोग होने वाले छह काल।"
+          },
+          "quizLink": { "category": "Grammar", "tags": ["tenses", "advanced"] },
+          "columns": [
+            { "en": "Tense", "te": "కాలం", "hi": "काल" },
+            { "en": "Form", "te": "రూపం", "hi": "रूप" },
+            { "en": "Example", "te": "ఉదాహరణ", "hi": "उदाहरण" }
+          ],
+          "rows": [
+            [
+              { "en": "Simple present", "te": "సింపుల్ ప్రెజెంట్", "hi": "सिंपल प्रेज़ेंट" },
+              { "en": "verb / verb + s", "te": "క్రియ / క్రియ + s", "hi": "क्रिया / क्रिया + s" },
+              { "en": "She writes daily.", "te": "She writes daily.", "hi": "She writes daily." }
+            ],
+            [
+              { "en": "Present continuous", "te": "ప్రెజెంట్ కంటిన్యువస్", "hi": "प्रेज़ेंट कंटीन्यूअस" },
+              { "en": "is / am / are + verb-ing", "te": "is / am / are + క్రియ-ing", "hi": "is / am / are + क्रिया-ing" },
+              { "en": "She is writing now.", "te": "She is writing now.", "hi": "She is writing now." }
+            ],
+            [
+              { "en": "Present perfect", "te": "ప్రెజెంట్ పర్ఫెక్ట్", "hi": "प्रेज़ेंट परफ़ेक्ट" },
+              { "en": "has / have + past participle", "te": "has / have + భూతకృదంతం", "hi": "has / have + भूतकालिक कृदंत" },
+              { "en": "She has written it.", "te": "She has written it.", "hi": "She has written it." }
+            ],
+            [
+              { "en": "Simple past", "te": "సింపుల్ పాస్ట్", "hi": "सिंपल पास्ट" },
+              { "en": "verb + ed / irregular form", "te": "క్రియ + ed / అక్రమ రూపం", "hi": "क्रिया + ed / अनियमित रूप" },
+              { "en": "She wrote yesterday.", "te": "She wrote yesterday.", "hi": "She wrote yesterday." }
+            ],
+            [
+              { "en": "Past continuous", "te": "పాస్ట్ కంటిన్యువస్", "hi": "पास्ट कंटीन्यूअस" },
+              { "en": "was / were + verb-ing", "te": "was / were + క్రియ-ing", "hi": "was / were + क्रिया-ing" },
+              { "en": "She was writing then.", "te": "She was writing then.", "hi": "She was writing then." }
+            ],
+            [
+              { "en": "Simple future", "te": "సింపుల్ ఫ్యూచర్", "hi": "सिंपल फ़्यूचर" },
+              { "en": "will + base verb", "te": "will + మూల క్రియ", "hi": "will + मूल क्रिया" },
+              { "en": "She will write tomorrow.", "te": "She will write tomorrow.", "hi": "She will write tomorrow." }
+            ]
+          ]
+        },
+        {
+          "id": "c8-active-passive",
+          "type": "rules",
+          "category": "Grammar",
+          "title": {
+            "en": "Active to passive voice",
+            "te": "కర్తరి నుండి కర్మణి వాక్యం",
+            "hi": "कर्तृवाच्य से कर्मवाच्य"
+          },
+          "quizLink": { "category": "Grammar", "tags": ["voice", "advanced"] },
+          "items": [
+            {
+              "id": "c8-ap-1",
+              "rule": {
+                "en": "Object becomes the subject, verb becomes be + past participle, old subject follows \"by\".",
+                "te": "కర్మ కర్తగా మారుతుంది, క్రియ be + భూతకృదంతం అవుతుంది, పాత కర్త \"by\" తర్వాత వస్తుంది.",
+                "hi": "कर्म कर्ता बन जाता है, क्रिया be + भूतकालिक कृदंत हो जाती है, पुराना कर्ता \"by\" के बाद आता है।"
+              },
+              "examples": [
+                { "en": "Ravi wrote the letter. → The letter was written by Ravi.", "te": "Ravi wrote the letter. → The letter was written by Ravi.", "hi": "Ravi wrote the letter. → The letter was written by Ravi." }
+              ]
+            },
+            {
+              "id": "c8-ap-2",
+              "rule": {
+                "en": "The tense of the original verb is carried by \"be\", not by the participle.",
+                "te": "మూల క్రియ కాలం \"be\" ద్వారా వ్యక్తమవుతుంది, భూతకృదంతం ద్వారా కాదు.",
+                "hi": "मूल क्रिया का काल \"be\" से व्यक्त होता है, कृदंत से नहीं।"
+              },
+              "examples": [
+                { "en": "They are cleaning the hall. → The hall is being cleaned.", "te": "They are cleaning the hall. → The hall is being cleaned.", "hi": "They are cleaning the hall. → The hall is being cleaned." }
+              ],
+              "note": {
+                "en": "Drop \"by them / by people\" when the doer is obvious or unimportant.",
+                "te": "చేసినవారు స్పష్టంగా ఉన్నప్పుడు లేదా ముఖ్యం కానప్పుడు \"by them / by people\" ను వదిలేయండి.",
+                "hi": "जब करने वाला स्पष्ट या अमहत्वपूर्ण हो तो \"by them / by people\" हटा दीजिए।"
+              }
+            }
+          ]
+        },
+        {
+          "id": "c8-register-phrases",
+          "type": "phrase-list",
+          "category": "Formal vs Informal English",
+          "title": {
+            "en": "Informal phrase → formal equivalent",
+            "te": "అనధికారిక పదబంధం → అధికారిక రూపం",
+            "hi": "अनौपचारिक वाक्यांश → औपचारिक रूप"
+          },
+          "summary": {
+            "en": "Use the formal column in letters, applications and exam answers.",
+            "te": "ఉత్తరాలు, దరఖాస్తులు, పరీక్ష సమాధానాలలో అధికారిక వరుసను వాడండి.",
+            "hi": "पत्रों, आवेदनों और परीक्षा उत्तरों में औपचारिक स्तंभ का प्रयोग कीजिए।"
+          },
+          "quizLink": { "category": "Formal vs Informal English", "tags": ["register", "advanced"] },
+          "items": [
+            {
+              "phrase": { "en": "By the way → Incidentally", "te": "By the way → Incidentally", "hi": "By the way → Incidentally" },
+              "meaning": {
+                "en": "adds a side point",
+                "te": "అనుబంధ అంశాన్ని జోడిస్తుంది",
+                "hi": "एक अतिरिक्त बात जोड़ता है"
+              },
+              "register": "formal",
+              "sourceId": "phr-by-the-way"
+            },
+            {
+              "phrase": { "en": "In a nutshell → In summary", "te": "In a nutshell → In summary", "hi": "In a nutshell → In summary" },
+              "meaning": {
+                "en": "states something briefly",
+                "te": "క్లుప్తంగా చెబుతుంది",
+                "hi": "संक्षेप में बताता है"
+              },
+              "register": "formal",
+              "sourceId": "phr-in-a-nutshell"
+            },
+            {
+              "phrase": { "en": "To be honest → Frankly speaking", "te": "To be honest → Frankly speaking", "hi": "To be honest → Frankly speaking" },
+              "meaning": {
+                "en": "introduces your real opinion",
+                "te": "మీ నిజమైన అభిప్రాయాన్ని పరిచయం చేస్తుంది",
+                "hi": "आपकी असली राय प्रस्तुत करता है"
+              },
+              "register": "formal",
+              "sourceId": "phr-to-be-honest"
+            },
+            {
+              "phrase": { "en": "At the end of the day → Ultimately", "te": "At the end of the day → Ultimately", "hi": "At the end of the day → Ultimately" },
+              "meaning": {
+                "en": "states the final, most important point",
+                "te": "చివరి, అత్యంత ముఖ్యమైన అంశాన్ని చెబుతుంది",
+                "hi": "अंतिम, सबसे महत्वपूर्ण बात कहता है"
+              },
+              "register": "formal",
+              "sourceId": "phr-end-of-the-day"
+            }
+          ]
+        },
+        {
+          "id": "c8-common-errors",
+          "type": "rules",
+          "category": "Error Correction",
+          "title": {
+            "en": "Mistakes to check before you submit",
+            "te": "సమర్పించే ముందు తనిఖీ చేయవలసిన పొరపాట్లు",
+            "hi": "जमा करने से पहले जाँचने योग्य ग़लतियाँ"
+          },
+          "quizLink": { "category": "Error Correction", "tags": ["advanced", "agreement"] },
+          "items": [
+            {
+              "id": "c8-err-1",
+              "rule": {
+                "en": "\"Neither\", \"either\", \"each\" and \"every\" take a singular verb.",
+                "te": "\"Neither\", \"either\", \"each\", \"every\" లతో ఏకవచన క్రియ వస్తుంది.",
+                "hi": "\"Neither\", \"either\", \"each\", \"every\" के साथ एकवचन क्रिया आती है।"
+              },
+              "examples": [
+                { "en": "Each of the girls has a badge.", "te": "Each of the girls has a badge.", "hi": "Each of the girls has a badge." }
+              ]
+            },
+            {
+              "id": "c8-err-2",
+              "rule": {
+                "en": "After \"did\", \"does\" and \"do\", the main verb stays in its base form.",
+                "te": "\"did\", \"does\", \"do\" తర్వాత ప్రధాన క్రియ మూల రూపంలోనే ఉంటుంది.",
+                "hi": "\"did\", \"does\", \"do\" के बाद मुख्य क्रिया मूल रूप में रहती है।"
+              },
+              "examples": [
+                { "en": "Where did you go? (not: Where did you went?)", "te": "Where did you go? (not: Where did you went?)", "hi": "Where did you go? (not: Where did you went?)" }
+              ]
+            },
+            {
+              "id": "c8-err-3",
+              "rule": {
+                "en": "\"Since\" marks a point in time; \"for\" marks a length of time.",
+                "te": "\"Since\" ఒక కాల బిందువును, \"for\" కాల వ్యవధిని సూచిస్తుంది.",
+                "hi": "\"Since\" समय का एक बिंदु बताता है; \"for\" समय की अवधि बताता है।"
+              },
+              "examples": [
+                { "en": "since 2019 / for three years", "te": "since 2019 / for three years", "hi": "since 2019 / for three years" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "c8-silent-letters",
+          "type": "tips",
+          "category": "Pronunciation Awareness",
+          "title": {
+            "en": "Silent letters",
+            "te": "ఉచ్చరించని అక్షరాలు",
+            "hi": "मौन अक्षर"
+          },
+          "quizLink": { "category": "Pronunciation Awareness", "tags": ["silent-letters", "advanced"] },
+          "items": [
+            {
+              "tip": {
+                "en": "kn- : the k is silent — knife, knee, knock, know.",
+                "te": "kn- : k ను పలకరు — knife, knee, knock, know.",
+                "hi": "kn- : k मौन रहता है — knife, knee, knock, know।"
+              }
+            },
+            {
+              "tip": {
+                "en": "-mb at the end: the b is silent — comb, thumb, climb, lamb.",
+                "te": "పదాంతంలో -mb: b ను పలకరు — comb, thumb, climb, lamb.",
+                "hi": "अंत में -mb: b मौन रहता है — comb, thumb, climb, lamb।"
+              }
+            },
+            {
+              "tip": {
+                "en": "wr- : the w is silent — write, wrong, wrist.",
+                "te": "wr- : w ను పలకరు — write, wrong, wrist.",
+                "hi": "wr- : w मौन रहता है — write, wrong, wrist।"
+              }
+            },
+            {
+              "tip": {
+                "en": "-tle, -ten: the t is often silent — castle, listen, often.",
+                "te": "-tle, -ten: t తరచుగా వినిపించదు — castle, listen, often.",
+                "hi": "-tle, -ten: t अक्सर मौन होता है — castle, listen, often।"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <!-- End Offline Data -->
+</body>
+</html>

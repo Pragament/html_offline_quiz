@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Test Error Catcher</h1>
+  <div id="errors"></div>
+  <script>
+    window.onerror = function(msg, url, line, col, error) {
+      document.getElementById('errors').innerHTML += '<p>' + msg + ' at ' + line + ':' + col + '</p>';
+      return false;
+    };
+  </script>
+  <!-- Mock some DOM elements to let init() run -->
+  <div id="sourceNote"></div>
+  <div id="restoreBanner"></div>
+  <div id="restoreBannerText"></div>
+  <button id="restoreBtn"></button>
+  <button id="dismissRestoreBtn"></button>
+  <form id="sessionForm"></form>
+  <select id="classSelect"></select>
+  <div id="languageChips"></div>
+  <div id="languageError"></div>
+  <div id="categoryGrid"></div>
+  <div id="difficultyChips"></div>
+  <div id="topicChips"></div>
+  <div id="customChips"></div>
+  <input id="customTagInput">
+  <button id="addTagBtn"></button>
+  <div id="customTagError"></div>
+  <div id="studentList"></div>
+  <div id="studentsError"></div>
+  <div id="studentModeHint"></div>
+  <button id="addStudentBtn"></button>
+  <div id="summary"></div>
+  <button id="startBtn"></button>
+  <button id="resetBtn"></button>
+  <div id="handoffPanel"></div>
+  <pre id="handoffJson"></pre>
+  <button id="closeHandoffBtn"></button>
+  <template id="studentTemplate">
+    <article><div class="student-fields" data-role="fields"></div></article>
+  </template>
+
+  <script src="assets/home.js"></script>
+</body>
+</html>

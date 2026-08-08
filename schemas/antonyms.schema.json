@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quizmaster.local/schemas/antonyms.schema.json",
+  "title": "en-te-hi-antonyms.json",
+  "description": "Headwords with parallel opposite-word lists. Same shape as synonyms.schema.json with `antonyms` in place of `synonyms`, so one generator implementation can serve both files.",
+  "type": "object",
+  "required": ["schemaVersion", "fileType", "languages", "idPrefix", "generators", "entries"],
+  "additionalProperties": false,
+  "allOf": [{ "$ref": "common.schema.json#/$defs/envelope" }],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "type": "string" },
+    "fileType": { "const": "antonyms" },
+    "languages": { "type": "array" },
+    "updated": { "type": "string" },
+    "description": { "type": "string" },
+    "idPrefix": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "generators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "common.schema.json#/$defs/generatorSpec" }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["id", "classes", "headword", "antonyms", "tags", "categoryHint"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "classes": { "$ref": "common.schema.json#/$defs/classList" },
+        "headword": { "$ref": "common.schema.json#/$defs/localizedText" },
+        "partOfSpeech": { "$ref": "common.schema.json#/$defs/partOfSpeech" },
+        "antonyms": {
+          "allOf": [{ "$ref": "common.schema.json#/$defs/localizedList" }],
+          "properties": {
+            "en": { "minItems": 2 },
+            "te": { "minItems": 2 },
+            "hi": { "minItems": 2 }
+          }
+        },
+        "example": {
+          "description": "A sentence that contrasts the headword with one of its antonyms.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "tags": { "$ref": "common.schema.json#/$defs/tags" },
+        "categoryHint": { "$ref": "common.schema.json#/$defs/category" }
+      }
+    }
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "$schema": "../schemas/synonyms.schema.json",
+  "schemaVersion": "1.0.0",
+  "fileType": "synonyms",
+  "languages": ["en", "te", "hi"],
+  "updated": "2026-08-01",
+  "description": "Class-tagged synonym sets. Distractors are drawn from other headwords in the same class, which keeps the wrong options plausible but clearly not synonymous.",
+  "idPrefix": "gen-syn",
+  "generators": [
+    {
+      "id": "pick-synonym-mcq",
+      "questionType": "mcq",
+      "category": "Vocabulary Building",
+      "addTags": ["generated", "synonyms"],
+      "weight": 2,
+      "prompt": {
+        "en": "Which word means almost the same as \"{{headword.en}}\"?",
+        "te": "\"{{headword.en}}\" అనే పదానికి దాదాపు అదే అర్థం ఇచ్చే పదం ఏది?",
+        "hi": "\"{{headword.en}}\" के लगभग समान अर्थ वाला शब्द कौन सा है?"
+      },
+      "answer": { "path": "synonyms", "pick": "random" },
+      "distractors": { "count": 3, "from": { "path": "headword" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" },
+      "explanation": {
+        "en": "\"{{headword.en}}\" and \"{{answer}}\" can replace each other in most sentences.",
+        "te": "\"{{headword.en}}\", \"{{answer}}\" చాలా వాక్యాలలో ఒకదాని స్థానంలో మరొకటి వాడవచ్చు.",
+        "hi": "\"{{headword.en}}\" और \"{{answer}}\" अधिकांश वाक्यों में एक-दूसरे की जगह ले सकते हैं।"
+      }
+    },
+    {
+      "id": "synonym-flip",
+      "questionType": "flip-card",
+      "category": "Vocabulary Building",
+      "addTags": ["generated", "synonyms", "recall"],
+      "prompt": {
+        "en": "Recall a synonym for \"{{headword.en}}\".",
+        "te": "\"{{headword.en}}\" కు ఒక పర్యాయపదం గుర్తుచేసుకోండి.",
+        "hi": "\"{{headword.en}}\" का एक पर्यायवाची याद कीजिए।"
+      },
+      "answer": { "path": "synonyms", "pick": "first" },
+      "distractors": { "count": 3, "from": { "path": "headword" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" }
+    }
+  ],
+  "entries": [
+    {
+      "id": "syn-happy",
+      "classes": [5],
+      "headword": { "en": "happy", "te": "సంతోషం", "hi": "ख़ुश" },
+      "partOfSpeech": "adjective",
+      "synonyms": {
+        "en": ["joyful", "cheerful", "glad"],
+        "te": ["ఆనందంగా", "ఉల్లాసంగా", "సంతోషంగా"],
+        "hi": ["आनंदित", "प्रसन्न", "हर्षित"]
+      },
+      "example": {
+        "en": "The whole class was joyful after the match.",
+        "te": "మ్యాచ్ తర్వాత తరగతి మొత్తం ఆనందంగా ఉంది.",
+        "hi": "मैच के बाद पूरी कक्षा आनंदित थी।"
+      },
+      "tags": ["emotions", "daily", "beginner"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "syn-big",
+      "classes": [5],
+      "headword": { "en": "big", "te": "పెద్ద", "hi": "बड़ा" },
+      "partOfSpeech": "adjective",
+      "synonyms": {
+        "en": ["large", "huge", "enormous"],
+        "te": ["పెద్దది", "భారీ", "అతి పెద్ద"],
+        "hi": ["बड़ा", "विशाल", "विराट"]
+      },
+      "example": {
+        "en": "They live in a huge house near the lake.",
+        "te": "వాళ్ళు సరస్సు దగ్గర భారీ ఇంట్లో ఉంటారు.",
+        "hi": "वे झील के पास एक विशाल घर में रहते हैं।"
+      },
+      "tags": ["daily", "beginner", "adjectives"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "syn-fast",
+      "classes": [5, 6],
+      "headword": { "en": "fast", "te": "వేగం", "hi": "तेज़" },
+      "partOfSpeech": "adjective",
+      "synonyms": {
+        "en": ["quick", "rapid", "swift"],
+        "te": ["త్వరితమైన", "వేగవంతమైన", "చురుకైన"],
+        "hi": ["शीघ्र", "तीव्र", "फुर्तीला"]
+      },
+      "example": {
+        "en": "He gave a quick answer without thinking.",
+        "te": "ఆలోచించకుండా అతను త్వరితమైన సమాధానం ఇచ్చాడు.",
+        "hi": "उसने बिना सोचे शीघ्र उत्तर दिया।"
+      },
+      "tags": ["daily", "intermediate", "adjectives"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "syn-important",
+      "classes": [8],
+      "headword": { "en": "important", "te": "ముఖ్యమైన", "hi": "महत्वपूर्ण" },
+      "partOfSpeech": "adjective",
+      "synonyms": {
+        "en": ["significant", "crucial", "vital"],
+        "te": ["ప్రాముఖ్యమైన", "కీలకమైన", "అత్యవసరమైన"],
+        "hi": ["सार्थक", "अहम", "अत्यावश्यक"]
+      },
+      "example": {
+        "en": "Sleep plays a crucial role in learning.",
+        "te": "నేర్చుకోవడంలో నిద్ర కీలకమైన పాత్ర పోషిస్తుంది.",
+        "hi": "सीखने में नींद की अहम भूमिका होती है।"
+      },
+      "tags": ["school", "advanced"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "syn-difficult",
+      "classes": [8],
+      "headword": { "en": "difficult", "te": "కష్టమైన", "hi": "कठिन" },
+      "partOfSpeech": "adjective",
+      "synonyms": {
+        "en": ["hard", "tough", "challenging"],
+        "te": ["కఠినమైన", "గట్టి", "సవాలుతో కూడిన"],
+        "hi": ["मुश्किल", "सख़्त", "चुनौतीपूर्ण"]
+      },
+      "example": {
+        "en": "The last question was challenging but fair.",
+        "te": "చివరి ప్రశ్న సవాలుతో కూడినది అయినా న్యాయమైనది.",
+        "hi": "आख़िरी प्रश्न चुनौतीपूर्ण था पर उचित था।"
+      },
+      "tags": ["school", "advanced"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "syn-angry",
+      "classes": [8],
+      "headword": { "en": "angry", "te": "కోపం", "hi": "क्रोधित" },
+      "partOfSpeech": "adjective",
+      "synonyms": {
+        "en": ["furious", "irritated", "annoyed"],
+        "te": ["ఆగ్రహంగా", "చిరాకుగా", "అసహనంగా"],
+        "hi": ["आगबबूला", "चिढ़ा हुआ", "नाराज़"]
+      },
+      "example": {
+        "en": "She was annoyed by the constant noise.",
+        "te": "నిరంతర శబ్దంతో ఆమె చిరాకుగా ఉంది.",
+        "hi": "लगातार शोर से वह चिढ़ी हुई थी।"
+      },
+      "tags": ["emotions", "advanced"],
+      "categoryHint": "Vocabulary Building"
+    }
+  ]
+}

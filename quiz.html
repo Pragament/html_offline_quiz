@@ -1,165 +1,180 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QuizMaster — Start a session</title>
-  <meta name="description" content="Set up a trilingual English / Telugu / Hindi quiz session for one student or a whole class.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QuizMaster</title>
+  
   <link rel="stylesheet" href="assets/home.css">
+  <link rel="stylesheet" href="assets/quiz.css">
+  
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <!-- Fonts come from the system stack in home.css: no external request, so the
+       page renders identically offline and matches the setup page. -->
 </head>
-<body>
-  <a class="skip-link" href="#setup">Skip to setup</a>
+<body class="quiz-body">
 
-  <header class="page-header">
-    <div class="wrap">
-      <h1>🎓 QuizMaster</h1>
-      <p class="tagline">Learn English with Telugu &amp; Hindi support · Class 1–10</p>
-      <p class="source-note" id="sourceNote" role="status">Loading question data…</p>
+  <!-- 1. Initialization Loading Screen -->
+  <div id="loader-screen" class="full-screen-center">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <h2 id="loader-status">Loading Quiz Data...</h2>
     </div>
-  </header>
+  </div>
 
-  <main class="wrap" id="setup">
-
-    <!-- Restore banner: shown only when a previous config exists -->
-    <div class="banner" id="restoreBanner" hidden>
-      <p id="restoreBannerText">A previous session setup was found.</p>
-      <div class="banner-actions">
-        <button type="button" class="btn btn-sm" id="restoreBtn">Restore it</button>
-        <button type="button" class="btn btn-sm btn-ghost" id="dismissRestoreBtn">Start fresh</button>
-      </div>
+  <!-- 2. Error Screen -->
+  <div id="error-screen" class="full-screen-center hidden">
+    <div class="error-content box">
+      <div class="error-icon">⚠️</div>
+      <h2>Failed to Start Quiz</h2>
+      <div id="error-messages" class="error-list"></div>
+      <button class="btn btn-primary mt-4" onclick="window.location.href='index.html'">Back to Setup</button>
     </div>
+  </div>
 
-    <form id="sessionForm" novalidate>
+  <!-- 3. Turn Handoff Screen (Multi-student) -->
+  <div id="handoff-screen" class="full-screen-center hidden">
+    <div class="handoff-content box text-center">
+      <h2>Turn Complete</h2>
+      <p class="mt-2 text-muted">Pass the device to:</p>
+      <div id="handoff-next-student" class="student-name-lg mt-2"></div>
+      <button id="btn-start-turn" class="btn btn-primary mt-4 w-100 btn-lg">I am ready</button>
+    </div>
+  </div>
 
-      <!-- ─────────────────────────── Quiz setup ─────────────────────────── -->
-      <section class="card">
-        <h2>1 · Quiz setup</h2>
-
-        <div class="field-row">
-          <div class="field">
-            <label for="classSelect">Class <span class="req" aria-hidden="true">*</span></label>
-            <select id="classSelect" name="class" required></select>
-            <p class="hint">Questions and cheatsheets are written per class.</p>
-          </div>
+  <!-- 4. Active Quiz Interface -->
+  <div id="quiz-interface" class="quiz-interface hidden">
+    
+    <header class="quiz-header">
+      <div class="quiz-header-top">
+        <div class="student-info">
+          <span class="student-avatar">👤</span>
+          <span id="current-student-name">Student</span>
         </div>
-
-        <fieldset class="group">
-          <legend>Quiz length</legend>
-          <p class="hint">
-            Endless keeps generating fresh questions until the student stops.
-            Turn it off for a fixed-length test where every student answers the same number.
-          </p>
-          <label class="check" for="endlessMode" style="max-width:520px">
-            <input type="checkbox" id="endlessMode" name="endless">
-            <span>Endless mode — never run out of questions</span>
-          </label>
-        </fieldset>
-
-        <fieldset class="group" id="languageGroup">
-          <legend>Languages <span class="req" aria-hidden="true">*</span></legend>
-          <p class="hint">Every question is shown in each language you pick. Pick at least one.</p>
-          <div class="chip-row" id="languageChips"></div>
-          <p class="error" id="languageError" role="alert" hidden></p>
-        </fieldset>
-      </section>
-
-      <!-- ─────────────────────────── Categories ─────────────────────────── -->
-      <section class="card">
-        <div class="card-head">
-          <h2>2 · Categories</h2>
-          <div class="bulk">
-            <button type="button" class="btn btn-sm btn-ghost" data-bulk="categories" data-action="all">Select all</button>
-            <button type="button" class="btn btn-sm btn-ghost" data-bulk="categories" data-action="none">Clear</button>
-          </div>
+        <div class="quiz-stats-header">
+          <div class="stat-pill"><span class="stat-label">Score</span> <span id="current-score" class="stat-val">0</span></div>
+          <div class="stat-pill"><span class="stat-label">Time</span> <span id="current-time" class="stat-val">00:00</span></div>
         </div>
-        <p class="hint">Leave everything unticked to include <strong>all</strong> categories.</p>
-        <div class="check-grid" id="categoryGrid"></div>
-      </section>
-
-      <!-- ────────────────────────────── Tags ────────────────────────────── -->
-      <section class="card">
-        <div class="card-head">
-          <h2>3 · Tags</h2>
-          <div class="bulk">
-            <button type="button" class="btn btn-sm btn-ghost" data-bulk="tags" data-action="none">Clear</button>
-          </div>
+        <button id="btn-end-early" class="btn btn-text btn-sm" aria-label="End Quiz Early">End</button>
+      </div>
+      <div class="progress-container">
+        <div class="progress-labels">
+          <span id="progress-text">Question 1 of 10</span>
+          <span id="progress-category" class="category-badge">Category</span>
         </div>
-        <p class="hint">Optional. A question matches if it carries <em>any</em> selected tag.</p>
-
-        <div class="tag-block">
-          <h3 class="tag-heading">Difficulty</h3>
-          <div class="chip-row" id="difficultyChips"></div>
-        </div>
-
-        <div class="tag-block">
-          <h3 class="tag-heading">Topic</h3>
-          <div class="chip-row" id="topicChips"></div>
-        </div>
-
-        <div class="tag-block">
-          <h3 class="tag-heading">Custom tags</h3>
-          <div class="add-row">
-            <label class="sr-only" for="customTagInput">Add a custom tag</label>
-            <input type="text" id="customTagInput" placeholder="e.g. revision-week" autocomplete="off"
-                   pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="30">
-            <button type="button" class="btn btn-sm" id="addTagBtn">Add tag</button>
-          </div>
-          <p class="hint">Lowercase letters, numbers and hyphens. Press Enter to add.</p>
-          <p class="error" id="customTagError" role="alert" hidden></p>
-          <div class="chip-row" id="customChips"></div>
-        </div>
-      </section>
-
-      <!-- ─────────────────────────── Students ───────────────────────────── -->
-      <section class="card">
-        <div class="card-head">
-          <h2>4 · Students</h2>
-          <button type="button" class="btn btn-sm" id="addStudentBtn">+ Add student</button>
-        </div>
-        <p class="hint" id="studentModeHint">
-          One student on this device. Add more if a group is sharing it.
-        </p>
-        <div id="studentList"></div>
-        <p class="error" id="studentsError" role="alert" hidden></p>
-      </section>
-
-      <!-- ─────────────────────────── Action bar ─────────────────────────── -->
-      <div class="action-bar">
-        <div class="summary" id="summary" aria-live="polite"></div>
-        <div class="action-buttons">
-          <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
-          <a class="btn" id="cheatsheetLink" href="cheatsheet.html">Cheatsheet</a>
-          <button type="submit" class="btn btn-primary" id="startBtn" disabled>Start Quiz</button>
+        <div class="progress-bar-bg">
+          <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
         </div>
       </div>
-    </form>
+    </header>
 
-    <!-- Hand-off preview: replaced by the real quiz engine in Phase 3 -->
-    <section class="card handoff" id="handoffPanel" hidden>
-      <div class="card-head">
-        <h2>Session saved</h2>
-        <button type="button" class="btn btn-sm btn-ghost" id="closeHandoffBtn">Close</button>
+    <main class="quiz-main">
+      <div class="question-container">
+        <!-- Tags -->
+        <div id="question-tags" class="question-tags"></div>
+        
+        <!-- Question Text -->
+        <div id="question-text" class="question-text"></div>
+        
+        <!-- Interactive Area (Rendered by quiz-renderers.js) -->
+        <div id="question-interactive" class="question-interactive"></div>
+        
+        <!-- Feedback & Explanation -->
+        <div id="question-feedback" class="question-feedback hidden">
+          <div id="feedback-icon" class="feedback-icon"></div>
+          <div class="feedback-content">
+            <h3 id="feedback-title">Correct!</h3>
+            <div id="feedback-explanation" class="feedback-explanation"></div>
+          </div>
+        </div>
       </div>
-      <p class="hint">
-        Written to <code>localStorage["quizSessionConfig"]</code> and logged to the console.
-        Phase 3 replaces <code>handOffToQuizEngine()</code> in <code>assets/home.js</code>.
-      </p>
-      <pre id="handoffJson" tabindex="0"></pre>
-    </section>
-  </main>
+    </main>
 
-  <!-- Template cloned for each student card -->
-  <template id="studentTemplate">
-    <article class="student-card" data-student>
-      <div class="student-head">
-        <h3 class="student-title">Student <span data-role="index">1</span></h3>
-        <button type="button" class="btn btn-sm btn-danger" data-role="remove">Remove</button>
+    <footer class="quiz-footer">
+      <button id="btn-skip" class="btn btn-secondary">Skip (+0)</button>
+      <button id="btn-next" class="btn btn-primary hidden">Next Question</button>
+    </footer>
+
+  </div>
+
+  <!-- 5. Results Screen -->
+  <div id="results-screen" class="hidden">
+    <header class="results-header">
+      <h1 class="page-title">Quiz Complete!</h1>
+      <p id="results-student-name" class="subtitle">Great job.</p>
+    </header>
+
+    <main class="results-main">
+      <!-- Score Summary -->
+      <div class="score-summary-box box">
+        <div class="score-gauge-container">
+          <svg class="score-gauge" viewBox="0 0 100 100">
+            <circle class="gauge-bg" cx="50" cy="50" r="45"></circle>
+            <circle id="gauge-fill" class="gauge-fill" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <div class="score-gauge-text">
+            <div id="score-percentage" class="score-pct">0%</div>
+            <div id="score-total" class="score-pts">0 pts</div>
+          </div>
+        </div>
+        <div class="score-stats-grid">
+          <div class="stat-card">
+            <div class="stat-num correct-color" id="stat-correct">0</div>
+            <div class="stat-lbl">Correct</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num wrong-color" id="stat-wrong">0</div>
+            <div class="stat-lbl">Wrong</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num skip-color" id="stat-skipped">0</div>
+            <div class="stat-lbl">Skipped</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num time-color" id="stat-time">00:00</div>
+            <div class="stat-lbl">Time</div>
+          </div>
+        </div>
       </div>
-      <div class="student-fields" data-role="fields"></div>
-    </article>
-  </template>
 
-  <script src="assets/home.js"></script>
+      <!-- Action Buttons -->
+      <div class="results-actions mt-4">
+        <button id="btn-results-next" class="btn btn-primary w-100 btn-lg mb-2 hidden">Next Student</button>
+        <button id="btn-view-cheatsheet" class="btn btn-secondary w-100 mb-2">View Cheatsheet</button>
+        <button id="btn-back-home" class="btn btn-outline w-100 mb-2">Back to Setup</button>
+      </div>
+
+      <!-- Review Section -->
+      <div class="review-section mt-4">
+        <h3>Question Review</h3>
+        <div id="review-list" class="review-list mt-2"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 6. Cheatsheet Screen -->
+  <div id="cheatsheet-screen" class="hidden">
+    <header class="page-header sticky-header">
+      <div class="header-inner">
+        <button id="btn-close-cheatsheet" class="btn btn-icon" aria-label="Close">←</button>
+        <h1 class="page-title mb-0">Cheatsheet</h1>
+        <div class="class-badge">Class <span id="cheatsheet-class-badge"></span></div>
+      </div>
+      <!-- Section Tabs -->
+      <div id="cheatsheet-tabs" class="tabs-scrollable mt-2"></div>
+    </header>
+
+    <main id="cheatsheet-content" class="cheatsheet-main"></main>
+  </div>
+
+
+  <!-- Scripts -->
+  <script src="assets/data-loader.js"></script>
+  <script src="assets/quiz-generator.js"></script>
+  <script src="assets/quiz-renderers.js"></script>
+  <script src="assets/quiz-engine.js"></script>
+  <script src="assets/cheatsheet.js"></script>
+  <script src="assets/quiz-results.js"></script>
   <!-- Offline Data Fallbacks (Injected by build_offline.py) -->
   <script type="application/json" data-file="data/en-te-hi-questions.json">
 {

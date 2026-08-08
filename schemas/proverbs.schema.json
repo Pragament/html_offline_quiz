@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quizmaster.local/schemas/proverbs.schema.json",
+  "title": "en-te-hi-proverbs.json",
+  "description": "English proverbs with their Telugu and Hindi equivalents, meanings, and a pre-authored cloze form so completion questions do not require string surgery at runtime.",
+  "type": "object",
+  "required": ["schemaVersion", "fileType", "languages", "idPrefix", "generators", "entries"],
+  "additionalProperties": false,
+  "allOf": [{ "$ref": "common.schema.json#/$defs/envelope" }],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "type": "string" },
+    "fileType": { "const": "proverbs" },
+    "languages": { "type": "array" },
+    "updated": { "type": "string" },
+    "description": { "type": "string" },
+    "idPrefix": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "generators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "common.schema.json#/$defs/generatorSpec" }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["id", "classes", "proverb", "meaning", "tags", "categoryHint"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "classes": { "$ref": "common.schema.json#/$defs/classList" },
+        "proverb": {
+          "description": "`en` is the proverb itself. `te` and `hi` are the closest natural saying in that language, which may not be a word-for-word translation — see `literal` when it differs.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "literal": {
+          "description": "Optional word-for-word rendering, used when the te/hi equivalent carries a different image from the English one.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "meaning": { "$ref": "common.schema.json#/$defs/localizedText" },
+        "cloze": {
+          "description": "The proverb with one salient word replaced by ___ (three underscores). Pre-authored so a completion generator only has to substitute, never parse.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "blankWord": {
+          "description": "The word removed in `cloze`. Becomes the correct option of a completion question; other entries' blankWords become the distractors.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "tags": { "$ref": "common.schema.json#/$defs/tags" },
+        "categoryHint": { "$ref": "common.schema.json#/$defs/category" }
+      },
+      "dependentRequired": {
+        "cloze": ["blankWord"],
+        "blankWord": ["cloze"]
+      }
+    }
+  }
+}

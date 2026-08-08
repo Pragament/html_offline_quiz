@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quizmaster.local/schemas/common.schema.json",
+  "title": "QuizMaster shared definitions",
+  "description": "Reusable definitions for every en-te-hi data file. Nothing here is a standalone document; refer to it with $ref from the per-file schemas.",
+  "$defs": {
+    "languageCode": {
+      "description": "Display languages supported by the app. 'en' is always the language being taught; 'te' and 'hi' are support languages.",
+      "enum": ["en", "te", "hi"]
+    },
+
+    "localizedText": {
+      "description": "A single string in all three languages. All three keys are required so the renderer never has to fall back.",
+      "type": "object",
+      "required": ["en", "te", "hi"],
+      "additionalProperties": false,
+      "properties": {
+        "en": { "type": "string", "minLength": 1 },
+        "te": { "type": "string", "minLength": 1 },
+        "hi": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "localizedList": {
+      "description": "Parallel string arrays, one per language. INVARIANT (checked by tools/validate_data.py, not expressible in JSON Schema): en, te and hi must have identical length, and index i must refer to the same item in all three languages.",
+      "type": "object",
+      "required": ["en", "te", "hi"],
+      "additionalProperties": false,
+      "properties": {
+        "en": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "te": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "hi": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+
+    "classNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+
+    "classList": {
+      "description": "Classes an entry is appropriate for. Source entries may serve several grades (a Class 5 word is still usable for Class 6 revision); a generator selects entries with `classes.includes(selectedClass)`.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/classNumber" }
+    },
+
+    "tags": {
+      "description": "Free-form lowercase filter tags. Difficulty is carried here too ('beginner' | 'intermediate' | 'advanced') to match the existing tag filter UI.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+    },
+
+    "category": {
+      "description": "Fixed taxonomy. The `category` of a question must be one of these exactly; source entries carry a `categoryHint` used to stamp generated questions.",
+      "enum": [
+        "Vocabulary Building",
+        "Sentence Formation",
+        "Grammar",
+        "Phrase Learning",
+        "Idioms & Expressions",
+        "Reading Comprehension",
+        "Conversation Understanding",
+        "Response Formation",
+        "Fluency Practice (Written)",
+        "Speaking Patterns",
+        "Question Formation",
+        "Error Correction",
+        "Paraphrasing",
+        "Story Completion",
+        "Situational English",
+        "Formal vs Informal English",
+        "Pronunciation Awareness"
+      ]
+    },
+
+    "questionType": {
+      "enum": ["mcq", "flip-card", "drag-drop", "match-pairs", "true-false"]
+    },
+
+    "partOfSpeech": {
+      "enum": ["noun", "pronoun", "verb", "adjective", "adverb", "preposition", "conjunction", "interjection", "phrase"]
+    },
+
+    "register": {
+      "description": "Formality band. Feeds the 'Formal vs Informal English' category.",
+      "enum": ["formal", "neutral", "informal"]
+    },
+
+    "envelope": {
+      "description": "Header fields common to every data file. Per-file schemas add their own payload array on top of these.",
+      "type": "object",
+      "required": ["schemaVersion", "fileType", "languages"],
+      "properties": {
+        "$schema": { "type": "string" },
+        "schemaVersion": {
+          "description": "Semver of the schema this file conforms to. Bump the major when a loader change is required.",
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "fileType": { "type": "string" },
+        "languages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/languageCode" }
+        },
+        "updated": { "type": "string", "format": "date" },
+        "description": { "type": "string" }
+      }
+    },
+
+    "fieldSelector": {
+      "description": "Tells a generator where to read option text from inside a source entry.",
+      "type": "object",
+      "required": ["path"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "description": "Property name on the entry holding a localizedText (e.g. 'word', 'meaning') or a localizedList (e.g. 'synonyms').",
+          "type": "string",
+          "minLength": 1
+        },
+        "pick": {
+          "description": "How to reduce a localizedList to one item. Ignored for localizedText paths. 'index' uses the `index` property.",
+          "enum": ["value", "first", "random", "index"],
+          "default": "value"
+        },
+        "index": { "type": "integer", "minimum": 0 },
+        "display": {
+          "description": "Maps each DISPLAY column to the SOURCE language read from the entry. Default is identity ({en:en, te:te, hi:hi}). Use a constant source (e.g. all three set to 'en') when the option text is an English artefact that must not be translated, such as a sentence being corrected.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "en": { "$ref": "#/$defs/languageCode" },
+            "te": { "$ref": "#/$defs/languageCode" },
+            "hi": { "$ref": "#/$defs/languageCode" }
+          }
+        }
+      }
+    },
+
+    "generatorSpec": {
+      "description": "A declarative recipe turning one source entry into one question object shaped exactly like an entry in en-te-hi-questions.json. Template tokens are written as {{path.lang}} (e.g. {{word.en}}, {{headword.te}}); {{answer}} resolves to the correct option text in the column being rendered.",
+      "type": "object",
+      "required": ["id", "questionType", "category", "prompt"],
+      "oneOf": [
+        {
+          "description": "Per-entry generator: one source entry becomes one question.",
+          "required": ["answer"],
+          "not": { "required": ["aggregate"] }
+        },
+        {
+          "description": "Aggregate generator: several source entries become one question.",
+          "required": ["aggregate"],
+          "not": { "required": ["answer"] }
+        }
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Stable generator id. Generated question ids are `<idPrefix>-<generator.id>-<entry.id>` so a regenerated bank is stable and de-duplicable.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "questionType": { "$ref": "#/$defs/questionType" },
+        "category": { "$ref": "#/$defs/category" },
+        "addTags": { "$ref": "#/$defs/tags" },
+        "requires": {
+          "description": "Entry fields that must be present for an entry to be the SUBJECT of a generated question. Lets a generator depend on optional fields (cloze, situation, formalEquivalent) without those fields becoming mandatory for every entry. This does not restrict distractors: an entry is eligible as a distractor whenever it has the field named by `distractors.from.path`.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "weight": {
+          "description": "Relative frequency when the generator has more entries than the requested question count.",
+          "type": "number",
+          "minimum": 0,
+          "default": 1
+        },
+        "prompt": { "$ref": "#/$defs/localizedText" },
+        "answer": { "$ref": "#/$defs/fieldSelector" },
+        "distractors": {
+          "description": "Where wrong options come from. Required for mcq and flip-card; omit for true-false.",
+          "type": "object",
+          "required": ["count", "from"],
+          "additionalProperties": false,
+          "properties": {
+            "count": { "type": "integer", "minimum": 1, "maximum": 5 },
+            "from": { "$ref": "#/$defs/fieldSelector" },
+            "scope": {
+              "description": "'self' draws the wrong options from the same entry (e.g. an antonym list); 'siblings' draws from other entries in the same file.",
+              "enum": ["self", "siblings"],
+              "default": "siblings"
+            },
+            "pool": {
+              "description": "Preferred source of sibling distractors.",
+              "enum": ["same-class", "same-tag", "any"],
+              "default": "same-class"
+            },
+            "poolFallback": {
+              "description": "What to do when the preferred pool holds fewer than `count` usable distractors — the normal case for a small class-tagged file. 'widen' walks the ladder same-class -> adjacent class (+/-1) -> any class in the file, stopping as soon as `count` distractors are available. 'strict' never widens and the generator instead skips the entry. Either way a generator MUST NOT emit a question with fewer options than count+1.",
+              "enum": ["widen", "strict"],
+              "default": "widen"
+            }
+          }
+        },
+        "falseStatement": {
+          "description": "true-false generators only: template for the deliberately wrong variant. The generator emits the true form or this false form at random and sets correctAnswer accordingly.",
+          "$ref": "#/$defs/localizedText"
+        },
+        "aggregate": {
+          "description": "match-pairs and drag-drop only: build ONE question out of several entries rather than one question per entry. The generator picks `count` eligible entries, reads `left` from each to build the left column and `right` to build the right column, shuffles the right column, and records the resulting index pairs in correctAnswer. Mutually exclusive with `answer`/`distractors`.",
+          "type": "object",
+          "required": ["count", "left", "right"],
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "description": "Preferred number of pairs.",
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 6
+            },
+            "minCount": {
+              "description": "Fewest pairs worth asking. If the class does not have `count` eligible entries the generator widens to adjacent classes and then to the whole file; if it still falls short it emits a smaller question down to `minCount`, and below that emits nothing.",
+              "type": "integer",
+              "minimum": 2,
+              "default": 3
+            },
+            "left": { "$ref": "#/$defs/fieldSelector" },
+            "right": { "$ref": "#/$defs/fieldSelector" }
+          }
+        },
+        "explanation": { "$ref": "#/$defs/localizedText" }
+      }
+    }
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "$schema": "../schemas/phrases.schema.json",
+  "schemaVersion": "1.0.0",
+  "fileType": "phrases",
+  "languages": ["en", "te", "hi"],
+  "updated": "2026-08-01",
+  "description": "Class-tagged everyday phrases. Four generators cover meaning, situational use, recall, and an informal-to-formal matching drill.",
+  "idPrefix": "gen-phr",
+  "generators": [
+    {
+      "id": "phrase-meaning-mcq",
+      "questionType": "mcq",
+      "category": "Phrase Learning",
+      "addTags": ["generated", "phrases"],
+      "weight": 2,
+      "prompt": {
+        "en": "What does the phrase \"{{phrase.en}}\" mean?",
+        "te": "\"{{phrase.en}}\" అనే పదబంధానికి అర్థం ఏమిటి?",
+        "hi": "\"{{phrase.en}}\" वाक्यांश का क्या अर्थ है?"
+      },
+      "answer": { "path": "meaning" },
+      "distractors": { "count": 3, "from": { "path": "meaning" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" }
+    },
+    {
+      "id": "phrase-situation-mcq",
+      "questionType": "mcq",
+      "category": "Situational English",
+      "addTags": ["generated", "phrases", "situational"],
+      "requires": ["situation"],
+      "prompt": {
+        "en": "{{situation.en}} Which phrase fits best?",
+        "te": "{{situation.te}} ఏ పదబంధం బాగా సరిపోతుంది?",
+        "hi": "{{situation.hi}} कौन सा वाक्यांश सबसे उपयुक्त है?"
+      },
+      "answer": { "path": "phrase", "display": { "en": "en", "te": "en", "hi": "en" } },
+      "distractors": {
+        "count": 3,
+        "from": { "path": "phrase", "display": { "en": "en", "te": "en", "hi": "en" } },
+        "scope": "siblings",
+        "pool": "same-class", "poolFallback": "widen"
+      }
+    },
+    {
+      "id": "phrase-recall-flip",
+      "questionType": "flip-card",
+      "category": "Phrase Learning",
+      "addTags": ["generated", "phrases", "recall"],
+      "prompt": {
+        "en": "Recall the meaning of \"{{phrase.en}}\".",
+        "te": "\"{{phrase.en}}\" అర్థాన్ని గుర్తుచేసుకోండి.",
+        "hi": "\"{{phrase.en}}\" का अर्थ याद कीजिए।"
+      },
+      "answer": { "path": "meaning" },
+      "distractors": { "count": 3, "from": { "path": "meaning" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" }
+    },
+    {
+      "id": "informal-to-formal-match",
+      "questionType": "match-pairs",
+      "category": "Formal vs Informal English",
+      "addTags": ["generated", "phrases", "register"],
+      "requires": ["formalEquivalent"],
+      "prompt": {
+        "en": "Match each everyday phrase with its more formal equivalent.",
+        "te": "ప్రతి సాధారణ పదబంధాన్ని దాని అధికారిక రూపంతో జతపరచండి.",
+        "hi": "प्रत्येक सामान्य वाक्यांश को उसके अधिक औपचारिक रूप से मिलाइए।"
+      },
+      "aggregate": {
+        "count": 4,
+        "minCount": 3,
+        "left": { "path": "phrase", "display": { "en": "en", "te": "en", "hi": "en" } },
+        "right": { "path": "formalEquivalent" }
+      }
+    }
+  ],
+  "entries": [
+    {
+      "id": "phr-excuse-me",
+      "classes": [5],
+      "phrase": { "en": "Excuse me", "te": "క్షమించండి", "hi": "सुनिए / माफ़ कीजिए" },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "a polite way to get someone's attention or to pass by",
+        "te": "ఎవరి దృష్టినైనా ఆకర్షించడానికి లేదా పక్కనుంచి వెళ్ళడానికి మర్యాదపూర్వక మాట",
+        "hi": "किसी का ध्यान खींचने या पास से निकलने का विनम्र तरीका"
+      },
+      "example": {
+        "en": "Excuse me, is this seat free?",
+        "te": "క్షమించండి, ఈ సీటు ఖాళీగా ఉందా?",
+        "hi": "सुनिए, क्या यह सीट खाली है?"
+      },
+      "situation": {
+        "en": "You need to walk past someone standing in a doorway.",
+        "te": "గుమ్మంలో నిలబడిన వ్యక్తిని దాటి వెళ్ళాలి.",
+        "hi": "आपको दरवाज़े पर खड़े किसी व्यक्ति के पास से निकलना है।"
+      },
+      "tags": ["daily", "school", "beginner", "politeness"],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phr-by-the-way",
+      "classes": [5, 6],
+      "phrase": { "en": "By the way", "te": "అన్నట్టు", "hi": "वैसे" },
+      "phraseType": "discourse-marker",
+      "register": "informal",
+      "meaning": {
+        "en": "used to add something that is not the main topic",
+        "te": "ప్రధాన విషయం కాని దాన్ని అదనంగా చెప్పడానికి వాడతారు",
+        "hi": "मुख्य विषय से हटकर कुछ जोड़ने के लिए प्रयोग होता है"
+      },
+      "example": {
+        "en": "By the way, your book is still with me.",
+        "te": "అన్నట్టు, నీ పుస్తకం ఇంకా నా దగ్గరే ఉంది.",
+        "hi": "वैसे, तुम्हारी किताब अब भी मेरे पास है।"
+      },
+      "formalEquivalent": { "en": "Incidentally", "te": "Incidentally", "hi": "Incidentally" },
+      "tags": ["daily", "conversation", "intermediate"],
+      "categoryHint": "Phrase Learning"
+    },
+    {
+      "id": "phr-asap",
+      "classes": [5, 6],
+      "phrase": { "en": "As soon as possible", "te": "వీలైనంత త్వరగా", "hi": "जितनी जल्दी हो सके" },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "at the earliest time that can be managed",
+        "te": "సాధ్యమైనంత తొందరగా",
+        "hi": "जितना जल्दी संभव हो सके उतनी जल्दी"
+      },
+      "example": {
+        "en": "Please return the form as soon as possible.",
+        "te": "దయచేసి ఫారమ్‌ను వీలైనంత త్వరగా తిరిగి ఇవ్వండి.",
+        "hi": "कृपया फ़ॉर्म जितनी जल्दी हो सके लौटा दीजिए।"
+      },
+      "situation": {
+        "en": "Your teacher wants the permission slip without delay.",
+        "te": "మీ ఉపాధ్యాయుడు అనుమతి పత్రాన్ని ఆలస్యం లేకుండా కోరుతున్నారు.",
+        "hi": "आपके शिक्षक बिना देरी के अनुमति पर्ची चाहते हैं।"
+      },
+      "formalEquivalent": {
+        "en": "At your earliest convenience",
+        "te": "At your earliest convenience",
+        "hi": "At your earliest convenience"
+      },
+      "tags": ["school", "daily", "intermediate"],
+      "categoryHint": "Phrase Learning"
+    },
+    {
+      "id": "phr-on-the-other-hand",
+      "classes": [5, 8],
+      "phrase": { "en": "On the other hand", "te": "మరోవైపు", "hi": "दूसरी ओर" },
+      "phraseType": "discourse-marker",
+      "register": "neutral",
+      "meaning": {
+        "en": "used to introduce a different or opposite point",
+        "te": "భిన్నమైన లేదా వ్యతిరేకమైన అంశాన్ని చెప్పడానికి వాడతారు",
+        "hi": "भिन्न या विपरीत बात कहने के लिए प्रयोग होता है"
+      },
+      "example": {
+        "en": "The trip is long; on the other hand, the view is worth it.",
+        "te": "ప్రయాణం పొడవైనది; మరోవైపు, ఆ దృశ్యం దానికి తగినది.",
+        "hi": "यात्रा लंबी है; दूसरी ओर, नज़ारा उसके लायक़ है।"
+      },
+      "tags": ["school", "writing", "intermediate"],
+      "categoryHint": "Phrase Learning"
+    },
+    {
+      "id": "phr-break-the-ice",
+      "classes": [8],
+      "phrase": { "en": "Break the ice", "te": "సంభాషణకు నాంది పలకడం", "hi": "बातचीत की शुरुआत करना" },
+      "phraseType": "idiom",
+      "register": "informal",
+      "meaning": {
+        "en": "to say or do something that makes strangers feel relaxed",
+        "te": "కొత్తవాళ్ళు హాయిగా అనిపించేలా ఏదైనా చెప్పడం లేదా చేయడం",
+        "hi": "कुछ ऐसा कहना या करना जिससे अजनबी सहज महसूस करें"
+      },
+      "example": {
+        "en": "He told a small joke to break the ice.",
+        "te": "సంభాషణకు నాంది పలకడానికి అతను ఒక చిన్న జోక్ చెప్పాడు.",
+        "hi": "बातचीत शुरू करने के लिए उसने एक छोटा चुटकुला सुनाया।"
+      },
+      "situation": {
+        "en": "You join a new class and nobody is talking.",
+        "te": "మీరు కొత్త తరగతిలో చేరారు, ఎవరూ మాట్లాడటం లేదు.",
+        "hi": "आप नई कक्षा में आए हैं और कोई बात नहीं कर रहा।"
+      },
+      "formalEquivalent": {
+        "en": "Initiate the conversation",
+        "te": "Initiate the conversation",
+        "hi": "Initiate the conversation"
+      },
+      "tags": ["conversation", "advanced", "idioms"],
+      "categoryHint": "Idioms & Expressions"
+    },
+    {
+      "id": "phr-in-a-nutshell",
+      "classes": [8],
+      "phrase": { "en": "In a nutshell", "te": "సంక్షిప్తంగా చెప్పాలంటే", "hi": "संक्षेप में" },
+      "phraseType": "idiom",
+      "register": "informal",
+      "meaning": {
+        "en": "expressed in very few words; briefly",
+        "te": "చాలా తక్కువ మాటల్లో చెప్పడం; క్లుప్తంగా",
+        "hi": "बहुत कम शब्दों में; संक्षेप में"
+      },
+      "example": {
+        "en": "In a nutshell, the experiment failed.",
+        "te": "సంక్షిప్తంగా చెప్పాలంటే, ప్రయోగం విఫలమైంది.",
+        "hi": "संक्षेप में, प्रयोग असफल रहा।"
+      },
+      "formalEquivalent": { "en": "In summary", "te": "In summary", "hi": "In summary" },
+      "tags": ["writing", "advanced", "idioms"],
+      "categoryHint": "Phrase Learning"
+    },
+    {
+      "id": "phr-to-be-honest",
+      "classes": [8],
+      "phrase": { "en": "To be honest", "te": "నిజం చెప్పాలంటే", "hi": "सच कहूँ तो" },
+      "phraseType": "discourse-marker",
+      "register": "informal",
+      "meaning": {
+        "en": "used before giving your real, sometimes unwelcome, opinion",
+        "te": "మీ నిజమైన, కొన్నిసార్లు నచ్చని అభిప్రాయాన్ని చెప్పే ముందు వాడతారు",
+        "hi": "अपनी असली, कभी-कभी अप्रिय राय देने से पहले प्रयोग होता है"
+      },
+      "example": {
+        "en": "To be honest, I did not enjoy the film.",
+        "te": "నిజం చెప్పాలంటే, ఆ సినిమా నాకు నచ్చలేదు.",
+        "hi": "सच कहूँ तो, मुझे वह फ़िल्म पसंद नहीं आई।"
+      },
+      "formalEquivalent": { "en": "Frankly speaking", "te": "Frankly speaking", "hi": "Frankly speaking" },
+      "tags": ["conversation", "advanced"],
+      "categoryHint": "Conversation Understanding"
+    },
+    {
+      "id": "phr-end-of-the-day",
+      "classes": [8],
+      "phrase": { "en": "At the end of the day", "te": "చివరికి చూస్తే", "hi": "आख़िरकार" },
+      "phraseType": "idiom",
+      "register": "informal",
+      "meaning": {
+        "en": "used before stating the most important fact after considering everything",
+        "te": "అన్నీ ఆలోచించిన తర్వాత అత్యంత ముఖ్యమైన విషయాన్ని చెప్పే ముందు వాడతారు",
+        "hi": "सब कुछ सोचने के बाद सबसे महत्वपूर्ण बात कहने से पहले प्रयोग होता है"
+      },
+      "example": {
+        "en": "At the end of the day, effort matters more than luck.",
+        "te": "చివరికి చూస్తే, అదృష్టం కంటే కృషి ముఖ్యం.",
+        "hi": "आख़िरकार, भाग्य से अधिक मेहनत मायने रखती है।"
+      },
+      "formalEquivalent": { "en": "Ultimately", "te": "Ultimately", "hi": "Ultimately" },
+      "tags": ["conversation", "advanced", "idioms"],
+      "categoryHint": "Phrase Learning"
+    }
+  ]
+}

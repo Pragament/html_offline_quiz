@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Quiz App</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #818cf8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 16px;
+        }
+        .app-container {
+            max-width: 820px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            min-height: 92vh;
+            padding: 24px 28px;
+            position: relative;
+        }
+        @media (max-width: 600px) {
+            .app-container {
+                padding: 16px;
+                min-height: 96vh;
+                border-radius: 8px;
+            }
+            body {
+                padding: 8px;
+            }
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: var(--gray-900);
+        }
+        h2 {
+            font-size: 1.4rem;
+            color: var(--gray-800);
+        }
+        h3 {
+            font-size: 1.1rem;
+            color: var(--gray-700);
+        }
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .text-muted {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+        .text-sm {
+            font-size: 0.85rem;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-1 {
+            margin-top: 8px;
+        }
+        .mt-2 {
+            margin-top: 16px;
+        }
+        .mt-3 {
+            margin-top: 24px;
+        }
+        .mb-1 {
+            margin-bottom: 8px;
+        }
+        .mb-2 {
+            margin-bottom: 16px;
+        }
+        .mb-3 {
+            margin-bottom: 24px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--gray-200);
+            color: var(--gray-700);
+            text-decoration: none;
+            min-width: 80px;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #16a34a;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #d97706;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--gray-300);
+            color: var(--gray-700);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--gray-50);
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.82rem;
+        }
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            color: var(--gray-700);
+        }
+        .form-group .hint {
+            font-size: 0.8rem;
+            color: var(--gray-400);
+            margin-top: 2px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background: #fff;
+            color: var(--gray-800);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        .form-control::placeholder {
+            color: var(--gray-400);
+        }
+        select.form-control {
+            appearance: auto;
+            cursor: pointer;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        /* ===== CARD / PANEL ===== */
+        .card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+            margin-bottom: 16px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .card-header h3 {
+            margin: 0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+        .badge-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .badge-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .badge-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .badge-warning {
+            background: var(--warning);
+            color: #fff;
+        }
+
+        /* ===== HOMEPAGE ===== */
+        .home-header {
+            text-align: center;
+            padding: 12px 0 20px;
+            border-bottom: 2px solid var(--gray-100);
+            margin-bottom: 24px;
+        }
+        .home-header .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+        .home-header .logo i {
+            margin-right: 6px;
+        }
+        .home-header .sub {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 6px 0;
+        }
+        .tag-group .tag {
+            padding: 4px 14px;
+            border-radius: 20px;
+            background: var(--gray-100);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            user-select: none;
+        }
+        .tag-group .tag:hover {
+            background: var(--gray-200);
+        }
+        .tag-group .tag.active {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
+            color: var(--primary);
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--gray-100);
+            margin-bottom: 20px;
+        }
+        .quiz-topbar .info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+        .quiz-topbar .info .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--gray-100);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .quiz-topbar .info .stat i {
+            font-size: 0.9rem;
+            color: var(--gray-500);
+        }
+        .quiz-topbar .info .stat.score {
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--success);
+        }
+        .quiz-topbar .info .stat.wrong {
+            background: rgba(239, 68, 68, 0.10);
+            color: var(--danger);
+        }
+        .quiz-topbar .info .stat.timer {
+            background: rgba(245, 158, 11, 0.10);
+            color: var(--warning);
+        }
+        .quiz-topbar .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .question-box {
+            padding: 8px 0 16px;
+        }
+        .question-box .q-number {
+            font-size: 0.85rem;
+            color: var(--gray-400);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .question-box .q-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 8px 0 4px;
+            color: var(--gray-900);
+        }
+        .question-box .q-translations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            background: var(--gray-50);
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin: 8px 0 12px;
+            border-left: 4px solid var(--primary-light);
+        }
+        .question-box .q-translations span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .question-box .q-translations .lang-label {
+            font-weight: 600;
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        .question-box .q-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 6px 0 14px;
+        }
+        .question-box .q-meta .badge {
+            font-size: 0.7rem;
+        }
+
+        /* ===== OPTIONS ===== */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .option-item {
+            padding: 14px 18px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+        .option-item:hover:not(.disabled) {
+            border-color: var(--primary-light);
+            background: var(--gray-50);
+            transform: translateY(-1px);
+        }
+        .option-item .opt-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            flex-shrink: 0;
+        }
+        .option-item .opt-text {
+            flex: 1;
+        }
+        .option-item.correct {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.08);
+        }
+        .option-item.correct .opt-letter {
+            background: var(--success);
+            color: #fff;
+        }
+        .option-item.wrong {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.08);
+        }
+        .option-item.wrong .opt-letter {
+            background: var(--danger);
+            color: #fff;
+        }
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .option-item.disabled:hover {
+            transform: none !important;
+        }
+        .option-item.selected {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.06);
+        }
+        .option-item.selected .opt-letter {
+            background: var(--primary);
+            color: #fff;
+        }
+        .option-item .opt-feedback {
+            position: absolute;
+            right: 12px;
+            font-size: 1.1rem;
+        }
+
+        /* ===== FLIP CARD ===== */
+        .flip-card-container {
+            perspective: 800px;
+            margin: 16px 0;
+        }
+        .flip-card {
+            position: relative;
+            width: 100%;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            min-height: 120px;
+        }
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+        .flip-card .front,
+        .flip-card .back {
+            position: absolute;
+            width: 100%;
+            backface-visibility: hidden;
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 2px solid var(--gray-200);
+            background: #fff;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .flip-card .back {
+            transform: rotateY(180deg);
+            flex-direction: column;
+            gap: 12px;
+        }
+        .flip-card .back .options-grid {
+            width: 100%;
+            grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 500px) {
+            .flip-card .back .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== DRAG & DROP ===== */
+        .drag-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 16px;
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
+            min-height: 80px;
+            background: var(--gray-50);
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            margin: 12px 0;
+        }
+        .drag-zone.drag-over {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.04);
+        }
+        .drag-zone .drag-item {
+            padding: 10px 18px;
+            background: #fff;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            cursor: grab;
+            font-weight: 500;
+            transition: var(--transition);
+            user-select: none;
+        }
+        .drag-zone .drag-item:hover {
+            border-color: var(--primary-light);
+        }
+        .drag-zone .drag-item:active {
+            cursor: grabbing;
+        }
+        .drag-zone .drag-item.dragging {
+            opacity: 0.4;
+        }
+        .drag-zone .drag-item.placed {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.06);
+            cursor: default;
+        }
+        .drop-target {
+            padding: 12px 18px;
+            border: 2px dashed var(--gray-300);
+            border-radius: 8px;
+            min-width: 120px;
+            min-height: 52px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-50);
+            font-weight: 500;
+            color: var(--gray-400);
+            transition: var(--transition);
+        }
+        .drop-target.drag-over {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.04);
+        }
+        .drop-target.filled {
+            border-style: solid;
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.06);
+            color: var(--gray-800);
+        }
+
+        /* ===== MATCH PAIRS ===== */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+        @media (max-width: 500px) {
+            .match-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .match-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .match-item {
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            background: #fff;
+            text-align: center;
+        }
+        .match-item:hover:not(.matched) {
+            border-color: var(--primary-light);
+        }
+        .match-item.selected {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.06);
+        }
+        .match-item.matched {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.08);
+            cursor: default;
+            opacity: 0.7;
+        }
+        .match-item.wrong-match {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.08);
+            animation: shake 0.3s;
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-6px);
+            }
+            75% {
+                transform: translateX(6px);
+            }
+        }
+
+        /* ===== TRUE/FALSE ===== */
+        .tf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+        .tf-btn {
+            padding: 18px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            background: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .tf-btn:hover:not(.disabled) {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        .tf-btn.correct {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.08);
+            color: var(--success);
+        }
+        .tf-btn.wrong {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.08);
+            color: var(--danger);
+        }
+        .tf-btn.disabled {
+            cursor: default;
+            opacity: 0.6;
+        }
+
+        /* ===== RESULTS ===== */
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin: 16px 0 24px;
+        }
+        .result-stat {
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+        .result-stat .num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+        .result-stat .label {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .result-stat.green .num {
+            color: var(--success);
+        }
+        .result-stat.red .num {
+            color: var(--danger);
+        }
+        .result-stat.amber .num {
+            color: var(--warning);
+        }
+        .result-stat.blue .num {
+            color: var(--primary);
+        }
+
+        .result-detail {
+            margin-top: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 16px;
+        }
+        .result-detail .q-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 0.9rem;
+        }
+        .result-detail .q-item .icon {
+            font-size: 1.2rem;
+            margin-top: 2px;
+            min-width: 28px;
+        }
+        .result-detail .q-item .q-detail {
+            flex: 1;
+        }
+        .result-detail .q-item .q-detail .q-text-sm {
+            font-weight: 500;
+        }
+        .result-detail .q-item .q-detail .q-answer {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+
+        /* ===== CHEATSHEET ===== */
+        .cheatsheet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 550px) {
+            .cheatsheet-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .cheatsheet-card {
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--gray-200);
+        }
+        .cheatsheet-card h4 {
+            color: var(--primary);
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            border-bottom: 1px solid var(--gray-200);
+            padding-bottom: 6px;
+        }
+        .cheatsheet-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 6px 0 0;
+        }
+        .cheatsheet-card ul li {
+            padding: 4px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .cheatsheet-card ul li .en {
+            font-weight: 500;
+        }
+        .cheatsheet-card ul li .te {
+            color: var(--gray-500);
+        }
+
+        /* ===== RESPONSIVE HELPERS ===== */
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            align-items: center;
+            justify-content: center;
+        }
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .gap-1 {
+            gap: 8px;
+        }
+        .gap-2 {
+            gap: 16px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .w-full {
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 20px 0 12px;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+
+        /* ===== LOADING ===== */
+        .loading-spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            gap: 12px;
+            font-size: 1.1rem;
+            color: var(--gray-500);
+        }
+        .loading-spinner i {
+            font-size: 1.8rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== toast ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gray-900);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            max-width: 90vw;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast.success {
+            background: var(--success);
+        }
+        .toast.error {
+            background: var(--danger);
+        }
+        .toast.warning {
+            background: var(--warning);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ===== APP ===== -->
+    <div class="app-container" id="app">
+
+        <!-- ======== HOMEPAGE ======== -->
+        <div id="homePage">
+            <div class="home-header">
+                <div class="logo"><i class="fas fa-graduation-cap"></i>QuizMaster</div>
+                <div class="sub">Learn English, Telugu &amp; Hindi • Class 1–10</div>
+            </div>
+
+            <form id="homeForm" autocomplete="off">
+                <!-- Class -->
+                <div class="form-group">
+                    <label for="classSelect">Class <span class="text-muted">*</span></label>
+                    <select class="form-control" id="classSelect" required>
+                        <option value="">— Select Class —</option>
+                        <option value="1">Class 1</option>
+                        <option value="2">Class 2</option>
+                        <option value="3">Class 3</option>
+                        <option value="4">Class 4</option>
+                        <option value="5" selected>Class 5</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                    </select>
+                </div>
+
+                <!-- Language -->
+                <div class="form-group">
+                    <label>Languages <span class="text-muted">(show translations)</span></label>
+                    <div class="tag-group" id="langGroup">
+                        <span class="tag active" data-value="en">English</span>
+                        <span class="tag active" data-value="te">తెలుగు</span>
+                        <span class="tag active" data-value="hi">हिन्दी</span>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="form-group">
+                    <label>Categories</label>
+                    <div class="tag-group" id="categoryGroup">
+                        <span class="tag active" data-value="Vocabulary">Vocabulary</span>
+                        <span class="tag active" data-value="Sentence Formation">Sentence Formation</span>
+                        <span class="tag active" data-value="Grammar">Grammar</span>
+                        <span class="tag active" data-value="Phrases & Collocations">Phrases</span>
+                        <span class="tag active" data-value="Reading Comprehension">Reading</span>
+                        <span class="tag active" data-value="Conversation Understanding">Conversation</span>
+                        <span class="tag active" data-value="Response Formation">Response</span>
+                        <span class="tag active" data-value="Pronunciation Awareness">Pronunciation</span>
+                        <span class="tag active" data-value="Fluency Practice">Fluency</span>
+                        <span class="tag active" data-value="Situational English">Situational</span>
+                        <span class="tag active" data-value="Formal vs Informal English">Formal/Informal</span>
+                        <span class="tag active" data-value="Speaking Patterns">Speaking Patterns</span>
+                        <span class="tag active" data-value="Question Formation">Question Formation</span>
+                        <span class="tag active" data-value="Error Correction">Error Correction</span>
+                        <span class="tag active" data-value="Paraphrasing">Paraphrasing</span>
+                        <span class="tag active" data-value="Story Completion">Story Completion</span>
+                        <span class="tag active" data-value="Idioms & Expressions">Idioms</span>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-group">
+                    <label>Tags <span class="text-muted">(optional)</span></label>
+                    <div class="tag-group" id="tagGroup">
+                        <span class="tag" data-value="daily">daily</span>
+                        <span class="tag" data-value="school">school</span>
+                        <span class="tag" data-value="travel">travel</span>
+                        <span class="tag" data-value="food">food</span>
+                        <span class="tag" data-value="family">family</span>
+                        <span class="tag" data-value="work">work</span>
+                        <span class="tag" data-value="interview">interview</span>
+                        <span class="tag" data-value="restaurant">restaurant</span>
+                        <span class="tag" data-value="airport">airport</span>
+                        <span class="tag" data-value="office">office</span>
+                        <span class="tag" data-value="beginner">beginner</span>
+                        <span class="tag" data-value="intermediate">intermediate</span>
+                        <span class="tag" data-value="advanced">advanced</span>
+                    </div>
+                    <div class="hint">Click tags to select/deselect.</div>
+                </div>
+
+                <!-- Student Info -->
+                <div class="section-title"><i class="fas fa-user-graduate"></i> Student Details</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentName">Full Name <span class="text-muted">*</span></label>
+                        <input class="form-control" id="studentName" placeholder="e.g. Raj Kumar" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="studentSection">Section</label>
+                        <input class="form-control" id="studentSection" placeholder="e.g. A" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentRoll">Roll Number</label>
+                        <input class="form-control" id="studentRoll" placeholder="e.g. 12" type="number" />
+                    </div>
+                    <div class="form-group">
+                        <label for="studentAdmission">Admission Number</label>
+                        <input class="form-control" id="studentAdmission" placeholder="e.g. 2025-001" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studentPhone">Parent Phone Number</label>
+                    <input class="form-control" id="studentPhone" placeholder="e.g. 9876543210" type="tel" />
+                </div>
+
+                <div class="flex gap-2 mt-2" style="flex-wrap:wrap;">
+                    <button type="submit" class="btn btn-primary" id="startQuizBtn">
+                        <i class="fas fa-play"></i> Start Quiz
+                    </button>
+                    <button type="button" class="btn btn-outline" id="viewCheatsheetBtn">
+                        <i class="fas fa-book"></i> View Cheatsheet
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ======== QUIZ PAGE ======== -->
+        <div id="quizPage" class="hidden">
+            <div class="quiz-topbar">
+                <div class="info">
+                    <span class="stat"><i class="fas fa-hashtag"></i> <span id="qCounter">0</span></span>
+                    <span class="stat score"><i class="fas fa-star"></i> <span id="qScore">0</span></span>
+                    <span class="stat wrong"><i class="fas fa-times"></i> <span id="qWrong">0</span></span>
+                    <span class="stat timer"><i class="fas fa-clock"></i> <span id="qTimer">0:00</span></span>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-sm btn-outline" id="skipBtn"><i class="fas fa-forward"></i> Skip</button>
+                    <button class="btn btn-sm btn-danger" id="endQuizBtn"><i class="fas fa-stop"></i> End</button>
+                </div>
+            </div>
+
+            <div id="questionContainer">
+                <!-- rendered by JS -->
+                <div class="loading-spinner"><i class="fas fa-spinner"></i> Loading question…</div>
+            </div>
+        </div>
+
+        <!-- ======== RESULTS PAGE ======== -->
+        <div id="resultsPage" class="hidden">
+            <div class="flex-between mb-2">
+                <h2><i class="fas fa-flag-checkered" style="color:var(--primary);"></i> Quiz Results</h2>
+                <button class="btn btn-sm btn-outline" id="backHomeFromResults"><i class="fas fa-home"></i> Home</button>
+            </div>
+            <div id="resultSummary" class="result-summary"></div>
+            <div id="resultDetail" class="result-detail"></div>
+            <div class="mt-2 flex gap-2" style="flex-wrap:wrap;">
+                <button class="btn btn-primary" id="retryQuizBtn"><i class="fas fa-redo"></i> Retry</button>
+                <button class="btn btn-outline" id="viewCheatsheetFromResults"><i class="fas fa-book"></i> Cheatsheet</button>
+            </div>
+        </div>
+
+        <!-- ======== CHEATSHEET PAGE ======== -->
+        <div id="cheatsheetPage" class="hidden">
+            <div class="flex-between mb-2">
+                <h2><i class="fas fa-book-open" style="color:var(--primary);"></i> Cheatsheet</h2>
+                <button class="btn btn-sm btn-outline" id="backHomeFromCheatsheet"><i class="fas fa-home"></i> Home</button>
+            </div>
+            <div id="cheatsheetContent">
+                <div class="loading-spinner"><i class="fas fa-spinner"></i> Loading cheatsheet…</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ========================================================================
+        //  DATA – Inline JSON equivalents
+        // ========================================================================
+
+        // --- en-te-hi-questions.json (static) ---
+        const STATIC_QUESTIONS = [{
+            id: 's001',
+            class: 5,
+            category: 'Vocabulary',
+            tags: ['daily', 'beginner'],
+            type: 'mcq',
+            question: { en: 'What is the meaning of "abandon"?', te: '"abandon" అంటే ఏమిటి?', hi: '"abandon" का क्या अर्थ है?' },
+            options: { en: ['Leave behind', 'Keep safe', 'Build', 'Destroy'], te: ['వదిలివేయడం', 'భద్రపరచడం',
+                    'నిర్మించడం', 'నాశనం చేయడం'
+                ], hi: ['पीछे छोड़ना', 'सुरक्षित रखना', 'निर्माण करना', 'नष्ट करना'] },
+            correct: 0
+        }, {
+            id: 's002',
+            class: 5,
+            category: 'Grammar',
+            tags: ['school', 'beginner'],
+            type: 'mcq',
+            question: { en: 'Fill in the blank: She ___ to school every day.', te: 'ఖాళీని పూరించండి: ఆమె ప్రతిరోజు స్కూల్ కు ___.',
+                hi: 'रिक्त स्थान भरें: वह हर दिन स्कूल ___ है।' },
+            options: { en: ['go', 'goes', 'going', 'went'], te: ['వెళ్తుంది', 'వెళ్తాడు', 'వెళ్తున్నారు', 'వెళ్లారు'],
+                hi: ['जाता है', 'जाती है', 'जा रहा है', 'गया'] },
+            correct: 1
+        }, {
+            id: 's003',
+            class: 5,
+            category: 'Sentence Formation',
+            tags: ['school', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Arrange into a sentence: "playing / is / park / in / the / she"',
+                te: 'వాక్యంలో అమర్చండి: "ఆమె / పార్క్ / లో / ఆడుతోంది"',
+                hi: 'वाक्य में व्यवस्थित करें: "वह / पार्क / में / खेल रही है"' },
+            options: { en: ['She is playing in the park.', 'She playing in the park is.', 'In the park she is playing.',
+                    'Playing she is in the park.'
+                ], te: ['ఆమె పార్క్ లో ఆడుతోంది.', 'ఆమె ఆడుతోంది పార్క్ లో.', 'పార్క్ లో ఆమె ఆడుతోంది.',
+                    'ఆడుతోంది ఆమె పార్క్ లో.'
+                ], hi: ['वह पार्क में खेल रही है।', 'वह खेल रही है पार्क में।', 'पार्क में वह खेल रही है।',
+                    'खेल रही है वह पार्क में।'
+                ] },
+            correct: 0
+        }, {
+            id: 's004',
+            class: 5,
+            category: 'True or False',
+            tags: ['daily', 'beginner'],
+            type: 'truefalse',
+            question: { en: 'The sun rises in the west.', te: 'సూర్యుడు పశ్చిమంలో ఉదయిస్తాడు.', hi: 'सूरज पश्चिम में उगता है।' },
+            correct: false
+        }, {
+            id: 's005',
+            class: 5,
+            category: 'Phrases & Collocations',
+            tags: ['daily', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Which phrase means "to start a conversation"?', te: 'ఏ పదబంధం "సంభాషణ ప్రారంభించడం" అని అర్థం?',
+                hi: 'किस वाक्यांश का अर्थ है "बातचीत शुरू करना"?' },
+            options: { en: ['Break the ice', 'Cut the cake', 'Spill the beans', 'Hit the nail'],
+                te: ['మంచు విరగగొట్టు', 'కేక్ కట్ చేయి', 'బీన్స్ చల్లు', 'గోరు కొట్టు'],
+                hi: ['बर्फ तोड़ना', 'केक काटना', 'बीन्स फैलाना', 'कील मारना'] },
+            correct: 0
+        }, {
+            id: 's006',
+            class: 5,
+            category: 'Idioms & Expressions',
+            tags: ['daily', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'What does "piece of cake" mean?', te: '"piece of cake" అంటే ఏమిటి?',
+                hi: '"piece of cake" का क्या अर्थ है?' },
+            options: { en: ['Very easy', 'Very difficult', 'A dessert', 'A problem'], te: ['చాలా సులభం', 'చాలా కష్టం',
+                    'డెజర్ట్', 'సమస్య'
+                ], hi: ['बहुत आसान', 'बहुत मुश्किल', 'एक मिठाई', 'एक समस्या'] },
+            correct: 0
+        }, {
+            id: 's007',
+            class: 5,
+            category: 'Reading Comprehension',
+            tags: ['school', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Read: "Ravi went to the market. He bought apples and bananas." What did Ravi buy?',
+                te: 'చదవండి: "రవి మార్కెట్ కు వెళ్ళాడు. అతను ఆపిల్లు, అరటిపండ్లు కొన్నాడు." రవి ఏమి కొన్నాడు?',
+                hi: 'पढ़ें: "रवि बाजार गया। उसने सेब और केले खरीदे।" रवि ने क्या खरीदा?' },
+            options: { en: ['Apples and bananas', 'Only apples', 'Only bananas', 'Mangoes'],
+                te: ['ఆపిల్లు, అరటిపండ్లు', 'ఆపిల్లు మాత్రమే', 'అరటిపండ్లు మాత్రమే', 'మామిడి పండ్లు'],
+                hi: ['सेब और केले', 'केवल सेब', 'केवल केले', 'आम'] },
+            correct: 0
+        }, {
+            id: 's008',
+            class: 5,
+            category: 'Conversation Understanding',
+            tags: ['daily', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'A: "How are you?" B: "I am fine, thank you." What is the response?',
+                te: 'A: "ఎలా ఉన్నారు?" B: "నేను బాగున్నాను, ధన్యవాదాలు." సమాధానం ఏమిటి?',
+                hi: 'A: "आप कैसे हैं?" B: "मैं ठीक हूँ, धन्यवाद।" उत्तर क्या है?' },
+            options: { en: ['I am fine, thank you.', 'How are you?', 'Goodbye.', 'Nice to meet you.'],
+                te: ['నేను బాగున్నాను, ధన్యవాదాలు.', 'ఎలా ఉన్నారు?', 'వీడ్కోలు.', 'మిమ్మల్ని కలిసినందుకు సంతోషం.'],
+                hi: ['मैं ठीक हूँ, धन्यवाद।', 'आप कैसे हैं?', 'अलविदा।', 'आपसे मिलकर खुशी हुई।'] },
+            correct: 0
+        }, {
+            id: 's009',
+            class: 5,
+            category: 'Response Formation',
+            tags: ['daily', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'If someone says "Thank you", what should you reply?',
+                te: 'ఎవరైనా "ధన్యవాదాలు" అంటే మీరు ఏమి సమాధానం ఇవ్వాలి?',
+                hi: 'अगर कोई "धन्यवाद" कहता है, तो आपको क्या जवाब देना चाहिए?' },
+            options: { en: ['You’re welcome', 'Thank you too', 'No problem', 'All of the above'],
+                te: ['స్వాగతం', 'ధన్యవాదాలు కూడా', 'సమస్య లేదు', 'పైన ఉన్న అన్నీ'],
+                hi: ['आपका स्वागत है', 'आपको भी धन्यवाद', 'कोई बात नहीं', 'उपरोक्त सभी'] },
+            correct: 0
+        }, {
+            id: 's010',
+            class: 5,
+            category: 'Pronunciation Awareness',
+            tags: ['daily', 'beginner'],
+            type: 'mcq',
+            question: { en: 'Which word has the same sound as "see"?', te: 'ఏ పదం "see" లాగా ఉంటుంది?',
+                hi: 'किस शब्द की ध्वनि "see" के समान है?' },
+            options: { en: ['Sea', 'Sit', 'Set', 'Saw'], te: ['సముద్రం', 'కూర్చోండి', 'సెట్', 'చూసింది'],
+                hi: ['समुद्र', 'बैठो', 'सेट', 'देखा'] },
+            correct: 0
+        }, {
+            id: 's011',
+            class: 5,
+            category: 'Fluency Practice',
+            tags: ['daily', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Describe your morning routine in a sentence.',
+                te: 'మీ ఉదయపు దినచర్యను ఒక వాక్యంలో వర్ణించండి.',
+                hi: 'अपनी सुबह की दिनचर्या को एक वाक्य में वर्णित करें।' },
+            options: { en: ['I wake up early and have breakfast.', 'I sleep late.', 'I go to school at night.',
+                    'I eat dinner in the morning.'
+                ], te: ['నేను త్వరగా లేచి అల్పాహారం తీసుకుంటాను.', 'నేను ఆలస్యంగా నిద్రపోతాను.',
+                    'నేను రాత్రి స్కూల్ కు వెళ్తాను.', 'నేను ఉదయం భోజనం చేస్తాను.'
+                ], hi: ['मैं जल्दी उठता हूँ और नाश्ता करता हूँ।', 'मैं देर से सोता हूँ।',
+                    'मैं रात में स्कूल जाता हूँ।', 'मैं सुबह में रात का खाना खाता हूँ।'
+                ] },
+            correct: 0
+        }, {
+            id: 's012',
+            class: 5,
+            category: 'Speaking Patterns',
+            tags: ['daily', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Which is a polite way to ask for help?', te: 'సహాయం అడగడానికి మర్యాదపూర్వక మార్గం ఏది?',
+                hi: 'मदद माँगने का विनम्र तरीका कौन सा है?' },
+            options: { en: ['Could you please help me?', 'Help me!', 'I want help.', 'Give me help.'],
+                te: ['దయచేసి మీరు నాకు సహాయం చేయగలరా?', 'నాకు సహాయం చేయండి!', 'నాకు సహాయం కావాలి.',
+                    'నాకు సహాయం ఇవ్వండి.'
+                ], hi: ['क्या आप कृपया मेरी मदद कर सकते हैं?', 'मेरी मदद करो!', 'मुझे मदद चाहिए।',
+                    'मुझे मदद दो।'
+                ] },
+            correct: 0
+        }, {
+            id: 's013',
+            class: 5,
+            category: 'Question Formation',
+            tags: ['school', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Convert to a question: "She is a teacher."', te: 'ప్రశ్నగా మార్చండి: "ఆమె ఒక ఉపాధ్యాయురాలు."',
+                hi: 'प्रश्न में बदलें: "वह एक शिक्षिका है।"' },
+            options: { en: ['Is she a teacher?', 'She is a teacher?', 'Teacher she is?', 'A teacher she is?'],
+                te: ['ఆమె ఒక ఉపాధ్యాయురాలా?', 'ఆమె ఒక ఉపాధ్యాయురాలు?', 'ఉపాధ్యాయురాలు ఆమె?',
+                    'ఒక ఉపాధ్యాయురాలు ఆమె?'
+                ], hi: ['क्या वह एक शिक्षिका है?', 'वह एक शिक्षिका है?', 'शिक्षिका वह है?',
+                    'एक शिक्षिका वह है?'
+                ] },
+            correct: 0
+        }, {
+            id: 's014',
+            class: 5,
+            category: 'Error Correction',
+            tags: ['school', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Correct the sentence: "He go to school."', te: 'వాక్యాన్ని సరిచేయండి: "He go to school."',
+                hi: 'वाक्य को सही करें: "He go to school."' },
+            options: { en: ['He goes to school.', 'He go to school.', 'He going to school.', 'He went to school.'],
+                te: ['He goes to school.', 'He go to school.', 'He going to school.', 'He went to school.'],
+                hi: ['He goes to school.', 'He go to school.', 'He going to school.', 'He went to school.'] },
+            correct: 0
+        }, {
+            id: 's015',
+            class: 5,
+            category: 'Paraphrasing',
+            tags: ['school', 'advanced'],
+            type: 'mcq',
+            question: { en: 'Paraphrase: "The movie was really good."', te: 'పునర్వివరణ: "The movie was really good."',
+                hi: 'पुनर्व्याख्या: "The movie was really good."' },
+            options: { en: ['The film was excellent.', 'The movie was bad.', 'The film was long.',
+                    'The movie was boring.'
+                ], te: ['సినిమా అద్భుతంగా ఉంది.', 'సినిమా చెడ్డగా ఉంది.', 'సినిమా పొడవుగా ఉంది.',
+                    'సినిమా బోరింగ్ గా ఉంది.'
+                ], hi: ['फिल्म बहुत अच्छी थी।', 'फिल्म खराब थी।', 'फिल्म लंबी थी।',
+                    'फिल्म उबाऊ थी।'
+                ] },
+            correct: 0
+        }, {
+            id: 's016',
+            class: 5,
+            category: 'Story Completion',
+            tags: ['school', 'intermediate'],
+            type: 'mcq',
+            question: { en: 'Complete the story: "Once upon a time, there was a ____."',
+                te: 'కథను పూర్తి చేయండి: "ఒకప్పుడు ఒక ____ ఉండేది."',
+                hi: 'कहानी पूरी करें: "एक बार की बात है, एक ____ था।"' },
+            options: { en: ['king', 'tree', 'river', 'mountain'], te: ['రాజు', 'చెట్టు', 'నది', 'పర్వతం'],
+                hi: ['राजा', 'पेड़', 'नदी', 'पहाड़'] },
+            correct: 0
+        }, {
+            id: 's017',
+            class: 5,
+            category: 'Situational English',
+            tags: ['restaurant', 'daily'],
+            type: 'mcq',
+            question: { en: 'At a restaurant, what do you say to order food?',
+                te: 'రెస్టారెంట్ లో భోజనం ఆర్డర్ చేయడానికి ఏమి అంటారు?',
+                hi: 'एक रेस्तराँ में, खाना ऑर्डर करने के लिए आप क्या कहते हैं?' },
+            options: { en: ['I would like to order…', 'Give me food.', 'I want food.', 'Food please.'],
+                te: ['నేను ఆర్డర్ చేయాలనుకుంటున్నాను…', 'నాకు భోజనం ఇవ్వండి.', 'నాకు భోజనం కావాలి.',
+                    'భోజనం దయచేసి.'
+                ], hi: ['मैं ऑर्डर करना चाहूंगा…', 'मुझे खाना दो।', 'मुझे खाना चाहिए।',
+                    'खाना कृपया।'
+                ] },
+            correct: 0
+        }, {
+            id: 's018',
+            class: 5,
+            category: 'Formal vs Informal English',
+            tags: ['work', 'interview'],
+            type: 'mcq',
+            question: { en: 'Which is more formal?', te: 'ఏది మరింత అధికారిక?', hi: 'कौन सा अधिक औपचारिक है?' },
+            options: { en: ['I would appreciate your assistance.', 'Can you help me?', 'Help me out.',
+                    'Give me a hand.'
+                ], te: ['నేను మీ సహాయాన్ని అభినందిస్తున్నాను.', 'మీరు నాకు సహాయం చేయగలరా?', 'నాకు సహాయం చేయండి.',
+                    'నాకు ఒక చెయ్యి ఇవ్వండి.'
+                ], hi: ['मैं आपकी सहायता की सराहना करूंगा।', 'क्या आप मेरी मदद कर सकते हैं?',
+                    'मेरी मदद करो।', 'मुझे एक हाथ दो।'
+                ] },
+            correct: 0
+        }];
+
+        // --- en-te-hi-vocabulary-dictionary.json ---
+        const VOCAB_DICT = [
+            { en: 'apple', te: 'ఆపిల్', hi: 'सेब', class: 3, category: 'Vocabulary', tags: ['food', 'daily'] },
+            { en: 'book', te: 'పుస్తకం', hi: 'किताब', class: 3, category: 'Vocabulary', tags: ['school', 'daily'] },
+            { en: 'school', te: 'పాఠశాల', hi: 'स्कूल', class: 3, category: 'Vocabulary', tags: ['school', 'daily'] },
+            { en: 'teacher', te: 'ఉపాధ్యాయుడు', hi: 'शिक्षक', class: 3, category: 'Vocabulary', tags: ['school',
+                'daily'] },
+            { en: 'student', te: 'విద్యార్థి', hi: 'छात्र', class: 3, category: 'Vocabulary', tags: ['school',
+                'daily'] },
+            { en: 'happy', te: 'సంతోషంగా', hi: 'खुश', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'sad', te: 'బాధగా', hi: 'उदास', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'big', te: 'పెద్ద', hi: 'बड़ा', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'small', te: 'చిన్న', hi: 'छोटा', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'run', te: 'పరుగెత్తు', hi: 'दौड़ना', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'eat', te: 'తిను', hi: 'खाना', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'drink', te: 'తాగు', hi: 'पीना', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'water', te: 'నీరు', hi: 'पानी', class: 3, category: 'Vocabulary', tags: ['daily', 'beginner'] },
+            { en: 'friend', te: 'స్నేహితుడు', hi: 'दोस्त', class: 3, category: 'Vocabulary', tags: ['daily',
+                'beginner'] },
+            { en: 'family', te: 'కుటుంబం', hi: 'परिवार', class: 3, category: 'Vocabulary', tags: ['family',
+                'daily'] },
+            { en: 'travel', te: 'ప్రయాణం', hi: 'यात्रा', class: 5, category: 'Vocabulary', tags: ['travel',
+                'intermediate'] },
+            { en: 'adventure', te: 'సాహసం', hi: 'साहसिक', class: 5, category: 'Vocabulary', tags: ['travel',
+                    'intermediate'
+                ] },
+            { en: 'knowledge', te: 'జ్ఞానం', hi: 'ज्ञान', class: 5, category: 'Vocabulary', tags: ['school',
+                    'intermediate'
+                ] },
+            { en: 'wisdom', te: 'వివేకం', hi: 'बुद्धि', class: 5, category: 'Vocabulary', tags: ['school',
+                    'intermediate'
+                ] },
+            { en: 'courage', te: 'ధైర్యం', hi: 'साहस', class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+        ];
+
+        // --- en-te-hi-synonyms.json ---
+        const SYNONYMS = [
+            { en: 'happy', synonyms: ['joyful', 'cheerful', 'delighted'], te: ['సంతోషంగా', 'ఉల్లాసంగా',
+                    'ఆనందంగా'
+                ], hi: ['खुश', 'प्रसन्न', 'आनंदित'], class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+            { en: 'big', synonyms: ['large', 'huge', 'enormous'], te: ['పెద్ద', 'భారీ', 'అతిపెద్ద'], hi: ['बड़ा',
+                    'विशाल', 'अत्यधिक'
+                ], class: 5, category: 'Vocabulary', tags: ['daily', 'intermediate'] },
+            { en: 'sad', synonyms: ['unhappy', 'sorrowful', 'gloomy'], te: ['బాధగా', 'దుఃఖంగా', 'విచారంగా'],
+                hi: ['उदास', 'दुखी', 'अंधकारमय'], class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+            { en: 'fast', synonyms: ['quick', 'rapid', 'swift'], te: ['వేగంగా', 'త్వరగా', 'చురుకుగా'], hi: ['तेज़',
+                    'शीघ्र', 'वेगवान'
+                ], class: 5, category: 'Vocabulary', tags: ['daily', 'intermediate'] },
+            { en: 'smart', synonyms: ['intelligent', 'clever', 'bright'], te: ['తెలివైన', 'మేధావి', 'ప్రకాశవంతమైన'],
+                hi: ['बुद्धिमान', 'चतुर', 'उज्ज्वल'], class: 5, category: 'Vocabulary', tags: ['school',
+                    'intermediate'
+                ] },
+        ];
+
+        // --- en-te-hi-antonyms.json ---
+        const ANTONYMS = [
+            { en: 'happy', antonyms: ['sad', 'unhappy', 'gloomy'], te: ['బాధగా', 'దుఃఖంగా', 'విచారంగా'],
+                hi: ['उदास', 'दुखी', 'अंधकारमय'], class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+            { en: 'big', antonyms: ['small', 'tiny', 'little'], te: ['చిన్న', 'సూక్ష్మ', 'కొద్ది'], hi: ['छोटा',
+                    'सूक्ष्म', 'थोड़ा'
+                ], class: 5, category: 'Vocabulary', tags: ['daily', 'intermediate'] },
+            { en: 'fast', antonyms: ['slow', 'sluggish', 'lethargic'], te: ['నెమ్మదిగా', 'సోమరిగా', 'జడత్వంతో'],
+                hi: ['धीमा', 'सुस्त', 'आलसी'], class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+            { en: 'hot', antonyms: ['cold', 'cool', 'chilly'], te: ['చల్లని', 'శీతల', 'చలిగా'], hi: ['ठंडा',
+                    'शीतल', 'ठंढा'
+                ], class: 5, category: 'Vocabulary', tags: ['daily', 'intermediate'] },
+            { en: 'bright', antonyms: ['dim', 'dark', 'gloomy'], te: ['మందమైన', 'చీకటి', 'విచారంగా'], hi: ['मंद',
+                    'अंधेरा', 'अंधकारमय'
+                ], class: 5, category: 'Vocabulary', tags: ['daily', 'intermediate'] },
+        ];
+
+        // --- en-te-hi-proverbs.json ---
+        const PROVERBS = [
+            { en: 'Actions speak louder than words.', te: 'చర్యలు మాటల కంటే గట్టిగా మాట్లాడతాయి.',
+                hi: 'कर्म वचनों से बड़कर बोलते हैं।', class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+            { en: 'A stitch in time saves nine.', te: 'సమయానికి ఒక కుట్టు తొమ్మిది కుట్లు ఆదా చేస్తుంది.',
+                hi: 'समय पर एक टाँका नौ टाँके बचाता है।', class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+            { en: 'Honesty is the best policy.', te: 'నిజాయితీ ఉత్తమ విధానం.', hi: 'ईमानदारी सबसे अच्छी नीति है।',
+                class: 5, category: 'Vocabulary', tags: ['daily', 'intermediate'] },
+            { en: 'Practice makes perfect.', te: 'అభ్యాసం పరిపూర్ణతను కలిగిస్తుంది.', hi: 'अभ्यास परिपूर्णता लाता है।',
+                class: 5, category: 'Vocabulary', tags: ['daily', 'intermediate'] },
+            { en: 'Where there is a will, there is a way.', te: 'కోరిక ఉంటే మార్గం ఉంటుంది.',
+                hi: 'जहाँ चाह है, वहाँ राह है।', class: 5, category: 'Vocabulary', tags: ['daily',
+                    'intermediate'
+                ] },
+        ];
+
+        // --- en-te-hi-phrases.json ---
+        const PHRASES = [
+            { en: 'By the way', te: 'మార్గం ద్వారా', hi: 'वैसे', class: 5, category: 'Phrases & Collocations',
+                tags: ['daily', 'intermediate'] },
+            { en: 'As soon as possible', te: 'వీలైనంత త్వరగా', hi: 'जितनी जल्दी हो सके', class: 5,
+                category: 'Phrases & Collocations', tags: ['daily', 'intermediate'] },
+            { en: 'In the meantime', te: 'అంతలో', hi: 'इस बीच', class: 5, category: 'Phrases & Collocations',
+                tags: ['daily', 'intermediate'] },
+            { en: 'On the other hand', te: 'మరోవైపు', hi: 'दूसरी ओर', class: 5, category: 'Phrases & Collocations',
+                tags: ['daily', 'intermediate'] },
+            { en: 'To be honest', te: 'నిజం చెప్పాలంటే', hi: 'ईमानदारी से कहूं तो', class: 5,
+                category: 'Phrases & Collocations', tags: ['daily', 'intermediate'] },
+            { en: 'In a nutshell', te: 'సంక్షిప్తంగా', hi: 'संक्षेप में', class: 5, category: 'Phrases & Collocations',
+                tags: ['daily', 'intermediate'] },
+            { en: 'At the end of the day', te: 'రోజు చివరిలో', hi: 'दिन के अंत में', class: 5,
+                category: 'Phrases & Collocations', tags: ['daily', 'intermediate'] },
+        ];
+
+        // --- Cheatsheet data ---
+        const CHEATSHEET_DATA = {
+            5: {
+                grammar: [
+                    { en: 'Present Simple: I/You/We/They + verb', te: 'ప్రెజెంట్ సింపుల్: నేను/మీరు/మేము/వారు + క్రియ',
+                        hi: 'प्रेजेंट सिंपल: मैं/तुम/हम/वे + क्रिया' },
+                    { en: 'He/She/It + verb(s/es)', te: 'అతను/ఆమె/ఇది + క్రియ(లు/ఎస్)', hi: 'वह/वह/यह + क्रिया(एस/ईएस)' },
+                    { en: 'Past Simple: verb + ed (regular)', te: 'పాస్ట్ సింపుల్: క్రియ + ed (సాధారణ)',
+                        hi: 'पास्ट सिंपल: क्रिया + ed (नियमित)' },
+                    { en: 'Future: will + verb', te: 'ఫ్యూచర్: will + క్రియ', hi: 'फ्यूचर: will + क्रिया' },
+                ],
+                vocabulary: [
+                    { en: 'abandon', te: 'వదిలివేయడం', hi: 'छोड़ देना' },
+                    { en: 'courage', te: 'ధైర్యం', hi: 'साहस' },
+                    { en: 'knowledge', te: 'జ్ఞానం', hi: 'ज्ञान' },
+                    { en: 'wisdom', te: 'వివేకం', hi: 'बुद्धि' },
+                    { en: 'adventure', te: 'సాహసం', hi: 'साहसिक' },
+                ],
+                phrases: [
+                    { en: 'By the way', te: 'మార్గం ద్వారా', hi: 'वैसे' },
+                    { en: 'As soon as possible', te: 'వీలైనంత త్వరగా', hi: 'जितनी जल्दी हो सके' },
+                    { en: 'On the other hand', te: 'మరోవైపు', hi: 'दूसरी ओर' },
+                ],
+                proverbs: [
+                    { en: 'Actions speak louder than words.', te: 'చర్యలు మాటల కంటే గట్టిగా మాట్లాడతాయి.',
+                        hi: 'कर्म वचनों से बड़कर बोलते हैं।' },
+                    { en: 'Honesty is the best policy.', te: 'నిజాయితీ ఉత్తమ విధానం.', hi: 'ईमानदारी सबसे अच्छी नीति है।' },
+                ]
+            },
+            3: {
+                grammar: [
+                    { en: 'I am / You are / He is', te: 'నేను / మీరు / అతను', hi: 'मैं हूँ / तुम हो / वह है' },
+                    { en: 'Present: verb + ing', te: 'ప్రెజెంట్: క్రియ + ing', hi: 'प्रेजेंट: क्रिया + ing' },
+                ],
+                vocabulary: [
+                    { en: 'apple', te: 'ఆపిల్', hi: 'सेब' },
+                    { en: 'book', te: 'పుస్తకం', hi: 'किताब' },
+                    { en: 'school', te: 'పాఠశాల', hi: 'स्कूल' },
+                    { en: 'teacher', te: 'ఉపాధ్యాయుడు', hi: 'शिक्षक' },
+                    { en: 'happy', te: 'సంతోషంగా', hi: 'खुश' },
+                ],
+                phrases: [
+                    { en: 'Good morning', te: 'శుభోదయం', hi: 'सुप्रभात' },
+                    { en: 'Thank you', te: 'ధన్యవాదాలు', hi: 'धन्यवाद' },
+                ],
+                proverbs: [
+                    { en: 'Honesty is the best policy.', te: 'నిజాయితీ ఉత్తమ విధానం.', hi: 'ईमानदारी सबसे अच्छी नीति है।' },
+                ]
+            }
+        };
+
+        // ========================================================================
+        //  STATE
+        // ========================================================================
+        const state = {
+            // Home
+            selectedClass: 5,
+            selectedLangs: ['en', 'te', 'hi'],
+            selectedCategories: new Set(),
+            selectedTags: new Set(),
+
+            // Student
+            student: { name: '', section: '', roll: '', admission: '', phone: '' },
+
+            // Quiz
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            wrong: 0,
+            answered: false,
+            timerSeconds: 0,
+            timerInterval: null,
+            history: [], // { question, selected, correct, isCorrect, points }
+            quizEnded: false,
+            currentType: 'mcq',
+            isFlipped: false,
+
+            // Drag & drop state
+            dragItems: [],
+            dragAnswers: [],
+            dropTargets: [],
+
+            // Match pairs state
+            matchPairs: [],
+            matchSelected: null,
+            matchLocked: false,
+        };
+
+        // ========================================================================
+        //  DOM REFS
+        // ========================================================================
+        const $ = id => document.getElementById(id);
+        const homePage = $('homePage');
+        const quizPage = $('quizPage');
+        const resultsPage = $('resultsPage');
+        const cheatsheetPage = $('cheatsheetPage');
+
+        const classSelect = $('classSelect');
+        const langGroup = $('langGroup');
+        const categoryGroup = $('categoryGroup');
+        const tagGroup = $('tagGroup');
+
+        const studentName = $('studentName');
+        const studentSection = $('studentSection');
+        const studentRoll = $('studentRoll');
+        const studentAdmission = $('studentAdmission');
+        const studentPhone = $('studentPhone');
+
+        const startQuizBtn = $('startQuizBtn');
+        const viewCheatsheetBtn = $('viewCheatsheetBtn');
+        const backHomeFromResults = $('backHomeFromResults');
+        const backHomeFromCheatsheet = $('backHomeFromCheatsheet');
+        const viewCheatsheetFromResults = $('viewCheatsheetFromResults');
+        const retryQuizBtn = $('retryQuizBtn');
+
+        const qCounter = $('qCounter');
+        const qScore = $('qScore');
+        const qWrong = $('qWrong');
+        const qTimer = $('qTimer');
+        const skipBtn = $('skipBtn');
+        const endQuizBtn = $('endQuizBtn');
+        const questionContainer = $('questionContainer');
+
+        const resultSummary = $('resultSummary');
+        const resultDetail = $('resultDetail');
+
+        const cheatsheetContent = $('cheatsheetContent');
+        const toast = $('toast');
+
+        // ========================================================================
+        //  HELPERS
+        // ========================================================================
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function pickRandom(arr, n = 1) {
+            const copy = [...arr];
+            shuffle(copy);
+            return copy.slice(0, n);
+        }
+
+        function getLangText(obj, langs) {
+            const parts = [];
+            for (const lang of langs) {
+                if (obj[lang]) {
+                    const label = { en: '🇬🇧', te: '🇮🇳', hi: '🇮🇳' } [lang] || lang;
+                    parts.push(`<span><span class="lang-label">${label}</span> ${obj[lang]}</span>`);
+                }
+            }
+            return parts.join(' &nbsp;|&nbsp; ');
+        }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function showToast(msg, type = 'info', duration = 2200) {
+            toast.textContent = msg;
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            toast.classList.add('show');
+            clearTimeout(toast._hide);
+            toast._hide = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function saveToStorage(key, data) {
+            try { localStorage.setItem('quiz_' + key, JSON.stringify(data)); } catch (e) {}
+        }
+
+        function getFromStorage(key) {
+            try {
+                const raw = localStorage.getItem('quiz_' + key);
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) { return null; }
+        }
+
+        // ========================================================================
+        //  QUESTION GENERATORS (runtime from dictionaries)
+        // ========================================================================
+
+        function generateVocabQuestions(classNum, langs, categories, tags) {
+            const result = [];
+            const filtered = VOCAB_DICT.filter(w => w.class == classNum);
+            if (filtered.length === 0) return result;
+
+            // pick 3 random words
+            const chosen = pickRandom(filtered, 3);
+            for (const word of chosen) {
+                const opts = pickRandom(VOCAB_DICT.filter(w => w.class == classNum && w.en !== word.en), 3);
+                const options = {
+                    en: [word.en, ...opts.map(w => w.en)],
+                    te: [word.te, ...opts.map(w => w.te)],
+                    hi: [word.hi, ...opts.map(w => w.hi)]
+                };
+                shuffle(options.en);
+                // reorder te/hi to match en
+                const correctEn = word.en;
+                const correctIdx = options.en.indexOf(correctEn);
+                // rebuild te/hi in same order
+                const orderedTe = options.en.map(e => {
+                    const found = VOCAB_DICT.find(w => w.en === e);
+                    return found ? found.te : e;
+                });
+                const orderedHi = options.en.map(e => {
+                    const found = VOCAB_DICT.find(w => w.en === e);
+                    return found ? found.hi : e;
+                });
+                options.te = orderedTe;
+                options.hi = orderedHi;
+
+                result.push({
+                    id: 'v' + Date.now() + Math.random().toString(36).slice(2, 6),
+                    class: classNum,
+                    category: 'Vocabulary',
+                    tags: word.tags || ['daily'],
+                    type: 'mcq',
+                    question: {
+                        en: `What is the meaning of "${word.en}"?`,
+                        te: `"${word.en}" అంటే ఏమిటి?`,
+                        hi: `"${word.en}" का क्या अर्थ है?`
+                    },
+                    options: options,
+                    correct: options.en.indexOf(word.en)
+                });
+            }
+            return result;
+        }
+
+        function generateSynonymQuestions(classNum, langs, categories, tags) {
+            const result = [];
+            const filtered = SYNONYMS.filter(s => s.class == classNum);
+            if (filtered.length === 0) return result;
+            const chosen = pickRandom(filtered, 2);
+            for (const item of chosen) {
+                const opts = pickRandom(SYNONYMS.filter(s => s.class == classNum && s.en !== item.en), 3);
+                const optWords = item.synonyms.slice(0, 3);
+                const allOpts = [...optWords, ...opts.map(s => s.en)];
+                shuffle(allOpts);
+                const correctIdx = allOpts.indexOf(item.synonyms[0]);
+                result.push({
+                    id: 'syn' + Date.now() + Math.random().toString(36).slice(2, 5),
+                    class: classNum,
+                    category: 'Vocabulary',
+                    tags: ['synonyms', 'intermediate'],
+                    type: 'mcq',
+                    question: {
+                        en: `Which is a synonym of "${item.en}"?`,
+                        te: `"${item.en}" కి పర్యాయపదం ఏది?`,
+                        hi: `"${item.en}" का पर्यायवाची शब्द कौन सा है?`
+                    },
+                    options: {
+                        en: allOpts,
+                        te: allOpts.map(w => {
+                            const found = SYNONYMS.find(s => s.en === w);
+                            return found ? found.te[0] : w;
+                        }),
+                        hi: allOpts.map(w => {
+                            const found = SYNONYMS.find(s => s.en === w);
+                            return found ? found.hi[0] : w;
+                        })
+                    },
+                    correct: correctIdx
+                });
+            }
+            return result;
+        }
+
+        function generateAntonymQuestions(classNum, langs, categories, tags) {
+            const result = [];
+            const filtered = ANTONYMS.filter(a => a.class == classNum);
+            if (filtered.length === 0) return result;
+            const chosen = pickRandom(filtered, 2);
+            for (const item of chosen) {
+                const opts = pickRandom(ANTONYMS.filter(a => a.class == classNum && a.en !== item.en), 3);
+                const optWords = item.antonyms.slice(0, 3);
+                const allOpts = [...optWords, ...opts.map(a => a.en)];
+                shuffle(allOpts);
+                const correctIdx = allOpts.indexOf(item.antonyms[0]);
+                result.push({
+                    id: 'ant' + Date.now() + Math.random().toString(36).slice(2, 5),
+                    class: classNum,
+                    category: 'Vocabulary',
+                    tags: ['antonyms', 'intermediate'],
+                    type: 'mcq',
+                    question: {
+                        en: `Which is an antonym of "${item.en}"?`,
+                        te: `"${item.en}" కి వ్యతిరేకపదం ఏది?`,
+                        hi: `"${item.en}" का विलोम शब्द कौन सा है?`
+                    },
+                    options: {
+                        en: allOpts,
+                        te: allOpts.map(w => {
+                            const found = ANTONYMS.find(a => a.en === w);
+                            return found ? found.te[0] : w;
+                        }),
+                        hi: allOpts.map(w => {
+                            const found = ANTONYMS.find(a => a.en === w);
+                            return found ? found.hi[0] : w;
+                        })
+                    },
+                    correct: correctIdx
+                });
+            }
+            return result;
+        }
+
+        function generateProverbQuestions(classNum, langs, categories, tags) {
+            const result = [];
+            const filtered = PROVERBS.filter(p => p.class == classNum);
+            if (filtered.length === 0) return result;
+            const chosen = pickRandom(filtered, 2);
+            for (const item of chosen) {
+                const opts = pickRandom(PROVERBS.filter(p => p.class == classNum && p.en !== item.en), 3);
+                const allOpts = [item.en, ...opts.map(p => p.en)];
+                shuffle(allOpts);
+                const correctIdx = allOpts.indexOf(item.en);
+                result.push({
+                    id: 'prov' + Date.now() + Math.random().toString(36).slice(2, 5),
+                    class: classNum,
+                    category: 'Vocabulary',
+                    tags: ['proverbs', 'intermediate'],
+                    type: 'mcq',
+                    question: {
+                        en: `Complete the proverb: "${item.en}"`,
+                        te: `జాతీయాన్ని పూర్తి చేయండి: "${item.te}"`,
+                        hi: `कहावत पूरी करें: "${item.hi}"`
+                    },
+                    options: {
+                        en: allOpts,
+                        te: allOpts.map(w => {
+                            const found = PROVERBS.find(p => p.en === w);
+                            return found ? found.te : w;
+                        }),
+                        hi: allOpts.map(w => {
+                            const found = PROVERBS.find(p => p.en === w);
+                            return found ? found.hi : w;
+                        })
+                    },
+                    correct: correctIdx
+                });
+            }
+            return result;
+        }
+
+        function generatePhraseQuestions(classNum, langs, categories, tags) {
+            const result = [];
+            const filtered = PHRASES.filter(p => p.class == classNum);
+            if (filtered.length === 0) return result;
+            const chosen = pickRandom(filtered, 2);
+            for (const item of chosen) {
+                const opts = pickRandom(PHRASES.filter(p => p.class == classNum && p.en !== item.en), 3);
+                const allOpts = [item.en, ...opts.map(p => p.en)];
+                shuffle(allOpts);
+                const correctIdx = allOpts.indexOf(item.en);
+                result.push({
+                    id: 'phr' + Date.now() + Math.random().toString(36).slice(2, 5),
+                    class: classNum,
+                    category: 'Phrases & Collocations',
+                    tags: item.tags || ['daily'],
+                    type: 'mcq',
+                    question: {
+                        en: `What does "${item.en}" mean?`,
+                        te: `"${item.te}" అంటే ఏమిటి?`,
+                        hi: `"${item.hi}" का क्या अर्थ है?`
+                    },
+                    options: {
+                        en: allOpts,
+                        te: allOpts.map(w => {
+                            const found = PHRASES.find(p => p.en === w);
+                            return found ? found.te : w;
+                        }),
+                        hi: allOpts.map(w => {
+                            const found = PHRASES.find(p => p.en === w);
+                            return found ? found.hi : w;
+                        })
+                    },
+                    correct: correctIdx
+                });
+            }
+            return result;
+        }
+
+        // ========================================================================
+        //  BUILD QUESTION BANK
+        // ========================================================================
+        function buildQuestionBank(classNum, categories, tags) {
+            let bank = [];
+
+            // 1. Static questions
+            const staticFiltered = STATIC_QUESTIONS.filter(q => {
+                if (q.class != classNum) return false;
+                if (categories && categories.size > 0) {
+                    const catMatch = categories.has(q.category);
+                    if (!catMatch) return false;
+                }
+                if (tags && tags.size > 0) {
+                    const tagMatch = q.tags.some(t => tags.has(t));
+                    if (!tagMatch) return false;
+                }
+                return true;
+            });
+            bank = bank.concat(staticFiltered);
+
+            // 2. Runtime generated from dictionaries (only if categories include Vocabulary or all)
+            const catSet = categories.size > 0 ? categories : new Set(['Vocabulary']);
+            if (catSet.has('Vocabulary') || catSet.size === 0) {
+                bank = bank.concat(generateVocabQuestions(classNum, ['en', 'te', 'hi'], categories, tags));
+                bank = bank.concat(generateSynonymQuestions(classNum, ['en', 'te', 'hi'], categories, tags));
+                bank = bank.concat(generateAntonymQuestions(classNum, ['en', 'te', 'hi'], categories, tags));
+                bank = bank.concat(generateProverbQuestions(classNum, ['en', 'te', 'hi'], categories, tags));
+                bank = bank.concat(generatePhraseQuestions(classNum, ['en', 'te', 'hi'], categories, tags));
+            }
+
+            // Deduplicate by id
+            const seen = new Set();
+            bank = bank.filter(q => {
+                if (seen.has(q.id)) return false;
+                seen.add(q.id);
+                return true;
+            });
+
+            // Shuffle
+            shuffle(bank);
+            return bank;
+        }
+
+        // ========================================================================
+        //  RENDER QUESTION
+        // ========================================================================
+        function renderQuestion() {
+            if (state.quizEnded) return;
+            if (state.currentIndex >= state.questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const q = state.questions[state.currentIndex];
+            state.currentType = q.type || 'mcq';
+            state.answered = false;
+            state.isFlipped = false;
+
+            // Update counter
+            qCounter.textContent = `${state.currentIndex + 1}/${state.questions.length}`;
+            qScore.textContent = state.score;
+            qWrong.textContent = state.wrong;
+
+            const langs = state.selectedLangs.length > 0 ? state.selectedLangs : ['en'];
+
+            // Build HTML
+            let html = `
+                <div class="question-box">
+                    <div class="q-number">Question ${state.currentIndex + 1} of ${state.questions.length}</div>
+                    <div class="q-text">${q.question.en}</div>
+                    <div class="q-translations">${getLangText(q.question, langs)}</div>
+                    <div class="q-meta">
+                        <span class="badge badge-primary">${q.category || 'General'}</span>
+                        ${(q.tags || []).map(t => `<span class="badge">#${t}</span>`).join('')}
+                        <span class="badge" style="background:var(--gray-300);">${q.type || 'MCQ'}</span>
+                    </div>
+                </div>
+            `;
+
+            // Render question type
+            const type = q.type || 'mcq';
+            switch (type) {
+                case 'mcq':
+                    html += renderMCQ(q, langs);
+                    break;
+                case 'truefalse':
+                    html += renderTrueFalse(q);
+                    break;
+                case 'flipcard':
+                    html += renderFlipCard(q, langs);
+                    break;
+                case 'dragdrop':
+                    html += renderDragDrop(q, langs);
+                    break;
+                case 'matchpairs':
+                    html += renderMatchPairs(q, langs);
+                    break;
+                default:
+                    html += renderMCQ(q, langs);
+            }
+
+            // Action buttons
+            html += `
+                <div class="flex gap-2 mt-2" style="flex-wrap:wrap;">
+                    <button class="btn btn-sm btn-outline" id="skipQuestionBtn"><i class="fas fa-forward"></i> Skip (0 pts)</button>
+                    <button class="btn btn-sm btn-danger" id="endQuizFromQuestion"><i class="fas fa-stop"></i> End Quiz</button>
+                </div>
+            `;
+
+            questionContainer.innerHTML = html;
+
+            // Attach event listeners based on type
+            attachQuestionEvents(q, type);
+        }
+
+        // --- MCQ ---
+        function renderMCQ(q, langs) {
+            const opts = q.options;
+            const letters = 'ABCD';
+            let html = `<div class="options-grid">`;
+            for (let i = 0; i < opts.en.length; i++) {
+                const label = langs.map(l => opts[l] ? opts[l][i] : '').filter(Boolean).join(' | ');
+                html += `
+                    <div class="option-item" data-index="${i}">
+                        <span class="opt-letter">${letters[i]}</span>
+                        <span class="opt-text">${label}</span>
+                    </div>
+                `;
+            }
+            html += `</div>`;
+            return html;
+        }
+
+        // --- True/False ---
+        function renderTrueFalse(q) {
+            return `
+                <div class="tf-grid">
+                    <button class="tf-btn" data-value="true">✅ True</button>
+                    <button class="tf-btn" data-value="false">❌ False</button>
+                </div>
+            `;
+        }
+
+        // --- Flip Card ---
+        function renderFlipCard(q, langs) {
+            const opts = q.options;
+            const letters = 'ABCD';
+            let html = `
+                <div class="flip-card-container">
+                    <div class="flip-card" id="flipCard">
+                        <div class="front">
+                            <span style="font-size:1.1rem;font-weight:500;">👆 Tap to reveal options</span>
+                        </div>
+                        <div class="back">
+                            <div class="options-grid" style="width:100%;">
+                    `;
+            for (let i = 0; i < opts.en.length; i++) {
+                const label = langs.map(l => opts[l] ? opts[l][i] : '').filter(Boolean).join(' | ');
+                html += `
+                    <div class="option-item" data-index="${i}" style="width:100%;">
+                        <span class="opt-letter">${letters[i]}</span>
+                        <span class="opt-text">${label}</span>
+                    </div>
+                `;
+            }
+            html += `
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-muted text-sm" style="margin-top:6px;">Tap the card to flip it.</p>
+            `;
+            return html;
+        }
+
+        // --- Drag & Drop ---
+        function renderDragDrop(q, langs) {
+            const opts = q.options;
+            const items = opts.en.map((_, i) => ({
+                index: i,
+                label: langs.map(l => opts[l] ? opts[l][i] : '').filter(Boolean).join(' | '),
+                placed: false
+            }));
+            shuffle(items);
+            state.dragItems = items;
+            state.dragAnswers = [];
+
+            let html = `
+                <div class="drag-zone" id="dragZone">
+                    ${items.map((item, idx) => `
+                        <span class="drag-item" draggable="true" data-idx="${idx}" data-orig="${item.index}">${item.label}</span>
+                    `).join('')}
+                </div>
+                <div style="margin:12px 0;">
+                    <p class="text-muted text-sm">Drop the correct answer into the target area below:</p>
+                    <div class="drop-target" id="dropTarget">⬇ Drop here</div>
+                </div>
+                <p class="text-muted text-sm" id="dragFeedback"></p>
+            `;
+            return html;
+        }
+
+        // --- Match Pairs ---
+        function renderMatchPairs(q, langs) {
+            const opts = q.options;
+            const left = [];
+            const right = [];
+            const indices = opts.en.map((_, i) => i);
+            shuffle(indices);
+            // left side: shuffled options, right side: shuffled translations or same
+            const leftItems = indices.map(i => ({
+                index: i,
+                label: langs.map(l => opts[l] ? opts[l][i] : '').filter(Boolean).join(' | '),
+                matched: false
+            }));
+            const rightItems = indices.map(i => ({
+                index: i,
+                label: langs.map(l => opts[l] ? opts[l][i] : '').filter(Boolean).join(' | '),
+                matched: false
+            }));
+            shuffle(rightItems);
+
+            state.matchPairs = { left: leftItems, right: rightItems, matched: [] };
+            state.matchSelected = null;
+
+            let html = `<div class="match-grid">`;
+            html += `<div class="match-col" id="matchLeft">`;
+            for (const item of leftItems) {
+                html += `<div class="match-item" data-side="left" data-idx="${item.index}" data-match="${item.index}">${item.label}</div>`;
+            }
+            html += `</div>`;
+            html += `<div class="match-col" id="matchRight">`;
+            for (const item of rightItems) {
+                html += `<div class="match-item" data-side="right" data-idx="${item.index}" data-match="${item.index}">${item.label}</div>`;
+            }
+            html += `</div>`;
+            html += `</div>`;
+            html += `<p class="text-muted text-sm" id="matchFeedback">Tap a left item, then tap its match on the right.</p>`;
+            return html;
+        }
+
+        // ========================================================================
+        //  ATTACH QUESTION EVENTS
+        // ========================================================================
+        function attachQuestionEvents(q, type) {
+            const langs = state.selectedLangs.length > 0 ? state.selectedLangs : ['en'];
+
+            // --- MCQ ---
+            if (type === 'mcq') {
+                document.querySelectorAll('.option-item').forEach(el => {
+                    el.addEventListener('click', function() {
+                        if (state.answered) return;
+                        const idx = parseInt(this.dataset.index);
+                        handleMCQAnswer(q, idx);
+                    });
+                });
+                return;
+            }
+
+            // --- True/False ---
+            if (type === 'truefalse') {
+                document.querySelectorAll('.tf-btn').forEach(el => {
+                    el.addEventListener('click', function() {
+                        if (state.answered) return;
+                        const val = this.dataset.value === 'true';
+                        handleTrueFalseAnswer(q, val);
+                    });
+                });
+                return;
+            }
+
+            // --- Flip Card ---
+            if (type === 'flipcard') {
+                const card = document.getElementById('flipCard');
+                if (card) {
+                    card.addEventListener('click', function(e) {
+                        // Only flip if not answered and not clicking an option
+                        if (state.answered) return;
+                        if (e.target.closest('.option-item')) return;
+                        this.classList.toggle('flipped');
+                        state.isFlipped = this.classList.contains('flipped');
+                    });
+                }
+                document.querySelectorAll('.option-item').forEach(el => {
+                    el.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (state.answered) return;
+                        const idx = parseInt(this.dataset.index);
+                        handleMCQAnswer(q, idx);
+                    });
+                });
+                return;
+            }
+
+            // --- Drag & Drop ---
+            if (type === 'dragdrop') {
+                setupDragDrop(q);
+                return;
+            }
+
+            // --- Match Pairs ---
+            if (type === 'matchpairs') {
+                setupMatchPairs(q);
+                return;
+            }
+        }
+
+        // ========================================================================
+        //  ANSWER HANDLERS
+        // ========================================================================
+
+        function handleMCQAnswer(q, selectedIdx) {
+            if (state.answered) return;
+            state.answered = true;
+            const correct = q.correct;
+            const isCorrect = selectedIdx === correct;
+            const points = isCorrect ? 3 : -1;
+
+            // Update state
+            state.score += points;
+            if (!isCorrect) state.wrong += 1;
+            state.history.push({
+                question: q,
+                selected: selectedIdx,
+                correct: correct,
+                isCorrect: isCorrect,
+                points: points
+            });
+
+            // UI feedback
+            const items = document.querySelectorAll('.option-item');
+            items.forEach((el, i) => {
+                el.classList.add('disabled');
+                if (i === correct) el.classList.add('correct');
+                if (i === selectedIdx && !isCorrect) el.classList.add('wrong');
+                if (i === selectedIdx) el.classList.add('selected');
+                if (i === correct) {
+                    const fb = document.createElement('span');
+                    fb.className = 'opt-feedback';
+                    fb.textContent = '✓';
+                    el.appendChild(fb);
+                }
+                if (i === selectedIdx && !isCorrect) {
+                    const fb = document.createElement('span');
+                    fb.className = 'opt-feedback';
+                    fb.textContent = '✗';
+                    el.appendChild(fb);
+                }
+            });
+
+            qScore.textContent = state.score;
+            qWrong.textContent = state.wrong;
+
+            showToast(isCorrect ? '✅ +3 points!' : '❌ -1 point', isCorrect ? 'success' : 'error');
+
+            // Auto advance
+            setTimeout(() => {
+                if (!state.quizEnded) {
+                    state.currentIndex++;
+                    renderQuestion();
+                }
+            }, 1400);
+        }
+
+        function handleTrueFalseAnswer(q, selected) {
+            if (state.answered) return;
+            state.answered = true;
+            const correct = q.correct;
+            const isCorrect = selected === correct;
+            const points = isCorrect ? 3 : -1;
+
+            state.score += points;
+            if (!isCorrect) state.wrong += 1;
+            state.history.push({
+                question: q,
+                selected: selected,
+                correct: correct,
+                isCorrect: isCorrect,
+                points: points
+            });
+
+            const btns = document.querySelectorAll('.tf-btn');
+            btns.forEach(el => {
+                el.classList.add('disabled');
+                const val = el.dataset.value === 'true';
+                if (val === correct) el.classList.add('correct');
+                if (val === selected && !isCorrect) el.classList.add('wrong');
+            });
+
+            qScore.textContent = state.score;
+            qWrong.textContent = state.wrong;
+
+            showToast(isCorrect ? '✅ +3 points!' : '❌ -1 point', isCorrect ? 'success' : 'error');
+
+            setTimeout(() => {
+                if (!state.quizEnded) {
+                    state.currentIndex++;
+                    renderQuestion();
+                }
+            }, 1400);
+        }
+
+        // ========================================================================
+        //  DRAG & DROP SETUP
+        // ========================================================================
+        function setupDragDrop(q) {
+            const zone = document.getElementById('dragZone');
+            const target = document.getElementById('dropTarget');
+            const feedback = document.getElementById('dragFeedback');
+            const items = state.dragItems;
+
+            let dragData = null;
+
+            // Drag events
+            document.querySelectorAll('.drag-item').forEach(el => {
+                el.addEventListener('dragstart', function(e) {
+                    if (this.classList.contains('placed')) { e.preventDefault(); return; }
+                    dragData = {
+                        idx: parseInt(this.dataset.idx),
+                        orig: parseInt(this.dataset.orig),
+                        label: this.textContent
+                    };
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                el.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+
+            // Drop target
+            target.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+            target.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+            target.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                if (!dragData) return;
+                if (state.answered) return;
+
+                const item = items.find(it => it.index === dragData.idx);
+                if (!item || item.placed) return;
+
+                // Place it
+                item.placed = true;
+                this.textContent = item.label;
+                this.classList.add('filled');
+                state.dragAnswers.push(item.orig);
+
+                // Remove from zone
+                const dragEl = zone.querySelector(`[data-idx="${item.index}"]`);
+                if (dragEl) dragEl.remove();
+
+                feedback.textContent = `✅ Placed: ${item.label}`;
+
+                // Check if all placed
+                const remaining = items.filter(it => !it.placed);
+                if (remaining.length === 0) {
+                    // All placed – check answer
+                    const correct = q.correct;
+                    // The drop target should contain the correct option
+                    // We compare the first dropped item (or the correct one)
+                    const droppedIdx = state.dragAnswers[0];
+                    const isCorrect = droppedIdx === correct;
+                    const points = isCorrect ? 3 : -1;
+                    state.score += points;
+                    if (!isCorrect) state.wrong += 1;
+                    state.history.push({
+                        question: q,
+                        selected: droppedIdx,
+                        correct: correct,
+                        isCorrect: isCorrect,
+                        points: points
+                    });
+                    state.answered = true;
+                    qScore.textContent = state.score;
+                    qWrong.textContent = state.wrong;
+                    feedback.textContent = isCorrect ? '🎉 Correct! +3 points' : '❌ Wrong! -1 point';
+                    feedback.style.color = isCorrect ? 'var(--success)' : 'var(--danger)';
+                    showToast(isCorrect ? '✅ +3 points!' : '❌ -1 point', isCorrect ? 'success' : 'error');
+
+                    // Disable drag
+                    document.querySelectorAll('.drag-item').forEach(el => el.draggable = false);
+
+                    setTimeout(() => {
+                        if (!state.quizEnded) {
+                            state.currentIndex++;
+                            renderQuestion();
+                        }
+                    }, 1500);
+                } else {
+                    feedback.textContent = `Placed ${item.label}. ${remaining.length} left.`;
+                }
+            });
+
+            // Prevent default on zone
+            zone.addEventListener('dragover', e => e.preventDefault());
+        }
+
+        // ========================================================================
+        //  MATCH PAIRS SETUP
+        // ========================================================================
+        function setupMatchPairs(q) {
+            const leftItems = document.querySelectorAll('#matchLeft .match-item');
+            const rightItems = document.querySelectorAll('#matchRight .match-item');
+            const feedback = document.getElementById('matchFeedback');
+
+            let selected = null;
+
+            function clearSelection() {
+                document.querySelectorAll('.match-item.selected').forEach(el => el.classList.remove('selected'));
+                selected = null;
+            }
+
+            function checkAllMatched() {
+                const all = document.querySelectorAll('.match-item');
+                const matched = document.querySelectorAll('.match-item.matched');
+                if (matched.length === all.length) {
+                    // All matched – check correctness
+                    // We need to verify pairs
+                    const pairs = {};
+                    document.querySelectorAll('.match-item.matched').forEach(el => {
+                        const side = el.dataset.side;
+                        const idx = parseInt(el.dataset.idx);
+                        const match = parseInt(el.dataset.match);
+                        if (side === 'left') {
+                            pairs['l' + idx] = match;
+                        } else {
+                            pairs['r' + idx] = match;
+                        }
+                    });
+                    // Check if every left matches its right counterpart
+                    const leftNodes = document.querySelectorAll('#matchLeft .match-item');
+                    let allCorrect = true;
+                    leftNodes.forEach(el => {
+                        const idx = parseInt(el.dataset.idx);
+                        const match = parseInt(el.dataset.match);
+                        // Find the right item with same match index
+                        const rightNode = document.querySelector(
+                            `#matchRight .match-item[data-match="${match}"][data-side="right"]`);
+                        if (!rightNode) { allCorrect = false; return; }
+                        const rightIdx = parseInt(rightNode.dataset.idx);
+                        // The pair is correct if left's match equals right's match
+                        // and both have the same match value
+                        if (parseInt(el.dataset.match) !== parseInt(rightNode.dataset.match)) {
+                            allCorrect = false;
+                        }
+                    });
+
+                    // Additional check: ensure each pair has matching match values
+                    const leftMatches = new Set();
+                    const rightMatches = new Set();
+                    leftNodes.forEach(el => leftMatches.add(parseInt(el.dataset.match)));
+                    document.querySelectorAll('#matchRight .match-item').forEach(el => rightMatches.add(parseInt(el
+                        .dataset.match)));
+
+                    // The correct matching is when left item's match equals right item's match
+                    // Actually we need to check if the pairs are correctly matched.
+                    // For simplicity, we'll check if the left item's match equals the right item's match
+                    let correctPairs = 0;
+                    const total = leftNodes.length;
+                    leftNodes.forEach(el => {
+                        const matchVal = parseInt(el.dataset.match);
+                        const rightEl = document.querySelector(
+                            `#matchRight .match-item[data-match="${matchVal}"][data-side="right"]`);
+                        if (rightEl) {
+                            // Check if the right item is matched to this left item
+                            // We'll just check if the match values align
+                            const leftIdx = parseInt(el.dataset.idx);
+                            const rightIdx = parseInt(rightEl.dataset.idx);
+                            // In a correct match, left item with match=M should pair with right item with match=M
+                            // And the pair should be unique
+                            // We'll use a simpler check: if every left has a corresponding right with same match
+                            if (parseInt(el.dataset.match) === parseInt(rightEl.dataset.match)) {
+                                correctPairs++;
+                            }
+                        }
+                    });
+
+                    const isCorrect = correctPairs === total;
+                    const points = isCorrect ? 3 : -1;
+                    state.score += points;
+                    if (!isCorrect) state.wrong += 1;
+                    state.history.push({
+                        question: q,
+                        selected: 'match',
+                        correct: 'match',
+                        isCorrect: isCorrect,
+                        points: points
+                    });
+                    state.answered = true;
+                    qScore.textContent = state.score;
+                    qWrong.textContent = state.wrong;
+                    feedback.textContent = isCorrect ? '🎉 All matched correctly! +3 points' :
+                        '❌ Some matches are incorrect. -1 point';
+                    feedback.style.color = isCorrect ? 'var(--success)' : 'var(--danger)';
+                    showToast(isCorrect ? '✅ +3 points!' : '❌ -1 point', isCorrect ? 'success' : 'error');
+
+                    setTimeout(() => {
+                        if (!state.quizEnded) {
+                            state.currentIndex++;
+                            renderQuestion();
+                        }
+                    }, 1500);
+                }
+            }
+
+            // Left click
+            leftItems.forEach(el => {
+                el.addEventListener('click', function() {
+                    if (state.answered || this.classList.contains('matched')) return;
+                    clearSelection();
+                    this.classList.add('selected');
+                    selected = this;
+                    feedback.textContent = `Selected: "${this.textContent}". Now tap a match on the right.`;
+                });
+            });
+
+            // Right click
+            rightItems.forEach(el => {
+                el.addEventListener('click', function() {
+                    if (state.answered || this.classList.contains('matched') || !selected) return;
+                    if (selected.dataset.side !== 'left') return;
+
+                    // Check if this right item is already matched
+                    if (this.classList.contains('matched')) {
+                        feedback.textContent = 'This item is already matched.';
+                        return;
+                    }
+
+                    // Match them
+                    const leftIdx = parseInt(selected.dataset.idx);
+                    const rightIdx = parseInt(this.dataset.idx);
+                    const matchVal = parseInt(selected.dataset.match);
+
+                    // Check if the match is correct (both have same match value)
+                    const isMatch = parseInt(this.dataset.match) === matchVal;
+
+                    selected.classList.remove('selected');
+                    selected.classList.add('matched');
+                    this.classList.add('matched');
+
+                    // Show feedback
+                    if (isMatch) {
+                        feedback.textContent = '✅ Matched!';
+                        feedback.style.color = 'var(--success)';
+                    } else {
+                        feedback.textContent = '❌ Not a match. Try again.';
+                        feedback.style.color = 'var(--danger)';
+                        // Unmatch them after a moment
+                        setTimeout(() => {
+                            selected.classList.remove('matched');
+                            this.classList.remove('matched');
+                            feedback.textContent = 'Try again. Tap a left item first.';
+                            feedback.style.color = '';
+                        }, 800);
+                        selected = null;
+                        return;
+                    }
+
+                    selected = null;
+                    checkAllMatched();
+                });
+            });
+
+            // Also allow clicking left to deselect
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.match-item')) {
+                    clearSelection();
+                    if (!state.answered) feedback.textContent = 'Tap a left item, then tap its match on the right.';
+                }
+            });
+        }
+
+        // ========================================================================
+        //  SKIP
+        // ========================================================================
+        function skipQuestion() {
+            if (state.answered || state.quizEnded) return;
+            state.answered = true;
+            state.history.push({
+                question: state.questions[state.currentIndex],
+                selected: 'skip',
+                correct: null,
+                isCorrect: false,
+                points: 0
+            });
+            showToast('⏭ Skipped (0 points)', 'warning');
+            setTimeout(() => {
+                if (!state.quizEnded) {
+                    state.currentIndex++;
+                    renderQuestion();
+                }
+            }, 600);
+        }
+
+        // ========================================================================
+        //  END QUIZ
+        // ========================================================================
+        function endQuiz() {
+            if (state.quizEnded) return;
+            state.quizEnded = true;
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+            // Save to storage
+            const report = {
+                student: state.student,
+                class: state.selectedClass,
+                score: state.score,
+                wrong: state.wrong,
+                total: state.history.length,
+                time: state.timerSeconds,
+                history: state.history,
+                date: new Date().toISOString()
+            };
+            saveToStorage('report', report);
+            showResults(report);
+        }
+
+        // ========================================================================
+        //  SHOW RESULTS
+        // ========================================================================
+        function showResults(report) {
+            quizPage.classList.add('hidden');
+            resultsPage.classList.remove('hidden');
+
+            const total = report.total || state.history.length;
+            const correct = report.history ? report.history.filter(h => h.isCorrect === true).length : 0;
+            const wrong = report.wrong || 0;
+            const skipped = total - correct - wrong;
+
+            resultSummary.innerHTML = `
+                <div class="result-stat blue"><div class="num">${report.score}</div><div class="label">Score</div></div>
+                <div class="result-stat green"><div class="num">${correct}</div><div class="label">Correct</div></div>
+                <div class="result-stat red"><div class="num">${wrong}</div><div class="label">Wrong</div></div>
+                <div class="result-stat amber"><div class="num">${skipped}</div><div class="label">Skipped</div></div>
+                <div class="result-stat"><div class="num">${formatTime(report.time || 0)}</div><div class="label">Time</div></div>
+                <div class="result-stat"><div class="num">${total}</div><div class="label">Total Qs</div></div>
+            `;
+
+            // Detail
+            let detailHtml = `<h4 style="margin-bottom:8px;">Question History</h4>`;
+            const history = report.history || state.history;
+            if (history.length === 0) {
+                detailHtml += `<p class="text-muted">No questions attempted.</p>`;
+            } else {
+                for (const h of history) {
+                    const icon = h.isCorrect === true ? '✅' : h.isCorrect === false ? '❌' : '⏭';
+                    const pts = h.points !== undefined ? h.points : (h.isCorrect ? 3 : (h.isCorrect === false ? -1 : 0));
+                    const qText = h.question ? h.question.question.en : 'Question';
+                    detailHtml += `
+                        <div class="q-item">
+                            <span class="icon">${icon}</span>
+                            <div class="q-detail">
+                                <div class="q-text-sm">${qText}</div>
+                                <div class="q-answer">${h.isCorrect === true ? 'Correct' : h.isCorrect === false ? 'Wrong' : 'Skipped'} ${pts !== undefined ? '· ' + (pts >= 0 ? '+' : '') + pts + ' pts' : ''}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            resultDetail.innerHTML = detailHtml;
+        }
+
+        // ========================================================================
+        //  CHEATSHEET
+        // ========================================================================
+        function showCheatsheet() {
+            const classNum = parseInt(classSelect.value) || 5;
+            const data = CHEATSHEET_DATA[classNum] || CHEATSHEET_DATA[5];
+
+            let html = `<div class="cheatsheet-grid">`;
+            for (const [key, items] of Object.entries(data)) {
+                if (items.length === 0) continue;
+                html += `
+                    <div class="cheatsheet-card">
+                        <h4>${key.charAt(0).toUpperCase() + key.slice(1)}</h4>
+                        <ul>
+                            ${items.map(item => `
+                                <li>
+                                    <span class="en">${item.en}</span>
+                                    <span class="te">${item.te || ''} ${item.hi ? '| ' + item.hi : ''}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            html += `</div>`;
+
+            if (!html.includes('cheatsheet-card')) {
+                html = `<p class="text-muted">No cheatsheet available for Class ${classNum}.</p>`;
+            }
+
+            cheatsheetContent.innerHTML = html;
+
+            // Show page
+            homePage.classList.add('hidden');
+            quizPage.classList.add('hidden');
+            resultsPage.classList.add('hidden');
+            cheatsheetPage.classList.remove('hidden');
+        }
+
+        // ========================================================================
+        //  NAVIGATION
+        // ========================================================================
+        function goHome() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+            state.quizEnded = true;
+            homePage.classList.remove('hidden');
+            quizPage.classList.add('hidden');
+            resultsPage.classList.add('hidden');
+            cheatsheetPage.classList.add('hidden');
+        }
+
+        function startQuiz() {
+            // Gather student info
+            const name = studentName.value.trim();
+            if (!name) {
+                showToast('Please enter student name.', 'error');
+                return;
+            }
+
+            state.student = {
+                name: name,
+                section: studentSection.value.trim(),
+                roll: studentRoll.value.trim(),
+                admission: studentAdmission.value.trim(),
+                phone: studentPhone.value.trim()
+            };
+
+            state.selectedClass = parseInt(classSelect.value) || 5;
+
+            // Gather categories
+            const catEls = categoryGroup.querySelectorAll('.tag.active');
+            state.selectedCategories = new Set(Array.from(catEls).map(el => el.dataset.value));
+
+            // Gather tags
+            const tagEls = tagGroup.querySelectorAll('.tag.active');
+            state.selectedTags = new Set(Array.from(tagEls).map(el => el.dataset.value));
+
+            // Gather languages
+            const langEls = langGroup.querySelectorAll('.tag.active');
+            state.selectedLangs = Array.from(langEls).map(el => el.dataset.value);
+
+            // Build question bank
+            const bank = buildQuestionBank(state.selectedClass, state.selectedCategories, state.selectedTags);
+            if (bank.length === 0) {
+                showToast('No questions found for the selected filters. Try different options.', 'error');
+                return;
+            }
+
+            // Init quiz state
+            state.questions = bank;
+            state.currentIndex = 0;
+            state.score = 0;
+            state.wrong = 0;
+            state.history = [];
+            state.quizEnded = false;
+            state.timerSeconds = 0;
+            state.answered = false;
+
+            // Save to storage
+            saveToStorage('session', {
+                class: state.selectedClass,
+                categories: [...state.selectedCategories],
+                tags: [...state.selectedTags],
+                langs: state.selectedLangs,
+                student: state.student,
+                totalQuestions: bank.length
+            });
+
+            // Switch UI
+            homePage.classList.add('hidden');
+            resultsPage.classList.add('hidden');
+            cheatsheetPage.classList.add('hidden');
+            quizPage.classList.remove('hidden');
+
+            // Start timer
+            if (state.timerInterval) clearInterval(state.timerInterval);
+            state.timerInterval = setInterval(() => {
+                state.timerSeconds++;
+                qTimer.textContent = formatTime(state.timerSeconds);
+            }, 1000);
+
+            // Render first question
+            renderQuestion();
+        }
+
+        // ========================================================================
+        //  EVENT BINDING
+        // ========================================================================
+
+        // Tag toggles
+        document.querySelectorAll('.tag-group').forEach(group => {
+            group.addEventListener('click', function(e) {
+                const tag = e.target.closest('.tag');
+                if (!tag) return;
+                // If it's the language group, allow multiple
+                if (this.id === 'langGroup') {
+                    tag.classList.toggle('active');
+                    return;
+                }
+                // For categories and tags, allow multiple
+                tag.classList.toggle('active');
+            });
+        });
+
+        // Class select change – update cheatsheet preview if needed
+        classSelect.addEventListener('change', function() {
+            state.selectedClass = parseInt(this.value) || 5;
+        });
+
+        // Home form submit
+        document.getElementById('homeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            startQuiz();
+        });
+
+        // View cheatsheet from home
+        viewCheatsheetBtn.addEventListener('click', function() {
+            showCheatsheet();
+        });
+
+        // Back to home from cheatsheet
+        backHomeFromCheatsheet.addEventListener('click', goHome);
+
+        // Back to home from results
+        backHomeFromResults.addEventListener('click', goHome);
+
+        // View cheatsheet from results
+        viewCheatsheetFromResults.addEventListener('click', function() {
+            showCheatsheet();
+        });
+
+        // Retry quiz
+        retryQuizBtn.addEventListener('click', function() {
+            goHome();
+            // Auto-fill student name
+            if (state.student.name) {
+                studentName.value = state.student.name;
+                studentSection.value = state.student.section || '';
+                studentRoll.value = state.student.roll || '';
+                studentAdmission.value = state.student.admission || '';
+                studentPhone.value = state.student.phone || '';
+            }
+            setTimeout(() => startQuiz(), 200);
+        });
+
+        // Skip button (delegated)
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#skipQuestionBtn')) {
+                skipQuestion();
+            }
+            if (e.target.closest('#skipBtn')) {
+                skipQuestion();
+            }
+        });
+
+        // End quiz buttons (delegated)
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#endQuizBtn') || e.target.closest('#endQuizFromQuestion')) {
+                if (confirm('Are you sure you want to end the quiz?')) {
+                    endQuiz();
+                }
+            }
+        });
+
+        // ========================================================================
+        //  RESTORE SESSION (auto-load from localStorage)
+        // ========================================================================
+        function restoreSession() {
+            const session = getFromStorage('session');
+            if (session) {
+                if (session.class) classSelect.value = session.class;
+                // Could restore more but we'll keep it simple
+            }
+            // Load last report if exists
+            const report = getFromStorage('report');
+            if (report) {
+                // Not auto-showing, but we could
+            }
+        }
+
+        // ========================================================================
+        //  INIT
+        // ========================================================================
+        restoreSession();
+
+        // Pre-select some categories by default
+        // (already active via HTML)
+
+        console.log('🏆 QuizMaster ready!');
+        console.log(`📚 Loaded ${STATIC_QUESTIONS.length} static questions.`);
+        console.log(`📖 Vocabulary: ${VOCAB_DICT.length} words.`);
+        console.log(`🔗 Synonyms: ${SYNONYMS.length}, Antonyms: ${ANTONYMS.length}`);
+        console.log(`📜 Proverbs: ${PROVERBS.length}, Phrases: ${PHRASES.length}`);
+    </script>
+</body>
+</html>

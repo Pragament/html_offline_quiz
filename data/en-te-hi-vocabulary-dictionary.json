@@ -1,0 +1,207 @@
+{
+  "$schema": "../schemas/vocabulary-dictionary.schema.json",
+  "schemaVersion": "1.0.0",
+  "fileType": "vocabulary-dictionary",
+  "languages": ["en", "te", "hi"],
+  "updated": "2026-08-01",
+  "description": "Class-tagged word list. Three generators turn each entry into an mcq, a reverse-translation mcq, or a flip-card.",
+  "idPrefix": "gen-voc",
+  "generators": [
+    {
+      "id": "meaning-mcq",
+      "questionType": "mcq",
+      "category": "Vocabulary Building",
+      "addTags": ["generated", "vocabulary"],
+      "weight": 2,
+      "prompt": {
+        "en": "What is the meaning of \"{{word.en}}\"?",
+        "te": "\"{{word.en}}\" అనే పదానికి అర్థం ఏమిటి?",
+        "hi": "\"{{word.en}}\" शब्द का क्या अर्थ है?"
+      },
+      "answer": { "path": "meaning" },
+      "distractors": { "count": 3, "from": { "path": "meaning" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" }
+    },
+    {
+      "id": "reverse-word-mcq",
+      "questionType": "mcq",
+      "category": "Vocabulary Building",
+      "addTags": ["generated", "vocabulary", "reverse"],
+      "prompt": {
+        "en": "Which English word means \"{{word.te}}\" / \"{{word.hi}}\"?",
+        "te": "\"{{word.te}}\" అనే అర్థం ఇచ్చే ఆంగ్ల పదం ఏది?",
+        "hi": "\"{{word.hi}}\" के लिए कौन सा अंग्रेज़ी शब्द है?"
+      },
+      "answer": { "path": "word", "display": { "en": "en", "te": "en", "hi": "en" } },
+      "distractors": {
+        "count": 3,
+        "from": { "path": "word", "display": { "en": "en", "te": "en", "hi": "en" } },
+        "scope": "siblings",
+        "pool": "same-class", "poolFallback": "widen"
+      }
+    },
+    {
+      "id": "meaning-flip",
+      "questionType": "flip-card",
+      "category": "Vocabulary Building",
+      "addTags": ["generated", "vocabulary", "recall"],
+      "prompt": {
+        "en": "Recall the meaning of \"{{word.en}}\".",
+        "te": "\"{{word.en}}\" అనే పదం అర్థాన్ని గుర్తుచేసుకోండి.",
+        "hi": "\"{{word.en}}\" शब्द का अर्थ याद कीजिए।"
+      },
+      "answer": { "path": "meaning" },
+      "distractors": { "count": 3, "from": { "path": "meaning" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" },
+      "explanation": {
+        "en": "Example: {{example.en}}",
+        "te": "ఉదాహరణ: {{example.te}}",
+        "hi": "उदाहरण: {{example.hi}}"
+      }
+    }
+  ],
+  "entries": [
+    {
+      "id": "voc-courage",
+      "classes": [5, 6],
+      "word": { "en": "courage", "te": "ధైర్యం", "hi": "साहस" },
+      "partOfSpeech": "noun",
+      "meaning": {
+        "en": "the strength to do something that frightens you",
+        "te": "భయపెట్టే పనిని చేయగల మనోబలం",
+        "hi": "डर लगने वाले काम को करने की हिम्मत"
+      },
+      "example": {
+        "en": "She showed great courage during the flood.",
+        "te": "వరద సమయంలో ఆమె ఎంతో ధైర్యాన్ని చూపింది.",
+        "hi": "बाढ़ के समय उसने बहुत साहस दिखाया।"
+      },
+      "tags": ["values", "intermediate"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "voc-gather",
+      "classes": [5],
+      "word": { "en": "gather", "te": "సేకరించు", "hi": "इकट्ठा करना" },
+      "partOfSpeech": "verb",
+      "meaning": {
+        "en": "to bring people or things together in one place",
+        "te": "వ్యక్తులను లేదా వస్తువులను ఒకచోట చేర్చడం",
+        "hi": "लोगों या चीज़ों को एक जगह पर लाना"
+      },
+      "example": {
+        "en": "The children gather under the tree after school.",
+        "te": "పాఠశాల తర్వాత పిల్లలు చెట్టు కింద సేకరిస్తారు.",
+        "hi": "स्कूल के बाद बच्चे पेड़ के नीचे इकट्ठा होते हैं।"
+      },
+      "tags": ["school", "daily", "intermediate"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "voc-generous",
+      "classes": [5, 6],
+      "word": { "en": "generous", "te": "ఉదారమైన", "hi": "उदार" },
+      "partOfSpeech": "adjective",
+      "meaning": {
+        "en": "happy to give more than is expected",
+        "te": "ఆశించిన దానికంటే ఎక్కువ ఇవ్వడానికి సంతోషించే",
+        "hi": "अपेक्षा से अधिक देने में ख़ुशी महसूस करने वाला"
+      },
+      "example": {
+        "en": "Our neighbour is generous with her time.",
+        "te": "మా పొరుగింటి ఆవిడ తన సమయాన్ని ఉదారంగా ఇస్తుంది.",
+        "hi": "हमारी पड़ोसन अपना समय उदारता से देती हैं।"
+      },
+      "tags": ["values", "family", "intermediate"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "voc-journey",
+      "classes": [5],
+      "word": { "en": "journey", "te": "ప్రయాణం", "hi": "यात्रा" },
+      "partOfSpeech": "noun",
+      "meaning": {
+        "en": "an act of travelling from one place to another",
+        "te": "ఒక ప్రదేశం నుండి మరో ప్రదేశానికి వెళ్ళడం",
+        "hi": "एक स्थान से दूसरे स्थान तक जाने की क्रिया"
+      },
+      "example": {
+        "en": "The journey to my grandmother's village takes four hours.",
+        "te": "మా అమ్మమ్మ ఊరికి ప్రయాణం నాలుగు గంటలు పడుతుంది.",
+        "hi": "मेरी नानी के गाँव की यात्रा में चार घंटे लगते हैं।"
+      },
+      "tags": ["travel", "intermediate"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "voc-persuade",
+      "classes": [8],
+      "word": { "en": "persuade", "te": "ఒప్పించు", "hi": "मनाना" },
+      "partOfSpeech": "verb",
+      "meaning": {
+        "en": "to make someone agree by giving them good reasons",
+        "te": "మంచి కారణాలు చెప్పి ఎవరినైనా అంగీకరించేలా చేయడం",
+        "hi": "अच्छे कारण देकर किसी को सहमत कराना"
+      },
+      "example": {
+        "en": "He persuaded his father to buy a bicycle.",
+        "te": "సైకిల్ కొనమని అతను తన తండ్రిని ఒప్పించాడు.",
+        "hi": "उसने अपने पिता को साइकिल ख़रीदने के लिए मना लिया।"
+      },
+      "tags": ["conversation", "advanced"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "voc-reluctant",
+      "classes": [8],
+      "word": { "en": "reluctant", "te": "అయిష్టంగా ఉన్న", "hi": "अनिच्छुक" },
+      "partOfSpeech": "adjective",
+      "meaning": {
+        "en": "not willing to do something and therefore slow to do it",
+        "te": "ఏదైనా చేయడానికి ఇష్టపడక ఆలస్యం చేసే",
+        "hi": "कुछ करने को तैयार न होने के कारण देर करने वाला"
+      },
+      "example": {
+        "en": "She was reluctant to speak in front of the class.",
+        "te": "తరగతి ముందు మాట్లాడటానికి ఆమె అయిష్టంగా ఉంది.",
+        "hi": "वह कक्षा के सामने बोलने में अनिच्छुक थी।"
+      },
+      "tags": ["school", "advanced"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "voc-consequence",
+      "classes": [8, 9],
+      "word": { "en": "consequence", "te": "పరిణామం", "hi": "परिणाम" },
+      "partOfSpeech": "noun",
+      "meaning": {
+        "en": "a result that follows from an action or decision",
+        "te": "ఒక చర్య లేదా నిర్ణయం వల్ల కలిగే ఫలితం",
+        "hi": "किसी कार्य या निर्णय से निकलने वाला नतीजा"
+      },
+      "example": {
+        "en": "Skipping practice had a serious consequence for the team.",
+        "te": "సాధన మానేయడం జట్టుకు తీవ్రమైన పరిణామాన్ని తెచ్చింది.",
+        "hi": "अभ्यास छोड़ने का टीम पर गंभीर परिणाम हुआ।"
+      },
+      "tags": ["school", "advanced"],
+      "categoryHint": "Vocabulary Building"
+    },
+    {
+      "id": "voc-abundant",
+      "classes": [8],
+      "word": { "en": "abundant", "te": "సమృద్ధిగా ఉన్న", "hi": "प्रचुर" },
+      "partOfSpeech": "adjective",
+      "meaning": {
+        "en": "present in very large quantity; more than enough",
+        "te": "చాలా ఎక్కువ పరిమాణంలో ఉన్న; అవసరానికి మించి ఉన్న",
+        "hi": "बहुत बड़ी मात्रा में मौजूद; ज़रूरत से अधिक"
+      },
+      "example": {
+        "en": "Rainfall is abundant in this region during July.",
+        "te": "జూలైలో ఈ ప్రాంతంలో వర్షపాతం సమృద్ధిగా ఉంటుంది.",
+        "hi": "जुलाई में इस क्षेत्र में वर्षा प्रचुर होती है।"
+      },
+      "tags": ["nature", "advanced"],
+      "categoryHint": "Vocabulary Building"
+    }
+  ]
+}

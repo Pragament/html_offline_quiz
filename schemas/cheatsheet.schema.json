@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quizmaster.local/schemas/cheatsheet.schema.json",
+  "title": "en-te-hi-cheatsheet.json",
+  "description": "Browsable class-specific reference material. This file is read-only study content, not a question source — but every section carries a `quizLink` so the UI can offer 'Quiz me on this' and hand the category and tags straight to the question-bank filter.",
+  "type": "object",
+  "required": ["schemaVersion", "fileType", "languages", "sheets"],
+  "additionalProperties": false,
+  "allOf": [{ "$ref": "common.schema.json#/$defs/envelope" }],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "type": "string" },
+    "fileType": { "const": "cheatsheet" },
+    "languages": { "type": "array" },
+    "updated": { "type": "string" },
+    "description": { "type": "string" },
+    "sheets": {
+      "description": "One sheet per class. An array rather than an object keyed by class number, so ordering is explicit and the file stays valid JSON Schema without patternProperties.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sheet" }
+    }
+  },
+
+  "$defs": {
+    "sheet": {
+      "type": "object",
+      "required": ["class", "title", "sections"],
+      "additionalProperties": false,
+      "properties": {
+        "class": { "$ref": "common.schema.json#/$defs/classNumber" },
+        "title": { "$ref": "common.schema.json#/$defs/localizedText" },
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/section" }
+        }
+      }
+    },
+
+    "section": {
+      "type": "object",
+      "required": ["id", "type", "title", "category"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "type": { "enum": ["rules", "vocab-list", "phrase-list", "table", "tips"] },
+        "title": { "$ref": "common.schema.json#/$defs/localizedText" },
+        "summary": {
+          "description": "One or two lines shown under the section heading.",
+          "$ref": "common.schema.json#/$defs/localizedText"
+        },
+        "category": { "$ref": "common.schema.json#/$defs/category" },
+        "quizLink": {
+          "description": "Filter to apply when the student taps 'Quiz me on this'.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "category": { "$ref": "common.schema.json#/$defs/category" },
+            "tags": { "$ref": "common.schema.json#/$defs/tags" }
+          }
+        },
+        "items": { "type": "array", "minItems": 1 },
+        "columns": { "type": "array" },
+        "rows": { "type": "array" }
+      },
+
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "rules" } }, "required": ["type"] },
+          "then": {
+            "required": ["items"],
+            "properties": {
+              "items": {
+                "items": {
+                  "type": "object",
+                  "required": ["rule"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": { "type": "string" },
+                    "rule": { "$ref": "common.schema.json#/$defs/localizedText" },
+                    "examples": {
+                      "description": "Worked examples. These stay in English in all three columns when the example IS an English sentence pattern; translate only when the example explains meaning.",
+                      "type": "array",
+                      "items": { "$ref": "common.schema.json#/$defs/localizedText" }
+                    },
+                    "note": { "$ref": "common.schema.json#/$defs/localizedText" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "vocab-list" } }, "required": ["type"] },
+          "then": {
+            "required": ["items"],
+            "properties": {
+              "items": {
+                "items": {
+                  "type": "object",
+                  "required": ["term"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "term": { "$ref": "common.schema.json#/$defs/localizedText" },
+                    "partOfSpeech": { "$ref": "common.schema.json#/$defs/partOfSpeech" },
+                    "example": { "$ref": "common.schema.json#/$defs/localizedText" },
+                    "sourceId": {
+                      "description": "Optional id of the matching entry in en-te-hi-vocabulary-dictionary.json, so the two files can be kept in step.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "phrase-list" } }, "required": ["type"] },
+          "then": {
+            "required": ["items"],
+            "properties": {
+              "items": {
+                "items": {
+                  "type": "object",
+                  "required": ["phrase", "meaning"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "phrase": { "$ref": "common.schema.json#/$defs/localizedText" },
+                    "meaning": { "$ref": "common.schema.json#/$defs/localizedText" },
+                    "register": { "$ref": "common.schema.json#/$defs/register" },
+                    "sourceId": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "table" } }, "required": ["type"] },
+          "then": {
+            "required": ["columns", "rows"],
+            "properties": {
+              "columns": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "$ref": "common.schema.json#/$defs/localizedText" }
+              },
+              "rows": {
+                "description": "Each row must hold exactly as many cells as there are columns (checked by tools/validate_data.py).",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "items": { "$ref": "common.schema.json#/$defs/localizedText" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "tips" } }, "required": ["type"] },
+          "then": {
+            "required": ["items"],
+            "properties": {
+              "items": {
+                "items": {
+                  "type": "object",
+                  "required": ["tip"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "tip": { "$ref": "common.schema.json#/$defs/localizedText" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
