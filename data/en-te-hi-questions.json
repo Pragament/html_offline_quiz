@@ -2,7 +2,11 @@
   "$schema": "../schemas/questions.schema.json",
   "schemaVersion": "1.0.0",
   "fileType": "questions",
-  "languages": ["en", "te", "hi"],
+  "languages": [
+    "en",
+    "te",
+    "hi"
+  ],
   "updated": "2026-08-01",
   "description": "Hand-authored question bank. Sample covers Class 5 and Class 8 with one question of every type in each class.",
   "questions": [
@@ -11,16 +15,35 @@
       "class": 5,
       "type": "mcq",
       "category": "Vocabulary Building",
-      "tags": ["daily", "beginner", "verbs"],
+      "tags": [
+        "daily",
+        "beginner",
+        "verbs"
+      ],
       "text": {
         "en": "What is the closest meaning of the word \"abandon\"?",
         "te": "\"abandon\" అనే పదానికి దగ్గరి అర్థం ఏమిటి?",
         "hi": "\"abandon\" शब्द का निकटतम अर्थ क्या है?"
       },
       "options": {
-        "en": ["Leave behind", "Keep safe", "Build again", "Praise"],
-        "te": ["వదిలివేయడం", "భద్రంగా ఉంచడం", "మళ్ళీ నిర్మించడం", "ప్రశంసించడం"],
-        "hi": ["छोड़ देना", "सुरक्षित रखना", "फिर से बनाना", "प्रशंसा करना"]
+        "en": [
+          "Leave behind",
+          "Keep safe",
+          "Build again",
+          "Praise"
+        ],
+        "te": [
+          "వదిలివేయడం",
+          "భద్రంగా ఉంచడం",
+          "మళ్ళీ నిర్మించడం",
+          "ప్రశంసించడం"
+        ],
+        "hi": [
+          "छोड़ देना",
+          "सुरक्षित रखना",
+          "फिर से बनाना",
+          "प्रशंसा करना"
+        ]
       },
       "correctAnswer": 0,
       "explanation": {
@@ -28,23 +51,38 @@
         "te": "\"Abandon\" అంటే ఒక వ్యక్తిని లేదా వస్తువును వదిలివేసి తిరిగి రాకపోవడం.",
         "hi": "\"Abandon\" का अर्थ है किसी व्यक्ति या वस्तु को छोड़ देना और उसके लिए वापस न आना।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c5-002",
       "class": 5,
       "type": "true-false",
       "category": "Grammar",
-      "tags": ["school", "beginner", "tenses"],
+      "tags": [
+        "school",
+        "beginner",
+        "tenses"
+      ],
       "text": {
         "en": "The sentence \"She go to school every day.\" is grammatically correct.",
         "te": "\"She go to school every day.\" అనే వాక్యం వ్యాకరణపరంగా సరైనది.",
         "hi": "\"She go to school every day.\" यह वाक्य व्याकरण की दृष्टि से सही है।"
       },
       "options": {
-        "en": ["True", "False"],
-        "te": ["నిజం", "అబద్ధం"],
-        "hi": ["सही", "ग़लत"]
+        "en": [
+          "True",
+          "False"
+        ],
+        "te": [
+          "నిజం",
+          "అబద్ధం"
+        ],
+        "hi": [
+          "सही",
+          "ग़लत"
+        ]
       },
       "correctAnswer": false,
       "explanation": {
@@ -52,14 +90,20 @@
         "te": "he / she / it తో సింపుల్ ప్రెజెంట్‌లో క్రియకు -s చేరుతుంది: \"She goes to school every day.\"",
         "hi": "he / she / it के साथ सिंपल प्रेज़ेंट में क्रिया में -s जुड़ता है: \"She goes to school every day.\""
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c5-003",
       "class": 5,
       "type": "flip-card",
       "category": "Phrase Learning",
-      "tags": ["daily", "intermediate", "phrases"],
+      "tags": [
+        "daily",
+        "intermediate",
+        "phrases"
+      ],
       "text": {
         "en": "What does the phrase \"break the ice\" mean?",
         "te": "\"break the ice\" అనే పదబంధానికి అర్థం ఏమిటి?",
@@ -72,9 +116,24 @@
           "hi": "उत्तर सोचिए, फिर विकल्प देखने के लिए टैप कीजिए।"
         },
         "choices": {
-          "en": ["To start a conversation", "To break something cold", "To make a mistake", "To finish a task"],
-          "te": ["సంభాషణ ప్రారంభించడం", "చల్లని వస్తువును పగలగొట్టడం", "పొరపాటు చేయడం", "పనిని పూర్తి చేయడం"],
-          "hi": ["बातचीत शुरू करना", "कोई ठंडी चीज़ तोड़ना", "ग़लती करना", "काम पूरा करना"]
+          "en": [
+            "To start a conversation",
+            "To break something cold",
+            "To make a mistake",
+            "To finish a task"
+          ],
+          "te": [
+            "సంభాషణ ప్రారంభించడం",
+            "చల్లని వస్తువును పగలగొట్టడం",
+            "పొరపాటు చేయడం",
+            "పనిని పూర్తి చేయడం"
+          ],
+          "hi": [
+            "बातचीत शुरू करना",
+            "कोई ठंडी चीज़ तोड़ना",
+            "ग़लती करना",
+            "काम पूरा करना"
+          ]
         }
       },
       "correctAnswer": 0,
@@ -83,14 +142,20 @@
         "te": "\"Break the ice\" అంటే కొత్తవాళ్ళు హాయిగా మాట్లాడటం మొదలుపెట్టేలా స్నేహపూర్వకంగా ఏదైనా చెప్పడం.",
         "hi": "\"Break the ice\" का अर्थ है कुछ दोस्ताना कहना ताकि अजनबी सहज होकर बात करने लगें।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c5-004",
       "class": 5,
       "type": "drag-drop",
       "category": "Sentence Formation",
-      "tags": ["daily", "intermediate", "word-order"],
+      "tags": [
+        "daily",
+        "intermediate",
+        "word-order"
+      ],
       "text": {
         "en": "Drag the chunks into order to make a correct English sentence.",
         "te": "సరైన ఆంగ్ల వాక్యం ఏర్పడేలా భాగాలను వరుసలో అమర్చండి.",
@@ -98,9 +163,24 @@
       },
       "options": {
         "tokens": {
-          "en": ["in the park", "She", "every evening", "is playing"],
-          "te": ["పార్క్‌లో", "ఆమె", "ప్రతి సాయంత్రం", "ఆడుతోంది"],
-          "hi": ["पार्क में", "वह", "हर शाम", "खेल रही है"]
+          "en": [
+            "in the park",
+            "She",
+            "every evening",
+            "is playing"
+          ],
+          "te": [
+            "పార్క్‌లో",
+            "ఆమె",
+            "ప్రతి సాయంత్రం",
+            "ఆడుతోంది"
+          ],
+          "hi": [
+            "पार्क में",
+            "वह",
+            "हर शाम",
+            "खेल रही है"
+          ]
         },
         "target": {
           "en": "She is playing in the park every evening.",
@@ -109,20 +189,31 @@
         },
         "taskLanguage": "en"
       },
-      "correctAnswer": [1, 3, 0, 2],
+      "correctAnswer": [
+        1,
+        3,
+        0,
+        2
+      ],
       "explanation": {
         "en": "English order is subject + verb + place + time. Telugu and Hindi put the time and place before the verb, so compare the target sentence carefully.",
         "te": "ఆంగ్లంలో క్రమం: కర్త + క్రియ + స్థలం + కాలం. తెలుగులో స్థలం, కాలం క్రియకు ముందు వస్తాయి, కాబట్టి లక్ష్య వాక్యాన్ని జాగ్రత్తగా పోల్చండి.",
         "hi": "अंग्रेज़ी का क्रम है: कर्ता + क्रिया + स्थान + समय। हिन्दी में समय और स्थान क्रिया से पहले आते हैं, इसलिए लक्ष्य वाक्य से ध्यान से मिलाइए।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c5-005",
       "class": 5,
       "type": "match-pairs",
       "category": "Vocabulary Building",
-      "tags": ["daily", "intermediate", "adjectives"],
+      "tags": [
+        "daily",
+        "intermediate",
+        "adjectives"
+      ],
       "text": {
         "en": "Match each English word with its meaning.",
         "te": "ప్రతి ఆంగ్ల పదాన్ని దాని అర్థంతో జతపరచండి.",
@@ -130,31 +221,83 @@
       },
       "options": {
         "left": {
-          "en": ["brave", "tiny", "rapid", "gloomy"],
-          "te": ["brave", "tiny", "rapid", "gloomy"],
-          "hi": ["brave", "tiny", "rapid", "gloomy"]
+          "en": [
+            "brave",
+            "tiny",
+            "rapid",
+            "gloomy"
+          ],
+          "te": [
+            "brave",
+            "tiny",
+            "rapid",
+            "gloomy"
+          ],
+          "hi": [
+            "brave",
+            "tiny",
+            "rapid",
+            "gloomy"
+          ]
         },
         "right": {
-          "en": ["very fast", "not afraid of danger", "sad and dark", "very small"],
-          "te": ["చాలా వేగవంతమైన", "ప్రమాదానికి భయపడని", "విచారంగా, చీకటిగా", "చాలా చిన్న"],
-          "hi": ["बहुत तेज़", "ख़तरे से न डरने वाला", "उदास और अंधेरा", "बहुत छोटा"]
+          "en": [
+            "very fast",
+            "not afraid of danger",
+            "sad and dark",
+            "very small"
+          ],
+          "te": [
+            "చాలా వేగవంతమైన",
+            "ప్రమాదానికి భయపడని",
+            "విచారంగా, చీకటిగా",
+            "చాలా చిన్న"
+          ],
+          "hi": [
+            "बहुत तेज़",
+            "ख़तरे से न डरने वाला",
+            "उदास और अंधेरा",
+            "बहुत छोटा"
+          ]
         }
       },
-      "correctAnswer": [[0, 1], [1, 3], [2, 0], [3, 2]],
+      "correctAnswer": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          2
+        ]
+      ],
       "explanation": {
         "en": "The left column keeps the English word untranslated because that word is what is being learned; only the meanings are given in Telugu and Hindi.",
         "te": "నేర్చుకుంటున్నది ఆంగ్ల పదమే కాబట్టి ఎడమ వరుసలో అది అనువదించకుండా ఉంచాం; అర్థాలు మాత్రమే తెలుగు, హిందీలో ఇచ్చాం.",
         "hi": "सीखा जाने वाला शब्द अंग्रेज़ी का ही है, इसलिए बाईं ओर उसे अनुवाद किए बिना रखा गया है; केवल अर्थ तेलुगु और हिन्दी में दिए गए हैं।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
-
     {
       "id": "q-c8-001",
       "class": 8,
       "type": "mcq",
       "category": "Error Correction",
-      "tags": ["school", "advanced", "agreement"],
+      "tags": [
+        "school",
+        "advanced",
+        "agreement"
+      ],
       "text": {
         "en": "Choose the grammatically correct sentence.",
         "te": "వ్యాకరణపరంగా సరైన వాక్యాన్ని ఎంచుకోండి.",
@@ -186,23 +329,38 @@
         "te": "\"Neither\" ఏకవచనం, కాబట్టి ఏకవచన క్రియ (has), ఏకవచన సర్వనామం (his) వాడాలి. విద్యార్థి పరిశీలించవలసినది ఆంగ్ల వాక్యమే కాబట్టి ఎంపికలను అనువదించలేదు.",
         "hi": "\"Neither\" एकवचन है, इसलिए एकवचन क्रिया (has) और एकवचन सर्वनाम (his) आता है। छात्र को अंग्रेज़ी वाक्य ही परखना है, इसलिए विकल्पों का अनुवाद नहीं किया गया।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c8-002",
       "class": 8,
       "type": "true-false",
       "category": "Pronunciation Awareness",
-      "tags": ["advanced", "spelling", "silent-letters"],
+      "tags": [
+        "advanced",
+        "spelling",
+        "silent-letters"
+      ],
       "text": {
         "en": "In the word \"knife\", the letter \"k\" is silent.",
         "te": "\"knife\" అనే పదంలో \"k\" అక్షరాన్ని ఉచ్చరించరు.",
         "hi": "\"knife\" शब्द में \"k\" अक्षर मौन (साइलेंट) होता है।"
       },
       "options": {
-        "en": ["True", "False"],
-        "te": ["నిజం", "అబద్ధం"],
-        "hi": ["सही", "ग़लत"]
+        "en": [
+          "True",
+          "False"
+        ],
+        "te": [
+          "నిజం",
+          "అబద్ధం"
+        ],
+        "hi": [
+          "सही",
+          "ग़लत"
+        ]
       },
       "correctAnswer": true,
       "explanation": {
@@ -210,14 +368,20 @@
         "te": "kn- తో మొదలయ్యే ఆంగ్ల పదాలలో (knife, knee, knock, know) k ధ్వని ఉండదు: knife ను /naɪf/ అని పలుకుతారు.",
         "hi": "kn- से शुरू होने वाले अंग्रेज़ी शब्दों (knife, knee, knock, know) में k की ध्वनि नहीं आती: knife को /naɪf/ बोला जाता है।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c8-003",
       "class": 8,
       "type": "flip-card",
       "category": "Idioms & Expressions",
-      "tags": ["daily", "advanced", "idioms"],
+      "tags": [
+        "daily",
+        "advanced",
+        "idioms"
+      ],
       "text": {
         "en": "What does the idiom \"once in a blue moon\" mean?",
         "te": "\"once in a blue moon\" అనే జాతీయానికి అర్థం ఏమిటి?",
@@ -230,9 +394,24 @@
           "hi": "पहले अनुमान लगाइए, फिर विकल्प देखने के लिए टैप कीजिए।"
         },
         "choices": {
-          "en": ["Very rarely", "Every month", "Only at night", "Very often"],
-          "te": ["చాలా అరుదుగా", "ప్రతి నెలా", "రాత్రి మాత్రమే", "చాలా తరచుగా"],
-          "hi": ["बहुत कम, कभी-कभार", "हर महीने", "केवल रात में", "बहुत बार"]
+          "en": [
+            "Very rarely",
+            "Every month",
+            "Only at night",
+            "Very often"
+          ],
+          "te": [
+            "చాలా అరుదుగా",
+            "ప్రతి నెలా",
+            "రాత్రి మాత్రమే",
+            "చాలా తరచుగా"
+          ],
+          "hi": [
+            "बहुत कम, कभी-कभार",
+            "हर महीने",
+            "केवल रात में",
+            "बहुत बार"
+          ]
         }
       },
       "correctAnswer": 0,
@@ -241,14 +420,20 @@
         "te": "ఒకే నెలలో రెండో పౌర్ణమి అరుదు, అందుకే \"once in a blue moon\" అంటే దాదాపు ఎప్పుడూ జరగనిది అని అర్థం.",
         "hi": "एक ही महीने में दूसरी पूर्णिमा दुर्लभ होती है, इसलिए \"once in a blue moon\" का अर्थ है लगभग कभी नहीं।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c8-004",
       "class": 8,
       "type": "drag-drop",
       "category": "Question Formation",
-      "tags": ["school", "advanced", "word-order"],
+      "tags": [
+        "school",
+        "advanced",
+        "word-order"
+      ],
       "text": {
         "en": "Drag the chunks into order to form a correct question.",
         "te": "సరైన ప్రశ్న ఏర్పడేలా భాగాలను వరుసలో అమర్చండి.",
@@ -256,9 +441,27 @@
       },
       "options": {
         "tokens": {
-          "en": ["you", "did", "Where", "go", "last Sunday?"],
-          "te": ["నువ్వు", "did (గత కాల సహాయ క్రియ)", "ఎక్కడికి", "వెళ్ళు", "గత ఆదివారం?"],
-          "hi": ["तुम", "did (भूतकाल सहायक क्रिया)", "कहाँ", "जाना", "पिछले रविवार?"]
+          "en": [
+            "you",
+            "did",
+            "Where",
+            "go",
+            "last Sunday?"
+          ],
+          "te": [
+            "నువ్వు",
+            "did (గత కాల సహాయ క్రియ)",
+            "ఎక్కడికి",
+            "వెళ్ళు",
+            "గత ఆదివారం?"
+          ],
+          "hi": [
+            "तुम",
+            "did (भूतकाल सहायक क्रिया)",
+            "कहाँ",
+            "जाना",
+            "पिछले रविवार?"
+          ]
         },
         "target": {
           "en": "Where did you go last Sunday?",
@@ -267,20 +470,32 @@
         },
         "taskLanguage": "en"
       },
-      "correctAnswer": [2, 1, 0, 3, 4],
+      "correctAnswer": [
+        2,
+        1,
+        0,
+        3,
+        4
+      ],
       "explanation": {
         "en": "Wh- questions in the past follow: question word + did + subject + base verb. The main verb stays in its base form (go, not went).",
         "te": "గత కాలపు Wh- ప్రశ్నల క్రమం: ప్రశ్న పదం + did + కర్త + మూల క్రియ. ప్రధాన క్రియ మూల రూపంలోనే ఉంటుంది (went కాదు, go).",
         "hi": "भूतकाल के Wh- प्रश्नों का क्रम है: प्रश्नवाचक शब्द + did + कर्ता + मूल क्रिया। मुख्य क्रिया मूल रूप में रहती है (went नहीं, go)।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
     },
     {
       "id": "q-c8-005",
       "class": 8,
       "type": "match-pairs",
       "category": "Formal vs Informal English",
-      "tags": ["work", "advanced", "register"],
+      "tags": [
+        "work",
+        "advanced",
+        "register"
+      ],
       "text": {
         "en": "Match each informal expression with its formal equivalent.",
         "te": "ప్రతి అనధికారిక వ్యక్తీకరణను దాని అధికారిక రూపంతో జతపరచండి.",
@@ -288,9 +503,24 @@
       },
       "options": {
         "left": {
-          "en": ["Wanna come?", "Gonna call you.", "Thanks a ton!", "Sorry, my bad."],
-          "te": ["Wanna come?", "Gonna call you.", "Thanks a ton!", "Sorry, my bad."],
-          "hi": ["Wanna come?", "Gonna call you.", "Thanks a ton!", "Sorry, my bad."]
+          "en": [
+            "Wanna come?",
+            "Gonna call you.",
+            "Thanks a ton!",
+            "Sorry, my bad."
+          ],
+          "te": [
+            "Wanna come?",
+            "Gonna call you.",
+            "Thanks a ton!",
+            "Sorry, my bad."
+          ],
+          "hi": [
+            "Wanna come?",
+            "Gonna call you.",
+            "Thanks a ton!",
+            "Sorry, my bad."
+          ]
         },
         "right": {
           "en": [
@@ -313,13 +543,388 @@
           ]
         }
       },
-      "correctAnswer": [[0, 3], [1, 0], [2, 1], [3, 2]],
+      "correctAnswer": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
       "explanation": {
         "en": "Formal English avoids contractions like wanna and gonna, and prefers full modal questions (Would you like…?) and complete apologies.",
         "te": "అధికారిక ఆంగ్లంలో wanna, gonna వంటి కుదింపులను వాడరు; పూర్తి మోడల్ ప్రశ్నలు (Would you like…?), పూర్తి క్షమాపణలు వాడతారు.",
         "hi": "औपचारिक अंग्रेज़ी में wanna, gonna जैसे संक्षिप्त रूप नहीं आते; पूरे मोडल प्रश्न (Would you like…?) और पूरी क्षमायाचना पसंद की जाती है।"
       },
-      "source": { "kind": "static" }
+      "source": {
+        "kind": "static"
+      }
+    },
+    {
+      "id": "q-c1-001",
+      "class": 1,
+      "type": "mcq",
+      "category": "Grammar",
+      "tags": [
+        "beginner",
+        "pronouns"
+      ],
+      "text": {
+        "en": "Look at the picture of a girl. Which word should we use?",
+        "te": "బాలిక చిత్రాన్ని చూడండి. మనం ఏ పదాన్ని ఉపయోగించాలి?",
+        "hi": "लड़की की तस्वीर देखें। हमें किस शब्द का उपयोग करना चाहिए?"
+      },
+      "options": {
+        "en": [
+          "He",
+          "She",
+          "It",
+          "They"
+        ],
+        "te": [
+          "అతను (He)",
+          "ఆమె (She)",
+          "అది (It)",
+          "వారు (They)"
+        ],
+        "hi": [
+          "वह (He)",
+          "वह (She)",
+          "यह (It)",
+          "वे (They)"
+        ]
+      },
+      "correctAnswer": 1,
+      "explanation": {
+        "en": "We use 'She' for a girl or a woman.",
+        "te": "మనం బాలిక లేదా స్త్రీ కోసం 'ఆమె' (She) అని ఉపయోగిస్తాము.",
+        "hi": "हम किसी लड़की या महिला के लिए 'वह' (She) का उपयोग करते हैं।"
+      }
+    },
+    {
+      "id": "q-c1-002",
+      "class": 1,
+      "type": "true-false",
+      "category": "Grammar",
+      "tags": [
+        "beginner",
+        "verbs",
+        "animals"
+      ],
+      "text": {
+        "en": "True or False: A bird can fly.",
+        "te": "నిజమా లేదా అబద్ధమా: పక్షి ఎగరగలదు.",
+        "hi": "सच या झूठ: एक पक्षी उड़ सकता है।"
+      },
+      "options": {
+        "en": [
+          "True",
+          "False"
+        ],
+        "te": [
+          "నిజం",
+          "అబద్ధం"
+        ],
+        "hi": [
+          "सच",
+          "झूठ"
+        ]
+      },
+      "correctAnswer": true,
+      "explanation": {
+        "en": "Yes, birds have wings and they can fly.",
+        "te": "అవును, పక్షులకు రెక్కలు ఉంటాయి మరియు అవి ఎగరగలవు.",
+        "hi": "हाँ, पक्षियों के पंख होते हैं और वे उड़ सकते हैं।"
+      }
+    },
+    {
+      "id": "q-c2-001",
+      "class": 2,
+      "type": "mcq",
+      "category": "Grammar",
+      "tags": [
+        "prepositions",
+        "directions"
+      ],
+      "text": {
+        "en": "Which word means 'at the back of'?",
+        "te": "ఏ పదం 'వెనుక వైపు' అని అర్థం ఇస్తుంది?",
+        "hi": "किस शब्द का अर्थ 'पीछे की ओर' होता है?"
+      },
+      "options": {
+        "en": [
+          "Near",
+          "Behind",
+          "Between",
+          "Under"
+        ],
+        "te": [
+          "దగ్గర (Near)",
+          "వెనుక (Behind)",
+          "మధ్యలో (Between)",
+          "కింద (Under)"
+        ],
+        "hi": [
+          "पास (Near)",
+          "पीछे (Behind)",
+          "बीच में (Between)",
+          "नीचे (Under)"
+        ]
+      },
+      "correctAnswer": 1,
+      "explanation": {
+        "en": "'Behind' means at the back of something.",
+        "te": "'వెనుక' అంటే దేనికైనా వెనుక వైపు ఉండటం.",
+        "hi": "'पीछे' का अर्थ है किसी चीज़ के पीछे की ओर।"
+      }
+    },
+    {
+      "id": "q-c2-002",
+      "class": 2,
+      "type": "flip-card",
+      "category": "Grammar",
+      "tags": [
+        "tenses",
+        "verbs"
+      ],
+      "text": {
+        "en": "What is the past tense of 'jump'?",
+        "te": "'jump' (దూకడం) యొక్క భూతకాల పదం ఏమిటి?",
+        "hi": "'jump' (कूदना) का भूतकाल शब्द क्या है?"
+      },
+      "options": {
+        "front": {
+          "en": "Tap to reveal options",
+          "te": "ఎంపికలను చూడటానికి నొక్కండి",
+          "hi": "विकल्प देखने के लिए टैप करें"
+        },
+        "choices": {
+          "en": [
+            "jumps",
+            "jumped"
+          ],
+          "te": [
+            "jumps",
+            "jumped"
+          ],
+          "hi": [
+            "jumps",
+            "jumped"
+          ]
+        }
+      },
+      "correctAnswer": 1,
+      "explanation": {
+        "en": "When an action happened yesterday, we usually add '-ed'. So 'jump' becomes 'jumped'.",
+        "te": "నిన్న జరిగిన పని గురించి చెప్పేటప్పుడు, మనం సాధారణంగా '-ed' కలుపుతాము. కాబట్టి 'jump' 'jumped' గా మారుతుంది.",
+        "hi": "जब कोई कार्य कल हुआ था, तो हम आमतौर पर '-ed' जोड़ते हैं। इसलिए 'jump' 'jumped' बन जाता है।"
+      }
+    },
+    {
+      "id": "q-c2-003",
+      "class": 2,
+      "type": "mcq",
+      "category": "Grammar",
+      "tags": [
+        "countable-nouns",
+        "daily"
+      ],
+      "text": {
+        "en": "Look at these objects. Which one can we count (Countable Noun)?",
+        "te": "ఈ వస్తువులను చూడండి. మనం దేనిని లెక్కించగలము?",
+        "hi": "इन वस्तुओं को देखें। हम किसे गिन सकते हैं?"
+      },
+      "options": {
+        "en": [
+          "Water",
+          "Milk",
+          "Book",
+          "Rain"
+        ],
+        "te": [
+          "నీరు (Water)",
+          "పాలు (Milk)",
+          "పుస్తకం (Book)",
+          "వర్షం (Rain)"
+        ],
+        "hi": [
+          "पानी (Water)",
+          "दूध (Milk)",
+          "किताब (Book)",
+          "बारिश (Rain)"
+        ]
+      },
+      "correctAnswer": 2,
+      "explanation": {
+        "en": "We can count books (one book, two books). We cannot count water or milk.",
+        "te": "మనం పుస్తకాలను లెక్కించగలం (ఒక పుస్తకం, రెండు పుస్తకాలు). నీరు లేదా పాలను లెక్కించలేము.",
+        "hi": "हम किताबों को गिन सकते हैं (एक किताब, दो किताबें)। हम पानी या दूध नहीं गिन सकते।"
+      }
+    },
+    {
+      "id": "q-c3-001",
+      "class": 3,
+      "type": "true-false",
+      "category": "Grammar",
+      "tags": [
+        "nouns",
+        "proper-nouns"
+      ],
+      "text": {
+        "en": "True or False: 'Himalayas' is a proper noun.",
+        "te": "నిజం లేదా అబద్ధం: 'Himalayas' అనేది సరైన నామవాచకం (proper noun).",
+        "hi": "सच या झूठ: 'Himalayas' एक व्यक्तिवाचक संज्ञा (proper noun) है।"
+      },
+      "options": {
+        "en": [
+          "True",
+          "False"
+        ],
+        "te": [
+          "నిజం",
+          "అబద్ధం"
+        ],
+        "hi": [
+          "सच",
+          "झूठ"
+        ]
+      },
+      "correctAnswer": true,
+      "explanation": {
+        "en": "Yes, 'Himalayas' is the specific name of a mountain range, so it is a proper noun.",
+        "te": "అవును, 'Himalayas' అనేది పర్వత శ్రేణి యొక్క నిర్దిష్ట పేరు, కాబట్టి ఇది సరైన నామవాచకం.",
+        "hi": "हाँ, 'Himalayas' एक पर्वत श्रृंखला का विशिष्ट नाम है, इसलिए यह एक व्यक्तिवाचक संज्ञा है।"
+      }
+    },
+    {
+      "id": "q-c3-002",
+      "class": 3,
+      "type": "mcq",
+      "category": "Grammar",
+      "tags": [
+        "articles"
+      ],
+      "text": {
+        "en": "Choose the correct article: I eat ___ apple every day.",
+        "te": "సరైన ఆర్టికల్‌ను ఎంచుకోండి: నేను ప్రతిరోజూ ___ యాపిల్ తింటాను.",
+        "hi": "सही आर्टिकल चुनें: मैं रोज़ ___ सेब खाता हूँ।"
+      },
+      "options": {
+        "en": [
+          "a",
+          "an",
+          "the",
+          "no article"
+        ],
+        "te": [
+          "a",
+          "an",
+          "the",
+          "no article"
+        ],
+        "hi": [
+          "a",
+          "an",
+          "the",
+          "no article"
+        ]
+      },
+      "correctAnswer": 1,
+      "explanation": {
+        "en": "We use 'an' before words that start with a vowel sound (like 'apple').",
+        "te": "అచ్చు శబ్దంతో ప్రారంభమయ్యే పదాల ముందు మనం 'an' ని ఉపయోగిస్తాము (ఉదాహరణకు 'apple').",
+        "hi": "हम स्वर ध्वनि से शुरू होने वाले शब्दों (जैसे 'apple') से पहले 'an' का उपयोग करते हैं।"
+      }
+    },
+    {
+      "id": "q-c4-001",
+      "class": 4,
+      "type": "mcq",
+      "category": "Grammar",
+      "tags": [
+        "collective-nouns"
+      ],
+      "text": {
+        "en": "What do we call a group of birds?",
+        "te": "పక్షుల గుంపును ఏమని పిలుస్తాము?",
+        "hi": "पक्षियों के समूह को हम क्या कहते हैं?"
+      },
+      "options": {
+        "en": [
+          "A team",
+          "A school",
+          "A flock",
+          "A bouquet"
+        ],
+        "te": [
+          "ఒక జట్టు (A team)",
+          "ఒక పాఠశాల (A school)",
+          "ఒక మంద (A flock)",
+          "ఒక బొకే (A bouquet)"
+        ],
+        "hi": [
+          "एक टीम (A team)",
+          "एक स्कूल (A school)",
+          "एक झुंड (A flock)",
+          "एक गुलदस्ता (A bouquet)"
+        ]
+      },
+      "correctAnswer": 2,
+      "explanation": {
+        "en": "A group of birds is called a 'flock'.",
+        "te": "పక్షుల గుంపును 'flock' (మంద) అంటారు.",
+        "hi": "पक्षियों के समूह को 'flock' (झुंड) कहा जाता है।"
+      }
+    },
+    {
+      "id": "q-c4-002",
+      "class": 4,
+      "type": "mcq",
+      "category": "Grammar",
+      "tags": [
+        "conjunctions"
+      ],
+      "text": {
+        "en": "I wanted to play outside, ___ it started raining.",
+        "te": "నేను బయట ఆడుకోవాలనుకున్నాను, ___ వర్షం కురవడం ప్రారంభించింది.",
+        "hi": "मैं बाहर खेलना चाहता था, ___ बारिश शुरू हो गई।"
+      },
+      "options": {
+        "en": [
+          "and",
+          "but",
+          "because",
+          "so"
+        ],
+        "te": [
+          "and (మరియు)",
+          "but (కానీ)",
+          "because (ఎందుకంటే)",
+          "so (కాబట్టి)"
+        ],
+        "hi": [
+          "and (और)",
+          "but (लेकिन)",
+          "because (क्योंकि)",
+          "so (इसलिए)"
+        ]
+      },
+      "correctAnswer": 1,
+      "explanation": {
+        "en": "'But' is used to show contrast or a change in direction.",
+        "te": "వ్యత్యాసాన్ని లేదా దిశలో మార్పును చూపించడానికి 'But' ఉపయోగించబడుతుంది.",
+        "hi": "'But' का उपयोग विपरीत या दिशा में बदलाव दिखाने के लिए किया जाता है।"
+      }
     }
   ]
 }
