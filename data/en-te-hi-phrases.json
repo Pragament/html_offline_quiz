@@ -2,7 +2,11 @@
   "$schema": "../schemas/phrases.schema.json",
   "schemaVersion": "1.0.0",
   "fileType": "phrases",
-  "languages": ["en", "te", "hi"],
+  "languages": [
+    "en",
+    "te",
+    "hi"
+  ],
   "updated": "2026-08-01",
   "description": "Class-tagged everyday phrases. Four generators cover meaning, situational use, recall, and an informal-to-formal matching drill.",
   "idPrefix": "gen-phr",
@@ -11,54 +15,108 @@
       "id": "phrase-meaning-mcq",
       "questionType": "mcq",
       "category": "Phrase Learning",
-      "addTags": ["generated", "phrases"],
+      "addTags": [
+        "generated",
+        "phrases"
+      ],
       "weight": 2,
       "prompt": {
         "en": "What does the phrase \"{{phrase.en}}\" mean?",
         "te": "\"{{phrase.en}}\" అనే పదబంధానికి అర్థం ఏమిటి?",
         "hi": "\"{{phrase.en}}\" वाक्यांश का क्या अर्थ है?"
       },
-      "answer": { "path": "meaning" },
-      "distractors": { "count": 3, "from": { "path": "meaning" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" }
+      "answer": {
+        "path": "meaning"
+      },
+      "distractors": {
+        "count": 3,
+        "from": {
+          "path": "meaning"
+        },
+        "scope": "siblings",
+        "pool": "same-class",
+        "poolFallback": "widen"
+      }
     },
     {
       "id": "phrase-situation-mcq",
       "questionType": "mcq",
       "category": "Situational English",
-      "addTags": ["generated", "phrases", "situational"],
-      "requires": ["situation"],
+      "addTags": [
+        "generated",
+        "phrases",
+        "situational"
+      ],
+      "requires": [
+        "situation"
+      ],
       "prompt": {
         "en": "{{situation.en}} Which phrase fits best?",
         "te": "{{situation.te}} ఏ పదబంధం బాగా సరిపోతుంది?",
         "hi": "{{situation.hi}} कौन सा वाक्यांश सबसे उपयुक्त है?"
       },
-      "answer": { "path": "phrase", "display": { "en": "en", "te": "en", "hi": "en" } },
+      "answer": {
+        "path": "phrase",
+        "display": {
+          "en": "en",
+          "te": "en",
+          "hi": "en"
+        }
+      },
       "distractors": {
         "count": 3,
-        "from": { "path": "phrase", "display": { "en": "en", "te": "en", "hi": "en" } },
+        "from": {
+          "path": "phrase",
+          "display": {
+            "en": "en",
+            "te": "en",
+            "hi": "en"
+          }
+        },
         "scope": "siblings",
-        "pool": "same-class", "poolFallback": "widen"
+        "pool": "same-class",
+        "poolFallback": "widen"
       }
     },
     {
       "id": "phrase-recall-flip",
       "questionType": "flip-card",
       "category": "Phrase Learning",
-      "addTags": ["generated", "phrases", "recall"],
+      "addTags": [
+        "generated",
+        "phrases",
+        "recall"
+      ],
       "prompt": {
         "en": "Recall the meaning of \"{{phrase.en}}\".",
         "te": "\"{{phrase.en}}\" అర్థాన్ని గుర్తుచేసుకోండి.",
         "hi": "\"{{phrase.en}}\" का अर्थ याद कीजिए।"
       },
-      "answer": { "path": "meaning" },
-      "distractors": { "count": 3, "from": { "path": "meaning" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" }
+      "answer": {
+        "path": "meaning"
+      },
+      "distractors": {
+        "count": 3,
+        "from": {
+          "path": "meaning"
+        },
+        "scope": "siblings",
+        "pool": "same-class",
+        "poolFallback": "widen"
+      }
     },
     {
       "id": "informal-to-formal-match",
       "questionType": "match-pairs",
       "category": "Formal vs Informal English",
-      "addTags": ["generated", "phrases", "register"],
-      "requires": ["formalEquivalent"],
+      "addTags": [
+        "generated",
+        "phrases",
+        "register"
+      ],
+      "requires": [
+        "formalEquivalent"
+      ],
       "prompt": {
         "en": "Match each everyday phrase with its more formal equivalent.",
         "te": "ప్రతి సాధారణ పదబంధాన్ని దాని అధికారిక రూపంతో జతపరచండి.",
@@ -67,16 +125,31 @@
       "aggregate": {
         "count": 4,
         "minCount": 3,
-        "left": { "path": "phrase", "display": { "en": "en", "te": "en", "hi": "en" } },
-        "right": { "path": "formalEquivalent" }
+        "left": {
+          "path": "phrase",
+          "display": {
+            "en": "en",
+            "te": "en",
+            "hi": "en"
+          }
+        },
+        "right": {
+          "path": "formalEquivalent"
+        }
       }
     }
   ],
   "entries": [
     {
       "id": "phr-excuse-me",
-      "classes": [5],
-      "phrase": { "en": "Excuse me", "te": "క్షమించండి", "hi": "सुनिए / माफ़ कीजिए" },
+      "classes": [
+        5
+      ],
+      "phrase": {
+        "en": "Excuse me",
+        "te": "క్షమించండి",
+        "hi": "सुनिए / माफ़ कीजिए"
+      },
       "phraseType": "functional",
       "register": "neutral",
       "meaning": {
@@ -94,13 +167,25 @@
         "te": "గుమ్మంలో నిలబడిన వ్యక్తిని దాటి వెళ్ళాలి.",
         "hi": "आपको दरवाज़े पर खड़े किसी व्यक्ति के पास से निकलना है।"
       },
-      "tags": ["daily", "school", "beginner", "politeness"],
+      "tags": [
+        "daily",
+        "school",
+        "beginner",
+        "politeness"
+      ],
       "categoryHint": "Situational English"
     },
     {
       "id": "phr-by-the-way",
-      "classes": [5, 6],
-      "phrase": { "en": "By the way", "te": "అన్నట్టు", "hi": "वैसे" },
+      "classes": [
+        5,
+        6
+      ],
+      "phrase": {
+        "en": "By the way",
+        "te": "అన్నట్టు",
+        "hi": "वैसे"
+      },
       "phraseType": "discourse-marker",
       "register": "informal",
       "meaning": {
@@ -113,14 +198,29 @@
         "te": "అన్నట్టు, నీ పుస్తకం ఇంకా నా దగ్గరే ఉంది.",
         "hi": "वैसे, तुम्हारी किताब अब भी मेरे पास है।"
       },
-      "formalEquivalent": { "en": "Incidentally", "te": "Incidentally", "hi": "Incidentally" },
-      "tags": ["daily", "conversation", "intermediate"],
+      "formalEquivalent": {
+        "en": "Incidentally",
+        "te": "Incidentally",
+        "hi": "Incidentally"
+      },
+      "tags": [
+        "daily",
+        "conversation",
+        "intermediate"
+      ],
       "categoryHint": "Phrase Learning"
     },
     {
       "id": "phr-asap",
-      "classes": [5, 6],
-      "phrase": { "en": "As soon as possible", "te": "వీలైనంత త్వరగా", "hi": "जितनी जल्दी हो सके" },
+      "classes": [
+        5,
+        6
+      ],
+      "phrase": {
+        "en": "As soon as possible",
+        "te": "వీలైనంత త్వరగా",
+        "hi": "जितनी जल्दी हो सके"
+      },
       "phraseType": "functional",
       "register": "neutral",
       "meaning": {
@@ -143,13 +243,24 @@
         "te": "At your earliest convenience",
         "hi": "At your earliest convenience"
       },
-      "tags": ["school", "daily", "intermediate"],
+      "tags": [
+        "school",
+        "daily",
+        "intermediate"
+      ],
       "categoryHint": "Phrase Learning"
     },
     {
       "id": "phr-on-the-other-hand",
-      "classes": [5, 8],
-      "phrase": { "en": "On the other hand", "te": "మరోవైపు", "hi": "दूसरी ओर" },
+      "classes": [
+        5,
+        8
+      ],
+      "phrase": {
+        "en": "On the other hand",
+        "te": "మరోవైపు",
+        "hi": "दूसरी ओर"
+      },
       "phraseType": "discourse-marker",
       "register": "neutral",
       "meaning": {
@@ -162,13 +273,23 @@
         "te": "ప్రయాణం పొడవైనది; మరోవైపు, ఆ దృశ్యం దానికి తగినది.",
         "hi": "यात्रा लंबी है; दूसरी ओर, नज़ारा उसके लायक़ है।"
       },
-      "tags": ["school", "writing", "intermediate"],
+      "tags": [
+        "school",
+        "writing",
+        "intermediate"
+      ],
       "categoryHint": "Phrase Learning"
     },
     {
       "id": "phr-break-the-ice",
-      "classes": [8],
-      "phrase": { "en": "Break the ice", "te": "సంభాషణకు నాంది పలకడం", "hi": "बातचीत की शुरुआत करना" },
+      "classes": [
+        8
+      ],
+      "phrase": {
+        "en": "Break the ice",
+        "te": "సంభాషణకు నాంది పలకడం",
+        "hi": "बातचीत की शुरुआत करना"
+      },
       "phraseType": "idiom",
       "register": "informal",
       "meaning": {
@@ -191,13 +312,23 @@
         "te": "Initiate the conversation",
         "hi": "Initiate the conversation"
       },
-      "tags": ["conversation", "advanced", "idioms"],
+      "tags": [
+        "conversation",
+        "advanced",
+        "idioms"
+      ],
       "categoryHint": "Idioms & Expressions"
     },
     {
       "id": "phr-in-a-nutshell",
-      "classes": [8],
-      "phrase": { "en": "In a nutshell", "te": "సంక్షిప్తంగా చెప్పాలంటే", "hi": "संक्षेप में" },
+      "classes": [
+        8
+      ],
+      "phrase": {
+        "en": "In a nutshell",
+        "te": "సంక్షిప్తంగా చెప్పాలంటే",
+        "hi": "संक्षेप में"
+      },
       "phraseType": "idiom",
       "register": "informal",
       "meaning": {
@@ -210,14 +341,28 @@
         "te": "సంక్షిప్తంగా చెప్పాలంటే, ప్రయోగం విఫలమైంది.",
         "hi": "संक्षेप में, प्रयोग असफल रहा।"
       },
-      "formalEquivalent": { "en": "In summary", "te": "In summary", "hi": "In summary" },
-      "tags": ["writing", "advanced", "idioms"],
+      "formalEquivalent": {
+        "en": "In summary",
+        "te": "In summary",
+        "hi": "In summary"
+      },
+      "tags": [
+        "writing",
+        "advanced",
+        "idioms"
+      ],
       "categoryHint": "Phrase Learning"
     },
     {
       "id": "phr-to-be-honest",
-      "classes": [8],
-      "phrase": { "en": "To be honest", "te": "నిజం చెప్పాలంటే", "hi": "सच कहूँ तो" },
+      "classes": [
+        8
+      ],
+      "phrase": {
+        "en": "To be honest",
+        "te": "నిజం చెప్పాలంటే",
+        "hi": "सच कहूँ तो"
+      },
       "phraseType": "discourse-marker",
       "register": "informal",
       "meaning": {
@@ -230,14 +375,27 @@
         "te": "నిజం చెప్పాలంటే, ఆ సినిమా నాకు నచ్చలేదు.",
         "hi": "सच कहूँ तो, मुझे वह फ़िल्म पसंद नहीं आई।"
       },
-      "formalEquivalent": { "en": "Frankly speaking", "te": "Frankly speaking", "hi": "Frankly speaking" },
-      "tags": ["conversation", "advanced"],
+      "formalEquivalent": {
+        "en": "Frankly speaking",
+        "te": "Frankly speaking",
+        "hi": "Frankly speaking"
+      },
+      "tags": [
+        "conversation",
+        "advanced"
+      ],
       "categoryHint": "Conversation Understanding"
     },
     {
       "id": "phr-end-of-the-day",
-      "classes": [8],
-      "phrase": { "en": "At the end of the day", "te": "చివరికి చూస్తే", "hi": "आख़िरकार" },
+      "classes": [
+        8
+      ],
+      "phrase": {
+        "en": "At the end of the day",
+        "te": "చివరికి చూస్తే",
+        "hi": "आख़िरकार"
+      },
       "phraseType": "idiom",
       "register": "informal",
       "meaning": {
@@ -250,9 +408,411 @@
         "te": "చివరికి చూస్తే, అదృష్టం కంటే కృషి ముఖ్యం.",
         "hi": "आख़िरकार, भाग्य से अधिक मेहनत मायने रखती है।"
       },
-      "formalEquivalent": { "en": "Ultimately", "te": "Ultimately", "hi": "Ultimately" },
-      "tags": ["conversation", "advanced", "idioms"],
+      "formalEquivalent": {
+        "en": "Ultimately",
+        "te": "Ultimately",
+        "hi": "Ultimately"
+      },
+      "tags": [
+        "conversation",
+        "advanced",
+        "idioms"
+      ],
       "categoryHint": "Phrase Learning"
+    },
+    {
+      "id": "phrase-c1-where-is",
+      "classes": [
+        1,
+        2
+      ],
+      "phrase": {
+        "en": "Excuse me, where is the library?",
+        "te": "క్షమించండి, గ్రంథాలయం ఎక్కడ ఉంది?",
+        "hi": "माफ़ कीजिए, पुस्तकालय कहाँ है?"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Asking for directions to a place",
+        "te": "ఒక ప్రదేశానికి దారి అడగడం",
+        "hi": "किसी जगह का रास्ता पूछना"
+      },
+      "situation": {
+        "en": "When you are lost in school",
+        "te": "మీరు పాఠశాలలో తప్పిపోయినప్పుడు",
+        "hi": "जब आप स्कूल में खो जाते हैं"
+      },
+      "tags": [
+        "school",
+        "directions",
+        "beginner"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c1-directions",
+      "classes": [
+        1,
+        2
+      ],
+      "phrase": {
+        "en": "Go straight and turn left.",
+        "te": "తిన్నగా వెళ్లి ఎడమవైపు తిరగండి.",
+        "hi": "सीधे जाइए और बाएँ मुड़िए।"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Giving directions to someone",
+        "te": "ఎవరికైనా దారి చెప్పడం",
+        "hi": "किसी को रास्ता बताना"
+      },
+      "situation": {
+        "en": "When someone asks you for directions",
+        "te": "ఎవరైనా మిమ్మల్ని దారి అడిగినప్పుడు",
+        "hi": "जब कोई आपसे रास्ता पूछता है"
+      },
+      "tags": [
+        "directions",
+        "beginner"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c1-help-mom",
+      "classes": [
+        1,
+        2
+      ],
+      "phrase": {
+        "en": "Can I help you, Mom?",
+        "te": "నేను మీకు సహాయం చేయనా, అమ్మా?",
+        "hi": "क्या मैं आपकी मदद कर सकता हूँ, माँ?"
+      },
+      "phraseType": "functional",
+      "register": "informal",
+      "meaning": {
+        "en": "Offering help to your mother",
+        "te": "మీ తల్లికి సహాయం చేయడానికి అడగడం",
+        "hi": "अपनी माँ की मदद करने की पेशकश करना"
+      },
+      "situation": {
+        "en": "When your mother is working at home",
+        "te": "మీ తల్లి ఇంట్లో పని చేస్తున్నప్పుడు",
+        "hi": "जब आपकी माँ घर पर काम कर रही हों"
+      },
+      "tags": [
+        "family",
+        "helping",
+        "beginner"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c1-buy-apple",
+      "classes": [
+        1,
+        2
+      ],
+      "phrase": {
+        "en": "I would like an apple, please.",
+        "te": "నాకు ఒక యాపిల్ కావాలి, దయచేసి.",
+        "hi": "मुझे एक सेब चाहिए, कृपया।"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Politely asking to buy something",
+        "te": "మర్యాదగా ఏదైనా కొనడానికి అడగడం",
+        "hi": "विनम्रता से कुछ खरीदने के लिए पूछना"
+      },
+      "situation": {
+        "en": "When you are at a fruit shop",
+        "te": "మీరు పండ్ల దుకాణంలో ఉన్నప్పుడు",
+        "hi": "जब आप फलों की दुकान पर हों"
+      },
+      "tags": [
+        "shopping",
+        "politeness",
+        "beginner"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c1-repeat-please",
+      "classes": [
+        1,
+        2
+      ],
+      "phrase": {
+        "en": "Can you repeat, please?",
+        "te": "దయచేసి మళ్లీ చెప్పగలరా?",
+        "hi": "क्या आप कृपया दोहरा सकते हैं?"
+      },
+      "phraseType": "functional",
+      "register": "formal",
+      "meaning": {
+        "en": "Asking someone to say something again",
+        "te": "ఎవరినైనా మళ్లీ ఏదైనా చెప్పమని అడగడం",
+        "hi": "किसी को फिर से कुछ कहने के लिए कहना"
+      },
+      "situation": {
+        "en": "When you didn't hear what the teacher said",
+        "te": "ఉపాధ్యాయుడు చెప్పింది మీకు వినపడనప్పుడు",
+        "hi": "जब आपने नहीं सुना कि शिक्षक ने क्या कहा"
+      },
+      "tags": [
+        "school",
+        "politeness",
+        "beginner"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c1-dont-understand",
+      "classes": [
+        1,
+        2
+      ],
+      "phrase": {
+        "en": "I don't understand.",
+        "te": "నాకు అర్థం కాలేదు.",
+        "hi": "मुझे समझ नहीं आया।"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Saying that you don't know what something means",
+        "te": "ఏదైనా అర్థం కానప్పుడు చెప్పడం",
+        "hi": "यह कहना कि आपको किसी चीज़ का मतलब नहीं पता"
+      },
+      "situation": {
+        "en": "When you don't know the meaning of a word",
+        "te": "మీకు ఒక పదం అర్థం తెలియనప్పుడు",
+        "hi": "जब आपको किसी शब्द का अर्थ नहीं पता हो"
+      },
+      "tags": [
+        "school",
+        "beginner"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c1-may-i-drink",
+      "classes": [
+        1,
+        2
+      ],
+      "phrase": {
+        "en": "May I drink water, please?",
+        "te": "నేను నీళ్లు త్రాగవచ్చా, దయచేసి?",
+        "hi": "क्या मैं पानी पी सकता हूँ, कृपया?"
+      },
+      "phraseType": "functional",
+      "register": "formal",
+      "meaning": {
+        "en": "Asking permission to drink water",
+        "te": "నీళ్లు త్రాగడానికి అనుమతి అడగడం",
+        "hi": "पानी पीने की अनुमति मांगना"
+      },
+      "situation": {
+        "en": "When you are thirsty in class",
+        "te": "మీరు తరగతిలో దాహంగా ఉన్నప్పుడు",
+        "hi": "जब आपको कक्षा में प्यास लगी हो"
+      },
+      "tags": [
+        "school",
+        "permission",
+        "politeness",
+        "beginner"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c3-great-idea",
+      "classes": [
+        3,
+        4,
+        5
+      ],
+      "phrase": {
+        "en": "That's a great idea!",
+        "te": "అది గొప్ప ఆలోచన!",
+        "hi": "यह एक बहुत अच्छा विचार है!"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Agreeing with someone's suggestion",
+        "te": "ఎవరి ఆలోచనతోనైనా ఏకీభవించడం",
+        "hi": "किसी के सुझाव से सहमत होना"
+      },
+      "situation": {
+        "en": "When planning something with a team",
+        "te": "బృందంతో కలిసి ఏదైనా ప్లాన్ చేస్తున్నప్పుడు",
+        "hi": "जब किसी टीम के साथ कुछ योजना बना रहे हों"
+      },
+      "tags": [
+        "teamwork",
+        "agreeing",
+        "intermediate"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c3-i-agree-because",
+      "classes": [
+        3,
+        4,
+        5
+      ],
+      "phrase": {
+        "en": "I agree because...",
+        "te": "నేను అంగీకరిస్తున్నాను ఎందుకంటే...",
+        "hi": "मैं सहमत हूँ क्योंकि..."
+      },
+      "phraseType": "discourse-marker",
+      "register": "formal",
+      "meaning": {
+        "en": "Giving a reason for agreeing with someone",
+        "te": "ఎవరితోనైనా ఏకీభవించడానికి కారణం చెప్పడం",
+        "hi": "किसी से सहमत होने का कारण बताना"
+      },
+      "situation": {
+        "en": "During a debate or discussion",
+        "te": "చర్చ లేదా సంభాషణ సమయంలో",
+        "hi": "बहस या चर्चा के दौरान"
+      },
+      "tags": [
+        "debate",
+        "agreeing",
+        "intermediate"
+      ],
+      "categoryHint": "Conversation Understanding"
+    },
+    {
+      "id": "phrase-c3-how-much-cost",
+      "classes": [
+        3,
+        4,
+        5
+      ],
+      "phrase": {
+        "en": "How much does this cost?",
+        "te": "దీని ధర ఎంత?",
+        "hi": "इसकी कीमत क्या है?"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Asking for the price of an item",
+        "te": "వస్తువు ధర అడగడం",
+        "hi": "किसी वस्तु की कीमत पूछना"
+      },
+      "situation": {
+        "en": "When shopping for something",
+        "te": "షాపింగ్ చేస్తున్నప్పుడు",
+        "hi": "जब कुछ खरीदारी कर रहे हों"
+      },
+      "tags": [
+        "shopping",
+        "intermediate"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c3-too-expensive",
+      "classes": [
+        3,
+        4,
+        5
+      ],
+      "phrase": {
+        "en": "That's too expensive.",
+        "te": "అది చాలా ఖరీదైనది.",
+        "hi": "यह बहुत महंगा है।"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Saying that the price is too high",
+        "te": "ధర చాలా ఎక్కువగా ఉందని చెప్పడం",
+        "hi": "यह कहना कि कीमत बहुत अधिक है"
+      },
+      "situation": {
+        "en": "When bargaining at a market",
+        "te": "మార్కెట్లో బేరమాడుతున్నప్పుడు",
+        "hi": "बाजार में मोलभाव करते समय"
+      },
+      "tags": [
+        "shopping",
+        "bargaining",
+        "intermediate"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c3-book-tickets",
+      "classes": [
+        3,
+        4,
+        5
+      ],
+      "phrase": {
+        "en": "I would like to book train tickets.",
+        "te": "నేను రైలు టిక్కెట్లను బుక్ చేసుకోవాలనుకుంటున్నాను.",
+        "hi": "मैं ट्रेन टिकट बुक करना चाहूंगा।"
+      },
+      "phraseType": "functional",
+      "register": "formal",
+      "meaning": {
+        "en": "Asking to buy travel tickets",
+        "te": "ప్రయాణ టిక్కెట్లను కొనమని అడగడం",
+        "hi": "यात्रा टिकट खरीदने के लिए पूछना"
+      },
+      "situation": {
+        "en": "At the railway station booking counter",
+        "te": "రైల్వే స్టేషన్ బుకింగ్ కౌంటర్ వద్ద",
+        "hi": "रेलवे स्टेशन बुकिंग काउंटर पर"
+      },
+      "tags": [
+        "travel",
+        "politeness",
+        "intermediate"
+      ],
+      "categoryHint": "Situational English"
+    },
+    {
+      "id": "phrase-c3-lost-item",
+      "classes": [
+        3,
+        4,
+        5
+      ],
+      "phrase": {
+        "en": "Where did you last see it?",
+        "te": "మీరు దీన్ని చివరిసారిగా ఎక్కడ చూశారు?",
+        "hi": "आपने इसे आखिरी बार कहाँ देखा था?"
+      },
+      "phraseType": "functional",
+      "register": "neutral",
+      "meaning": {
+        "en": "Asking someone where they lost something",
+        "te": "ఎవరైనా ఏదైనా ఎక్కడ పోగొట్టుకున్నారో అడగడం",
+        "hi": "किसी से पूछना कि उसने कोई चीज़ कहाँ खोई थी"
+      },
+      "situation": {
+        "en": "At the Lost and Found desk",
+        "te": "లాస్ట్ అండ్ ఫౌండ్ డెస్క్ వద్ద",
+        "hi": "लॉस्ट एंड फाउंड डेस्क पर"
+      },
+      "tags": [
+        "school",
+        "investigation",
+        "intermediate"
+      ],
+      "categoryHint": "Situational English"
     }
   ]
 }
