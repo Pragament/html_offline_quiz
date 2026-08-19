@@ -127,6 +127,7 @@
       <!-- ─────────────────────────── Action bar ─────────────────────────── -->
       <div class="action-bar">
         <div class="summary" id="summary" aria-live="polite"></div>
+        <p class="error" id="submitError" role="alert" hidden></p>
         <div class="action-buttons">
           <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
           <a class="btn" id="cheatsheetLink" href="cheatsheet.html">Cheatsheet</a>
@@ -134,19 +135,6 @@
         </div>
       </div>
     </form>
-
-    <!-- Hand-off preview: replaced by the real quiz engine in Phase 3 -->
-    <section class="card handoff" id="handoffPanel" hidden>
-      <div class="card-head">
-        <h2>Session saved</h2>
-        <button type="button" class="btn btn-sm btn-ghost" id="closeHandoffBtn">Close</button>
-      </div>
-      <p class="hint">
-        Written to <code>localStorage["quizSessionConfig"]</code> and logged to the console.
-        Phase 3 replaces <code>handOffToQuizEngine()</code> in <code>assets/home.js</code>.
-      </p>
-      <pre id="handoffJson" tabindex="0"></pre>
-    </section>
   </main>
 
   <!-- Template cloned for each student card -->

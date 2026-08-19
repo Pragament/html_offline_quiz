@@ -4,7 +4,7 @@
  * class controls, and falls back to a baked-in snapshot when they cannot be
  * fetched (opening this file straight off disk blocks fetch in most browsers).
  *
- * Phase 3 hook: replace handOffToQuizEngine() at the bottom of this file.
+ * Hands off to quiz.html once the session is saved.
  */
 (function () {
   'use strict';
@@ -122,8 +122,9 @@
      'sessionForm', 'classSelect', 'languageChips', 'languageError', 'categoryGrid',
      'difficultyChips', 'topicChips', 'customChips', 'customTagInput', 'addTagBtn',
      'customTagError', 'studentList', 'studentsError', 'studentModeHint', 'addStudentBtn',
-     'summary', 'startBtn', 'resetBtn', 'handoffPanel', 'handoffJson', 'closeHandoffBtn',
-     'studentTemplate', 'cheatsheetLink', 'endlessMode'].forEach(function (id) { el[id] = $(id); });
+     'summary', 'startBtn', 'resetBtn',
+     'studentTemplate', 'cheatsheetLink', 'endlessMode',
+     'submitError'].forEach(function (id) { el[id] = $(id); });
   }
 
   // ────────────────────────────── Data loading ──────────────────────────────
@@ -601,7 +602,7 @@
     renderClasses();
     el.studentList.innerHTML = '';
     addStudent();
-    el.handoffPanel.hidden = true;
+    el.submitError.hidden = true;
     el.languageError.hidden = true;
     el.studentsError.hidden = true;
     el.customTagError.hidden = true;
@@ -625,32 +626,28 @@
     config.students = check.students;
     config.deviceMode = check.students.length > 1 ? 'shared' : 'single';
 
-    var stored = true;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
     } catch (err) {
-      stored = false;
+      // quiz.html reads the session back out of localStorage, so if the write
+      // failed there is nothing for it to load. Say so here rather than sending
+      // the student to a page that can only error.
       if (window.console) console.error('[QuizMaster] could not write localStorage:', err);
+      el.submitError.textContent =
+        'Could not save the session on this device, so the quiz cannot start. ' +
+        'This usually means private browsing or a full storage quota.';
+      el.submitError.hidden = false;
+      el.submitError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
     }
-
-    el.handoffJson.textContent = JSON.stringify(config, null, 2);
-    el.handoffPanel.hidden = false;
-    if (!stored) {
-      el.handoffJson.textContent =
-        '/* localStorage unavailable — config not persisted */\n\n' + el.handoffJson.textContent;
-    }
-    el.handoffPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.submitError.hidden = true;
 
     handOffToQuizEngine(config);
   }
 
-  /* ── Phase 3 hook ────────────────────────────────────────────────────────
-     Replace the body of this function with the quiz engine launch. The config
-     is already persisted at localStorage["quizSessionConfig"] by the time this
-     runs, so the engine can equally well read it from there on a fresh page. */
+  /* The session is already saved to localStorage by the time this runs;
+     quiz.html reads it back on load. */
   function handOffToQuizEngine(config) {
-    // Config is already saved in localStorage by startQuiz().
-    // Navigate to the standalone quiz page.
     window.location.href = 'quiz.html';
   }
 
@@ -695,7 +692,6 @@
     });
 
     el.resetBtn.addEventListener('click', resetForm);
-    el.closeHandoffBtn.addEventListener('click', function () { el.handoffPanel.hidden = true; });
 
     el.restoreBtn.addEventListener('click', function () {
       applyConfig(readSaved());
@@ -729,7 +725,7 @@
     init();
   }
 
-  // Small surface for Phase 3 / manual testing.
+  // Small surface for the quiz page / manual testing.
   window.QuizHome = {
     STORAGE_KEY: STORAGE_KEY,
     getSavedConfig: readSaved,
