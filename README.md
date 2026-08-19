@@ -46,7 +46,7 @@ vocabulary, synonym, antonym, proverb and phrase dictionaries.
 | `assets/` | CSS and the framework-free JS modules (see below). |
 | `data/` | Question bank, generator sources, cheatsheet content. |
 | `schemas/` | JSON Schemas for every data file. |
-| `tools/` | `server.py` (dev server), `validate_data.py` (data checks), `build_offline.py` (offline build), plus small `check_*.py` helpers. |
+| `tools/` | `server.py` (dev server), `validate_data.py` (data checks), `check_project.py` (wiring checks), `build_offline.py` (offline build). |
 | `test/generators-test.html` | Dev harness: previews what each generator produces. |
 | `test_home.html` | Dev harness: catches JS errors thrown by the setup page. |
 | `legacy/quizmaster-v1.html` | The original single-file prototype, kept for reference. |
@@ -116,6 +116,26 @@ py -3 tools/validate_data.py
 Checks what JSON Schema cannot: parallel-array lengths across languages, answer
 indices in range, drag-drop orders being real permutations, generator template
 tokens resolving, cross-file `sourceId` references, and UTF-8 BOMs.
+
+### Checking how the pages are wired
+
+```bash
+py -3 tools/check_project.py
+```
+
+`validate_data.py` checks what is *in* `data/`; this checks how the pages hang
+together, which is where the quieter bugs live:
+
+- every local `href`/`src` resolves — a missing icon, stylesheet or script shows
+  up here instead of as a 404 in someone's console
+- no duplicate element ids on a page
+- every `getElementById()` a page's scripts call exists on that page
+- every CSS variable used is defined, and every `url()` resolves
+- the embedded offline JSON still matches `data/` (i.e. whether you owe a
+  `build_offline.py` run)
+
+Both scripts exit non-zero on failure, so they drop straight into a pre-commit
+hook or CI.
 
 ---
 
