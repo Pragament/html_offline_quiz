@@ -133,6 +133,7 @@
   var ENDLESS_MAX_TRIES = 12;   // consecutive empty variants before giving up
   var variant = 0;
   var seenKeys = {};
+  var seenSubjects = {};
   var recycleCursor = 0;
 
   /** Content fingerprint: two questions with the same one are the same question,
@@ -148,6 +149,22 @@
       JSON.stringify(optText),
       JSON.stringify(q.correctAnswer)
     ].join('|');
+  }
+
+  /** The teaching subject behind a question: which generator ran over which
+   *  entry. Two questions can differ in their distractors yet still be "the
+   *  same question" to a student — same stem, same word being tested — so the
+   *  subject, not the fingerprint, is what endless mode must spread out. */
+  function subjectKey(q) {
+    var s = q.source || {};
+    if (s.generator) {
+      // Aggregate generators (match-pairs) draw a fresh random set of entries
+      // each variant. Keying on that set would make every variant look like a
+      // brand new subject, so the same "Match each ..." prompt would come back
+      // on every top-up. One subject per aggregate generator instead.
+      return s.generator + '|' + (s.entry || 'aggregate');
+    }
+    return 'static|' + q.id;
   }
 
   function passesFilters(q) {
@@ -180,6 +197,7 @@
 
     variant = 0;
     seenKeys = {};
+    seenSubjects = {};
     recycleCursor = 0;
 
     // 1. Static questions (en-te-hi-questions.json)
@@ -205,6 +223,7 @@
       var key = questionKey(q);
       if (!seenKeys[key]) {
         seenKeys[key] = true;
+        seenSubjects[subjectKey(q)] = true;
         unique.push(q);
       }
     });
@@ -235,16 +254,26 @@
     variant++;
     var batch = QuizGenerator.generateAll(generatorData(), config.class, variant);
 
+    // Two passes. The first only accepts subjects the student has never seen,
+    // so every word, phrase and proverb in the class is covered before any of
+    // them comes round a second time. Only once the class is exhausted do we
+    // fall back to re-asking a subject with a different set of distractors.
     var fresh = [];
+    var recycled = [];
     batch.forEach(function (q) {
       var key = questionKey(q);
       if (seenKeys[key]) return;
       if (!passesFilters(q)) return;
-      seenKeys[key] = true;
-      fresh.push(q);
+      (seenSubjects[subjectKey(q)] ? recycled : fresh).push(q);
     });
 
+    if (!fresh.length) fresh = recycled;
     if (!fresh.length) return 0;
+
+    fresh.forEach(function (q) {
+      seenKeys[questionKey(q)] = true;
+      seenSubjects[subjectKey(q)] = true;
+    });
 
     var rng = QuizGenerator._createRng('quiz-' + config.class + '-' + studentIndex + '-v' + variant);
     questionBank = questionBank.concat(QuizGenerator._seededShuffle(fresh, rng));
