@@ -137,12 +137,15 @@
     promptEn.textContent = q.options.front.en;
     front.appendChild(promptEn);
     
-    if (langs.indexOf('te') !== -1 && q.options.front.te) {
+    ['te', 'hi'].forEach(function (lang) {
+      if (langs.indexOf(lang) === -1) return;
+      var text = q.options.front[lang];
+      if (!text || text === q.options.front.en) return;
       var pt = document.createElement('div');
       pt.style.marginTop = '8px'; pt.style.color = 'var(--text-muted)';
-      pt.textContent = q.options.front.te;
+      pt.textContent = text;
       front.appendChild(pt);
-    }
+    });
     
     var back = document.createElement('div');
     back.className = 'flip-card-back';
@@ -175,7 +178,6 @@
     targetZone.className = 'dd-target';
     
     var tokens = q.options.tokens.en;
-    var teGlosses = q.options.tokens.te;
     
     var slots = []; // state: array of token indices
     var slotEls = [];
@@ -269,11 +271,14 @@
       tokenEls.forEach(function(t) { t.style.pointerEvents = 'none'; });
       btnSubmit.disabled = true;
       
-      if (isCorrect) {
-        slotEls.forEach(function(s) { s.style.borderColor = 'var(--success-color)'; s.style.backgroundColor = '#f0fdf4'; });
-      } else {
-        slotEls.forEach(function(s) { s.style.borderColor = 'var(--danger-color)'; s.style.backgroundColor = '#fef2f2'; });
-      }
+      // Tokens, not raw hex: the hardcoded pale green/red rendered as bright
+      // blocks on the dark theme.
+      var edge = isCorrect ? 'var(--success-color)' : 'var(--danger-color)';
+      var fill = isCorrect ? 'var(--success-soft)' : 'var(--danger-soft)';
+      slotEls.forEach(function (s) {
+        s.style.borderColor = edge;
+        s.style.backgroundColor = fill;
+      });
       
       onAnswer(slots, isCorrect);
     });
@@ -362,12 +367,16 @@
       enDiv.textContent = enText;
       el.appendChild(enDiv);
       
-      if (langs.indexOf('te') !== -1 && textObj.te && textObj.te[index] && textObj.te[index] !== enText) {
-        var teDiv = document.createElement('div');
-        teDiv.style.fontSize = '0.85rem'; teDiv.style.color = 'var(--text-muted)';
-        teDiv.textContent = textObj.te[index];
-        el.appendChild(teDiv);
-      }
+      ['te', 'hi'].forEach(function (lang) {
+        if (langs.indexOf(lang) === -1) return;
+        var arr = textObj[lang];
+        var text = arr && arr[index];
+        if (!text || text === enText) return;
+        var d = document.createElement('div');
+        d.style.fontSize = '0.85rem'; d.style.color = 'var(--text-muted)';
+        d.textContent = text;
+        el.appendChild(d);
+      });
       
       el.addEventListener('click', function() {
         if (btnSubmit.disabled) return; // already submitted

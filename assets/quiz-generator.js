@@ -159,6 +159,18 @@
 
   // ─── Pool widening (distractor gathering) ─────────────────────────────
 
+  /** True if any language still carries an unexpanded {{token}}.
+   *  Templates may reference optional entry fields (most vocabulary entries
+   *  have no `example`), and a literal "{{example.en}}" on screen is worse
+   *  than no explanation at all. */
+  function hasUnresolved(expanded) {
+    if (!expanded) return false;
+    for (var i = 0; i < LANGS.length; i++) {
+      if (/\{\{[^}]+\}\}/.test(expanded[LANGS[i]] || '')) return true;
+    }
+    return false;
+  }
+
   function uniqueById(entries) {
     var seen = {};
     return entries.filter(function (e) {
@@ -286,8 +298,10 @@
 
       // TRUE variant: use the normal prompt with the real answer
       var trueText = expandTemplate(gen.prompt, entry, answerResolved.values);
+      if (hasUnresolved(trueText)) return [];
       var explanation = gen.explanation
         ? expandTemplate(gen.explanation, entry, answerResolved.values) : null;
+      if (hasUnresolved(explanation)) explanation = null;
 
       questions.push({
         id:            qId + '-true',
@@ -338,8 +352,10 @@
     var optResult = buildOptions(answerResolved.values, picked, gen.distractors.from, rng);
 
     var text        = expandTemplate(gen.prompt, entry, answerResolved.values);
+    if (hasUnresolved(text)) return [];
     var explanation = gen.explanation
       ? expandTemplate(gen.explanation, entry, answerResolved.values) : null;
+    if (hasUnresolved(explanation)) explanation = null;
 
     var question = {
       id:            qId,

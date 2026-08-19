@@ -197,22 +197,35 @@
 
   // ─────────────────────────────── Rendering ────────────────────────────────
 
+  // The class with the most content, so a first-time visitor lands on the
+  // richest example rather than whichever class happens to sort first.
+  var PREFERRED_CLASS = 5;
+
   function renderClasses() {
     var frag = document.createDocumentFragment();
+    var selectable = [];
+
     for (var c = 1; c <= 10; c++) {
+      var count = state.questionCountByClass[c] || 0;
+      var empty = state.dataLoaded && !count;
+
       var opt = document.createElement('option');
       opt.value = String(c);
-      var count = state.questionCountByClass[c] || 0;
-      opt.textContent = 'Class ' + c + (state.dataLoaded && !count ? ' · no content yet' : '');
+      opt.textContent = 'Class ' + c + (empty ? ' — no content yet' : '');
+      // Choosing an empty class only leads to a dead-end error screen, so take
+      // it off the table rather than letting someone walk into it.
+      opt.disabled = empty;
+      if (!empty) selectable.push(c);
       frag.appendChild(opt);
     }
+
     el.classSelect.innerHTML = '';
     el.classSelect.appendChild(frag);
 
-    // Prefer a class that actually has content in the sample data.
-    var withData = Object.keys(state.questionCountByClass)
-      .map(Number).filter(function (c) { return c >= 1 && c <= 10; }).sort(function (a, b) { return a - b; });
-    el.classSelect.value = String(withData.length ? withData[0] : 5);
+    var preferred = selectable.indexOf(PREFERRED_CLASS) !== -1
+      ? PREFERRED_CLASS
+      : (selectable.length ? selectable[0] : PREFERRED_CLASS);
+    el.classSelect.value = String(preferred);
   }
 
   function makeChip(opts) {

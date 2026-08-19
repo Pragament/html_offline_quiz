@@ -145,12 +145,12 @@ before giving up.
 | `table` | `columns[]` + `rows[][]` (row length must equal column count) |
 | `tips` | `items[].tip` |
 
-Two hooks tie it back to the rest of the app:
+Two fields are carried for the app to use, but **neither is wired up yet**:
 
-- **`quizLink: { category, tags }`** — a "Quiz me on this" button hands these straight to the
-  question-bank filter.
+- **`quizLink: { category, tags }`** — intended to drive a "Quiz me on this" button that hands
+  these straight to the question-bank filter. The data carries it; no UI reads it.
 - **`sourceId`** — points at the matching entry in the vocabulary or phrases file so the two stay
-  in step. The validator fails on a `sourceId` that resolves to nothing.
+  in step. The validator fails on a `sourceId` that resolves to nothing, but the app ignores it.
 
 ---
 
