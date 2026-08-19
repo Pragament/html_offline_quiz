@@ -330,6 +330,16 @@ def validate_generator(gen, entries, where0, gid_seen):
                 if token == "answer":
                     continue
                 head, _, tail = token.partition(".")
+
+                # `distractor` is supplied by the generator, not read off an
+                # entry — but it only exists if the generator asks for one.
+                if head == "distractor":
+                    if not gen.get("distractors"):
+                        fail(where, f"{field}.{lang}: uses {{{{{token}}}}} but the "
+                                    f"generator declares no `distractors`, so it "
+                                    f"can never be filled")
+                    continue
+
                 if tail and tail not in LANGS:
                     fail(where, f"{field}.{lang}: token {{{{{token}}}}} has unknown language '{tail}'")
                     continue

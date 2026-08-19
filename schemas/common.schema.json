@@ -184,7 +184,7 @@
         "prompt": { "$ref": "#/$defs/localizedText" },
         "answer": { "$ref": "#/$defs/fieldSelector" },
         "distractors": {
-          "description": "Where wrong options come from. Required for mcq and flip-card; omit for true-false.",
+          "description": "Where wrong options come from. Required for mcq and flip-card. A true-false generator may also declare one, in which case its `falseStatement` can use {{distractor.lang}} to name a word that is deliberately not the answer.",
           "type": "object",
           "required": ["count", "from"],
           "additionalProperties": false,
@@ -209,7 +209,7 @@
           }
         },
         "falseStatement": {
-          "description": "true-false generators only: template for the deliberately wrong variant. The generator emits the true form or this false form at random and sets correctAnswer accordingly.",
+          "description": "true-false generators only: template for the deliberately wrong variant, emitted alongside the true one. Prefer keeping the same sentence frame as `prompt` and swapping in {{distractor.lang}}, so the two cannot be told apart by shape; a statement built only from the entry's own fields tends to read as nonsense (\"fast is the opposite of fast\").",
           "$ref": "#/$defs/localizedText"
         },
         "aggregate": {

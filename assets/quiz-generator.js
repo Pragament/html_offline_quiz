@@ -316,9 +316,40 @@
         source:        { kind: 'generated', generator: gen.id, entry: entry.id }
       });
 
-      // FALSE variant: use falseStatement (if present) with correctAnswer = false
+      // FALSE variant. It needs a word that is genuinely NOT the answer; using
+      // the headword itself produced sentences like "fast is the opposite of
+      // fast", which is false but reads as a bug rather than a question. So
+      // borrow a word from a sibling entry and expose it as {{distractor.*}},
+      // keeping the same sentence frame as the true variant so the two cannot
+      // be told apart by shape.
+      var falseSubject = entry;
+      if (gen.falseStatement && gen.distractors) {
+        var pool = gatherDistractorEntries(entry, allEntries, gen.distractors, selectedClass);
+        if (pool && pool.length) {
+          // Never pick a word that really is one of the subject's answers.
+          var ownField = entry[gen.answer.path] || {};
+          var own = (ownField.en || []).map(function (w) { return String(w).toLowerCase(); });
+          var candidates = seededShuffle(pool, rng).filter(function (cand) {
+            var val = cand[gen.distractors.from.path];
+            var text = val && val.en;
+            return text && own.indexOf(String(text).toLowerCase()) === -1;
+          });
+          if (candidates.length) {
+            var dv = resolveAllLangs(candidates[0], gen.distractors.from, rng);
+            if (dv) {
+              falseSubject = {};
+              Object.keys(entry).forEach(function (k) { falseSubject[k] = entry[k]; });
+              falseSubject.distractor = dv.values;
+            }
+          }
+        }
+      }
+
       if (gen.falseStatement) {
-        var falseText = expandTemplate(gen.falseStatement, entry, answerResolved.values);
+        var falseText = expandTemplate(gen.falseStatement, falseSubject, answerResolved.values);
+        // No usable distractor means the sentence would still carry a raw
+        // token — emit only the true variant rather than something broken.
+        if (hasUnresolved(falseText)) return questions;
         questions.push({
           id:            qId + '-false',
           class:         selectedClass,

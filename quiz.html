@@ -2536,7 +2536,11 @@
   "$schema": "../schemas/antonyms.schema.json",
   "schemaVersion": "1.0.0",
   "fileType": "antonyms",
-  "languages": ["en", "te", "hi"],
+  "languages": [
+    "en",
+    "te",
+    "hi"
+  ],
   "updated": "2026-08-01",
   "description": "Class-tagged opposite-word sets. The true-false generator uses `falseStatement` to emit a deliberately wrong pairing half the time.",
   "idPrefix": "gen-ant",
@@ -2545,15 +2549,29 @@
       "id": "pick-antonym-mcq",
       "questionType": "mcq",
       "category": "Vocabulary Building",
-      "addTags": ["generated", "antonyms"],
+      "addTags": [
+        "generated",
+        "antonyms"
+      ],
       "weight": 2,
       "prompt": {
         "en": "Which word is the opposite of \"{{headword.en}}\"?",
         "te": "\"{{headword.en}}\" కు వ్యతిరేక పదం ఏది?",
         "hi": "\"{{headword.en}}\" का विलोम शब्द कौन सा है?"
       },
-      "answer": { "path": "antonyms", "pick": "random" },
-      "distractors": { "count": 3, "from": { "path": "headword" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" },
+      "answer": {
+        "path": "antonyms",
+        "pick": "random"
+      },
+      "distractors": {
+        "count": 3,
+        "from": {
+          "path": "headword"
+        },
+        "scope": "siblings",
+        "pool": "same-class",
+        "poolFallback": "widen"
+      },
       "explanation": {
         "en": "\"{{headword.en}}\" and \"{{answer}}\" describe opposite ends of the same idea.",
         "te": "\"{{headword.en}}\", \"{{answer}}\" ఒకే భావనకు రెండు వ్యతిరేక కొనలను సూచిస్తాయి.",
@@ -2564,127 +2582,273 @@
       "id": "antonym-true-false",
       "questionType": "true-false",
       "category": "Vocabulary Building",
-      "addTags": ["generated", "antonyms", "quick-check"],
+      "addTags": [
+        "generated",
+        "antonyms",
+        "quick-check"
+      ],
       "prompt": {
         "en": "\"{{answer}}\" is the opposite of \"{{headword.en}}\".",
         "te": "\"{{answer}}\" అనేది \"{{headword.en}}\" కు వ్యతిరేక పదం.",
         "hi": "\"{{answer}}\" शब्द \"{{headword.en}}\" का विलोम है।"
       },
-      "answer": { "path": "antonyms", "pick": "random" },
+      "answer": {
+        "path": "antonyms",
+        "pick": "random"
+      },
       "falseStatement": {
-        "en": "\"{{headword.en}}\" is the opposite of \"{{headword.en}}\".",
-        "te": "\"{{headword.en}}\" అనేది \"{{headword.en}}\" కు వ్యతిరేక పదం.",
-        "hi": "\"{{headword.en}}\" शब्द \"{{headword.en}}\" का विलोम है।"
+        "en": "\"{{distractor.en}}\" is the opposite of \"{{headword.en}}\".",
+        "te": "\"{{distractor.te}}\" అనేది \"{{headword.en}}\" కు వ్యతిరేక పదం.",
+        "hi": "\"{{distractor.hi}}\" शब्द \"{{headword.en}}\" का विलोम है।"
+      },
+      "distractors": {
+        "count": 1,
+        "from": {
+          "path": "headword"
+        },
+        "scope": "siblings",
+        "pool": "same-class",
+        "poolFallback": "widen"
       }
     }
   ],
   "entries": [
     {
       "id": "ant-happy",
-      "classes": [5],
-      "headword": { "en": "happy", "te": "సంతోషం", "hi": "ख़ुश" },
+      "classes": [
+        5
+      ],
+      "headword": {
+        "en": "happy",
+        "te": "సంతోషం",
+        "hi": "ख़ुश"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["sad", "unhappy", "miserable"],
-        "te": ["విచారంగా", "సంతోషం లేని", "దుఃఖంగా"],
-        "hi": ["उदास", "नाख़ुश", "दुखी"]
+        "en": [
+          "sad",
+          "unhappy",
+          "miserable"
+        ],
+        "te": [
+          "విచారంగా",
+          "సంతోషం లేని",
+          "దుఃఖంగా"
+        ],
+        "hi": [
+          "उदास",
+          "नाख़ुश",
+          "दुखी"
+        ]
       },
       "example": {
         "en": "He was happy in the morning but sad by evening.",
         "te": "ఉదయం అతను సంతోషంగా ఉన్నాడు, సాయంత్రానికి విచారంగా మారాడు.",
         "hi": "सुबह वह ख़ुश था पर शाम तक उदास हो गया।"
       },
-      "tags": ["emotions", "daily", "beginner"],
+      "tags": [
+        "emotions",
+        "daily",
+        "beginner"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-big",
-      "classes": [5],
-      "headword": { "en": "big", "te": "పెద్ద", "hi": "बड़ा" },
+      "classes": [
+        5
+      ],
+      "headword": {
+        "en": "big",
+        "te": "పెద్ద",
+        "hi": "बड़ा"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["small", "tiny", "little"],
-        "te": ["చిన్న", "అతి చిన్న", "కొద్దిపాటి"],
-        "hi": ["छोटा", "नन्हा", "थोड़ा"]
+        "en": [
+          "small",
+          "tiny",
+          "little"
+        ],
+        "te": [
+          "చిన్న",
+          "అతి చిన్న",
+          "కొద్దిపాటి"
+        ],
+        "hi": [
+          "छोटा",
+          "नन्हा",
+          "थोड़ा"
+        ]
       },
       "example": {
         "en": "A big elephant and a tiny ant walked past.",
         "te": "ఒక పెద్ద ఏనుగు, ఒక అతి చిన్న చీమ పక్కనుంచి వెళ్ళాయి.",
         "hi": "एक बड़ा हाथी और एक नन्ही चींटी पास से गुज़रे।"
       },
-      "tags": ["daily", "beginner", "adjectives"],
+      "tags": [
+        "daily",
+        "beginner",
+        "adjectives"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-fast",
-      "classes": [5, 6],
-      "headword": { "en": "fast", "te": "వేగం", "hi": "तेज़" },
+      "classes": [
+        5,
+        6
+      ],
+      "headword": {
+        "en": "fast",
+        "te": "వేగం",
+        "hi": "तेज़"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["slow", "sluggish", "gradual"],
-        "te": ["నెమ్మదిగా", "మందకొడిగా", "క్రమంగా"],
-        "hi": ["धीमा", "सुस्त", "क्रमिक"]
+        "en": [
+          "slow",
+          "sluggish",
+          "gradual"
+        ],
+        "te": [
+          "నెమ్మదిగా",
+          "మందకొడిగా",
+          "క్రమంగా"
+        ],
+        "hi": [
+          "धीमा",
+          "सुस्त",
+          "क्रमिक"
+        ]
       },
       "example": {
         "en": "The train was fast, but the bus was slow.",
         "te": "రైలు వేగంగా ఉంది, కానీ బస్సు నెమ్మదిగా ఉంది.",
         "hi": "रेलगाड़ी तेज़ थी, पर बस धीमी थी।"
       },
-      "tags": ["daily", "travel", "intermediate"],
+      "tags": [
+        "daily",
+        "travel",
+        "intermediate"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-ancient",
-      "classes": [8],
-      "headword": { "en": "ancient", "te": "ప్రాచీన", "hi": "प्राचीन" },
+      "classes": [
+        8
+      ],
+      "headword": {
+        "en": "ancient",
+        "te": "ప్రాచీన",
+        "hi": "प्राचीन"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["modern", "recent", "new"],
-        "te": ["ఆధునిక", "ఇటీవలి", "కొత్త"],
-        "hi": ["आधुनिक", "हालिया", "नया"]
+        "en": [
+          "modern",
+          "recent",
+          "new"
+        ],
+        "te": [
+          "ఆధునిక",
+          "ఇటీవలి",
+          "కొత్త"
+        ],
+        "hi": [
+          "आधुनिक",
+          "हालिया",
+          "नया"
+        ]
       },
       "example": {
         "en": "The museum keeps ancient coins beside modern ones.",
         "te": "మ్యూజియంలో ప్రాచీన నాణేలను ఆధునిక నాణేల పక్కనే ఉంచారు.",
         "hi": "संग्रहालय में प्राचीन सिक्के आधुनिक सिक्कों के साथ रखे हैं।"
       },
-      "tags": ["history", "advanced"],
+      "tags": [
+        "history",
+        "advanced"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-generous",
-      "classes": [8],
-      "headword": { "en": "generous", "te": "ఉదారమైన", "hi": "उदार" },
+      "classes": [
+        8
+      ],
+      "headword": {
+        "en": "generous",
+        "te": "ఉదారమైన",
+        "hi": "उदार"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["selfish", "stingy", "greedy"],
-        "te": ["స్వార్థపరుడు", "పిసినారి", "అత్యాశపరుడు"],
-        "hi": ["स्वार्थी", "कंजूस", "लालची"]
+        "en": [
+          "selfish",
+          "stingy",
+          "greedy"
+        ],
+        "te": [
+          "స్వార్థపరుడు",
+          "పిసినారి",
+          "అత్యాశపరుడు"
+        ],
+        "hi": [
+          "स्वार्थी",
+          "कंजूस",
+          "लालची"
+        ]
       },
       "example": {
         "en": "A generous friend shares; a selfish one hides.",
         "te": "ఉదారమైన స్నేహితుడు పంచుకుంటాడు; స్వార్థపరుడు దాచుకుంటాడు.",
         "hi": "उदार मित्र बाँटता है; स्वार्थी छिपाता है।"
       },
-      "tags": ["values", "advanced"],
+      "tags": [
+        "values",
+        "advanced"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-victory",
-      "classes": [8],
-      "headword": { "en": "victory", "te": "విజయం", "hi": "जीत" },
+      "classes": [
+        8
+      ],
+      "headword": {
+        "en": "victory",
+        "te": "విజయం",
+        "hi": "जीत"
+      },
       "partOfSpeech": "noun",
       "antonyms": {
-        "en": ["defeat", "loss", "failure"],
-        "te": ["ఓటమి", "నష్టం", "వైఫల్యం"],
-        "hi": ["हार", "नुक़सान", "असफलता"]
+        "en": [
+          "defeat",
+          "loss",
+          "failure"
+        ],
+        "te": [
+          "ఓటమి",
+          "నష్టం",
+          "వైఫల్యం"
+        ],
+        "hi": [
+          "हार",
+          "नुक़सान",
+          "असफलता"
+        ]
       },
       "example": {
         "en": "One defeat cannot erase a season of victory.",
         "te": "ఒక ఓటమి ఒక సీజన్ విజయాన్ని చెరిపివేయలేదు.",
         "hi": "एक हार पूरे सत्र की जीत को नहीं मिटा सकती।"
       },
-      "tags": ["sports", "advanced"],
+      "tags": [
+        "sports",
+        "advanced"
+      ],
       "categoryHint": "Vocabulary Building"
     }
   ]

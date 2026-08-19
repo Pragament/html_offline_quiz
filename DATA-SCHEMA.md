@@ -97,7 +97,10 @@ static bank and the generated bank concatenate directly. Generated ids are
 ```
 
 **Template tokens** are `{{field.lang}}` — `{{word.en}}`, `{{headword.te}}`, `{{cloze.en}}`.
-`{{answer}}` resolves to the correct option text in the column being rendered. Double braces
+Two are supplied by the generator rather than read off the entry: `{{answer}}` resolves
+to the correct option text in the column being rendered, and `{{distractor.lang}}`
+resolves to a word borrowed from a sibling entry — used by `falseStatement` to name
+something that is deliberately *not* the answer. Double braces
 never collide with Telugu or Hindi text. The validator checks that every token names a real
 entry field and a real language.
 
