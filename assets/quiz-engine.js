@@ -133,6 +133,7 @@
   var ENDLESS_MAX_TRIES = 12;   // consecutive empty variants before giving up
   var variant = 0;
   var seenKeys = {};
+  var seenSubjects = {};
   var recycleCursor = 0;
 
   /** Content fingerprint: two questions with the same one are the same question,
@@ -148,6 +149,22 @@
       JSON.stringify(optText),
       JSON.stringify(q.correctAnswer)
     ].join('|');
+  }
+
+  /** The teaching subject behind a question: which generator ran over which
+   *  entry. Two questions can differ in their distractors yet still be "the
+   *  same question" to a student — same stem, same word being tested — so the
+   *  subject, not the fingerprint, is what endless mode must spread out. */
+  function subjectKey(q) {
+    var s = q.source || {};
+    if (s.generator) {
+      // Aggregate generators (match-pairs) draw a fresh random set of entries
+      // each variant. Keying on that set would make every variant look like a
+      // brand new subject, so the same "Match each ..." prompt would come back
+      // on every top-up. One subject per aggregate generator instead.
+      return s.generator + '|' + (s.entry || 'aggregate');
+    }
+    return 'static|' + q.id;
   }
 
   function passesFilters(q) {
@@ -180,6 +197,7 @@
 
     variant = 0;
     seenKeys = {};
+    seenSubjects = {};
     recycleCursor = 0;
 
     // 1. Static questions (en-te-hi-questions.json)
@@ -205,6 +223,7 @@
       var key = questionKey(q);
       if (!seenKeys[key]) {
         seenKeys[key] = true;
+        seenSubjects[subjectKey(q)] = true;
         unique.push(q);
       }
     });
@@ -235,16 +254,26 @@
     variant++;
     var batch = QuizGenerator.generateAll(generatorData(), config.class, variant);
 
+    // Two passes. The first only accepts subjects the student has never seen,
+    // so every word, phrase and proverb in the class is covered before any of
+    // them comes round a second time. Only once the class is exhausted do we
+    // fall back to re-asking a subject with a different set of distractors.
     var fresh = [];
+    var recycled = [];
     batch.forEach(function (q) {
       var key = questionKey(q);
       if (seenKeys[key]) return;
       if (!passesFilters(q)) return;
-      seenKeys[key] = true;
-      fresh.push(q);
+      (seenSubjects[subjectKey(q)] ? recycled : fresh).push(q);
     });
 
+    if (!fresh.length) fresh = recycled;
     if (!fresh.length) return 0;
+
+    fresh.forEach(function (q) {
+      seenKeys[questionKey(q)] = true;
+      seenSubjects[subjectKey(q)] = true;
+    });
 
     var rng = QuizGenerator._createRng('quiz-' + config.class + '-' + studentIndex + '-v' + variant);
     questionBank = questionBank.concat(QuizGenerator._seededShuffle(fresh, rng));
@@ -459,6 +488,47 @@
     els.btnNext.focus();
   }
 
+  /** Append one line per selected language, skipping repeats. */
+  function appendLocalized(container, localized, prefix) {
+    var langs = (config && config.languages) || ['en'];
+    var seen = [];
+    ['en', 'te', 'hi'].forEach(function (lang) {
+      if (lang !== 'en' && langs.indexOf(lang) === -1) return;
+      var text = localized[lang];
+      if (!text || seen.indexOf(text) !== -1) return;
+      seen.push(text);
+      var div = document.createElement('div');
+      if (lang !== 'en') {
+        div.style.fontSize = '0.9rem';
+        div.style.color = 'var(--text-muted)';
+        div.style.marginTop = '4px';
+      }
+      div.textContent = (lang === 'en' ? (prefix || '') : '') + text;
+      container.appendChild(div);
+    });
+  }
+
+  /** Human-readable correct answer, whatever the question type. */
+  function correctAnswerText(q) {
+    var o = q.options || {};
+    var a = q.correctAnswer;
+    try {
+      if (q.type === 'mcq') return o.en[a];
+      if (q.type === 'flip-card') return o.choices.en[a];
+      if (q.type === 'true-false') return a ? (o.en[0] || 'True') : (o.en[1] || 'False');
+      if (q.type === 'drag-drop') {
+        if (o.target && o.target.en) return o.target.en;
+        return a.map(function (i) { return o.tokens.en[i]; }).join(' ');
+      }
+      if (q.type === 'match-pairs') {
+        return a.map(function (pair) {
+          return o.left.en[pair[0]] + ' → ' + o.right.en[pair[1]];
+        }).join(';  ');
+      }
+    } catch (e) { /* malformed question — fall through */ }
+    return '';
+  }
+
   function showFeedback(type, title, q) {
     els.questionFeedback.className = 'question-feedback ' + type;
     
@@ -471,26 +541,26 @@
     els.feedbackTitle.textContent = title;
     
     els.feedbackExplanation.innerHTML = '';
-    if (q.explanation && q.explanation.en) {
-      els.feedbackExplanation.textContent = '💡 ' + q.explanation.en;
+
+    // The explanation is the teaching moment, so it follows the languages the
+    // student chose rather than always being English.
+    if (q.explanation) {
+      appendLocalized(els.feedbackExplanation, q.explanation, '💡 ');
     }
-    
-    // For Match Pairs and Drag Drop, show correct answer text if missed/skipped
-    if ((type === 'wrong' || type === 'skipped') && q.options) {
-        if (q.type === 'drag-drop' && q.options.target && q.options.target.en) {
-             var div = document.createElement('div');
-             div.style.marginTop = '8px';
-             div.innerHTML = '<strong>Correct:</strong> ' + q.options.target.en;
-             els.feedbackExplanation.appendChild(div);
-        }
-        else if (q.type === 'match-pairs' && q.options.left && q.options.right) {
-             // simplified feedback for match pairs just indicating they missed it. 
-             // detailed review is in the results screen
-             var div2 = document.createElement('div');
-             div2.style.marginTop = '8px';
-             div2.innerHTML = 'Review the correct pairs in the results screen.';
-             els.feedbackExplanation.appendChild(div2);
-        }
+
+    // Show the right answer when they missed it — otherwise there is nowhere
+    // to learn it from.
+    if (type === 'wrong' || type === 'skipped') {
+      var answer = correctAnswerText(q);
+      if (answer) {
+        var box = document.createElement('div');
+        box.style.marginTop = '8px';
+        var label = document.createElement('strong');
+        label.textContent = 'Correct answer: ';
+        box.appendChild(label);
+        box.appendChild(document.createTextNode(answer));
+        els.feedbackExplanation.appendChild(box);
+      }
     }
     
     els.questionFeedback.classList.remove('hidden');

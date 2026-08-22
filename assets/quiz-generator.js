@@ -159,6 +159,18 @@
 
   // ─── Pool widening (distractor gathering) ─────────────────────────────
 
+  /** True if any language still carries an unexpanded {{token}}.
+   *  Templates may reference optional entry fields (most vocabulary entries
+   *  have no `example`), and a literal "{{example.en}}" on screen is worse
+   *  than no explanation at all. */
+  function hasUnresolved(expanded) {
+    if (!expanded) return false;
+    for (var i = 0; i < LANGS.length; i++) {
+      if (/\{\{[^}]+\}\}/.test(expanded[LANGS[i]] || '')) return true;
+    }
+    return false;
+  }
+
   function uniqueById(entries) {
     var seen = {};
     return entries.filter(function (e) {
@@ -286,8 +298,10 @@
 
       // TRUE variant: use the normal prompt with the real answer
       var trueText = expandTemplate(gen.prompt, entry, answerResolved.values);
+      if (hasUnresolved(trueText)) return [];
       var explanation = gen.explanation
         ? expandTemplate(gen.explanation, entry, answerResolved.values) : null;
+      if (hasUnresolved(explanation)) explanation = null;
 
       questions.push({
         id:            qId + '-true',
@@ -302,9 +316,40 @@
         source:        { kind: 'generated', generator: gen.id, entry: entry.id }
       });
 
-      // FALSE variant: use falseStatement (if present) with correctAnswer = false
+      // FALSE variant. It needs a word that is genuinely NOT the answer; using
+      // the headword itself produced sentences like "fast is the opposite of
+      // fast", which is false but reads as a bug rather than a question. So
+      // borrow a word from a sibling entry and expose it as {{distractor.*}},
+      // keeping the same sentence frame as the true variant so the two cannot
+      // be told apart by shape.
+      var falseSubject = entry;
+      if (gen.falseStatement && gen.distractors) {
+        var pool = gatherDistractorEntries(entry, allEntries, gen.distractors, selectedClass);
+        if (pool && pool.length) {
+          // Never pick a word that really is one of the subject's answers.
+          var ownField = entry[gen.answer.path] || {};
+          var own = (ownField.en || []).map(function (w) { return String(w).toLowerCase(); });
+          var candidates = seededShuffle(pool, rng).filter(function (cand) {
+            var val = cand[gen.distractors.from.path];
+            var text = val && val.en;
+            return text && own.indexOf(String(text).toLowerCase()) === -1;
+          });
+          if (candidates.length) {
+            var dv = resolveAllLangs(candidates[0], gen.distractors.from, rng);
+            if (dv) {
+              falseSubject = {};
+              Object.keys(entry).forEach(function (k) { falseSubject[k] = entry[k]; });
+              falseSubject.distractor = dv.values;
+            }
+          }
+        }
+      }
+
       if (gen.falseStatement) {
-        var falseText = expandTemplate(gen.falseStatement, entry, answerResolved.values);
+        var falseText = expandTemplate(gen.falseStatement, falseSubject, answerResolved.values);
+        // No usable distractor means the sentence would still carry a raw
+        // token — emit only the true variant rather than something broken.
+        if (hasUnresolved(falseText)) return questions;
         questions.push({
           id:            qId + '-false',
           class:         selectedClass,
@@ -338,8 +383,10 @@
     var optResult = buildOptions(answerResolved.values, picked, gen.distractors.from, rng);
 
     var text        = expandTemplate(gen.prompt, entry, answerResolved.values);
+    if (hasUnresolved(text)) return [];
     var explanation = gen.explanation
       ? expandTemplate(gen.explanation, entry, answerResolved.values) : null;
+    if (hasUnresolved(explanation)) explanation = null;
 
     var question = {
       id:            qId,

@@ -6,6 +6,7 @@
   <title>QuizMaster — Start a session</title>
   <meta name="description" content="Set up a trilingual English / Telugu / Hindi quiz session for one student or a whole class.">
   <link rel="stylesheet" href="assets/home.css">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 </head>
 <body>
   <a class="skip-link" href="#setup">Skip to setup</a>
@@ -126,6 +127,7 @@
       <!-- ─────────────────────────── Action bar ─────────────────────────── -->
       <div class="action-bar">
         <div class="summary" id="summary" aria-live="polite"></div>
+        <p class="error" id="submitError" role="alert" hidden></p>
         <div class="action-buttons">
           <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
           <a class="btn" id="cheatsheetLink" href="cheatsheet.html">Cheatsheet</a>
@@ -133,19 +135,6 @@
         </div>
       </div>
     </form>
-
-    <!-- Hand-off preview: replaced by the real quiz engine in Phase 3 -->
-    <section class="card handoff" id="handoffPanel" hidden>
-      <div class="card-head">
-        <h2>Session saved</h2>
-        <button type="button" class="btn btn-sm btn-ghost" id="closeHandoffBtn">Close</button>
-      </div>
-      <p class="hint">
-        Written to <code>localStorage["quizSessionConfig"]</code> and logged to the console.
-        Phase 3 replaces <code>handOffToQuizEngine()</code> in <code>assets/home.js</code>.
-      </p>
-      <pre id="handoffJson" tabindex="0"></pre>
-    </section>
   </main>
 
   <!-- Template cloned for each student card -->
@@ -1443,6 +1432,11 @@
         "te": "మీరు మీ కుటుంబంతో నివసించే ప్రదేశం",
         "hi": "वह जगह जहाँ आप अपने परिवार के साथ रहते हैं"
       },
+      "example": {
+        "en": "We go home after school.",
+        "te": "పాఠశాల తర్వాత మేము ఇంటికి వెళ్తాము.",
+        "hi": "स्कूल के बाद हम घर जाते हैं।"
+      },
       "tags": [
         "beginner",
         "family",
@@ -1466,6 +1460,11 @@
         "en": "A room where food is cooked",
         "te": "ఆహారం వండే గది",
         "hi": "वह कमरा जहाँ खाना पकाया जाता है"
+      },
+      "example": {
+        "en": "Amma is cooking rice in the kitchen.",
+        "te": "అమ్మ వంటగదిలో అన్నం వండుతోంది.",
+        "hi": "माँ रसोई में चावल पका रही हैं।"
       },
       "tags": [
         "beginner",
@@ -1491,6 +1490,11 @@
         "te": "వెలుతురు మరియు గాలి రావడానికి గోడలో ఉండే రంధ్రం",
         "hi": "रोशनी और हवा आने के लिए दीवार में बना एक छेद"
       },
+      "example": {
+        "en": "Please open the window.",
+        "te": "దయచేసి కిటికీ తెరవండి.",
+        "hi": "कृपया खिड़की खोलिए।"
+      },
       "tags": [
         "beginner",
         "daily"
@@ -1513,6 +1517,11 @@
         "en": "A female parent",
         "te": "ఆడ తల్లిదండ్రులు",
         "hi": "महिला माता-पिता"
+      },
+      "example": {
+        "en": "My mother tells me a story every night.",
+        "te": "మా అమ్మ ప్రతి రాత్రి నాకు కథ చెబుతుంది.",
+        "hi": "मेरी माँ हर रात मुझे कहानी सुनाती हैं।"
       },
       "tags": [
         "beginner",
@@ -1538,6 +1547,11 @@
         "te": "మగ తల్లిదండ్రులు",
         "hi": "पुरुष माता-पिता"
       },
+      "example": {
+        "en": "My father goes to work by bus.",
+        "te": "మా నాన్న బస్సులో పనికి వెళ్తారు.",
+        "hi": "मेरे पिता बस से काम पर जाते हैं।"
+      },
       "tags": [
         "beginner",
         "family",
@@ -1561,6 +1575,11 @@
         "en": "A plant or part of a plant used as food",
         "te": "ఆహారంగా ఉపయోగించే మొక్క లేదా మొక్కలో ఒక భాగం",
         "hi": "भोजन के रूप में इस्तेमाल किया जाने वाला पौधा या पौधे का हिस्सा"
+      },
+      "example": {
+        "en": "Carrot is my favourite vegetable.",
+        "te": "క్యారెట్ నాకు ఇష్టమైన కూరగాయ.",
+        "hi": "गाजर मेरी पसंदीदा सब्जी है।"
       },
       "tags": [
         "beginner",
@@ -1586,6 +1605,11 @@
         "te": "చెట్టు లేదా మొక్క నుండి వచ్చే తీయని మరియు కండ కలిగిన ఉత్పత్తి",
         "hi": "पेड़ या पौधे का मीठा और गूदेदार उत्पाद"
       },
+      "example": {
+        "en": "A mango is a sweet fruit.",
+        "te": "మామిడి ఒక తియ్యని పండు.",
+        "hi": "आम एक मीठा फल है।"
+      },
       "tags": [
         "beginner",
         "food",
@@ -1609,6 +1633,11 @@
         "en": "In good condition and not sick",
         "te": "మంచి స్థితిలో ఉన్న మరియు జబ్బుపడని",
         "hi": "अच्छी स्थिति में और बीमार नहीं"
+      },
+      "example": {
+        "en": "Milk and fruit keep us healthy.",
+        "te": "పాలు, పండ్లు మనల్ని ఆరోగ్యంగా ఉంచుతాయి.",
+        "hi": "दूध और फल हमें स्वस्थ रखते हैं।"
       },
       "tags": [
         "beginner",
@@ -1634,6 +1663,11 @@
         "te": "సరదా కోసం మరియు ఆనందం కోసం చేసే పనులు",
         "hi": "मौज-मस्ती और आनंद के लिए गतिविधियाँ करना"
       },
+      "example": {
+        "en": "The children play in the park every evening.",
+        "te": "పిల్లలు ప్రతి సాయంత్రం పార్క్‌లో ఆడుకుంటారు.",
+        "hi": "बच्चे हर शाम पार्क में खेलते हैं।"
+      },
       "tags": [
         "beginner",
         "verbs",
@@ -1657,6 +1691,11 @@
         "en": "Water that falls from the clouds in drops",
         "te": "మబ్బుల నుండి చుక్కలుగా పడే నీరు",
         "hi": "बादलों से बूंदों के रूप में गिरने वाला पानी"
+      },
+      "example": {
+        "en": "We stay inside when it starts to rain.",
+        "te": "వర్షం మొదలైనప్పుడు మేము లోపల ఉంటాము.",
+        "hi": "जब बारिश शुरू होती है तो हम अंदर रहते हैं।"
       },
       "tags": [
         "beginner",
@@ -1682,6 +1721,11 @@
         "te": "జబ్బుపడిన వారు కోలుకోవడానికి సహాయం చేసే వ్యక్తి",
         "hi": "वह व्यक्ति जो बीमार लोगों को ठीक होने में मदद करता है"
       },
+      "example": {
+        "en": "The doctor gave me medicine for my cough.",
+        "te": "దగ్గు కోసం వైద్యుడు నాకు మందు ఇచ్చారు.",
+        "hi": "डॉक्टर ने मुझे खाँसी की दवा दी।"
+      },
       "tags": [
         "beginner",
         "work",
@@ -1705,6 +1749,11 @@
         "en": "People whose job is to protect us and keep us safe",
         "te": "మనల్ని రక్షించడం మరియు సురక్షితంగా ఉంచడం ఎవరి పని అయితే వారు",
         "hi": "वे लोग जिनका काम हमारी रक्षा करना और हमें सुरक्षित रखना है"
+      },
+      "example": {
+        "en": "The police help us when we are in trouble.",
+        "te": "మనం ఇబ్బందిలో ఉన్నప్పుడు పోలీసులు సహాయం చేస్తారు.",
+        "hi": "मुसीबत में पुलिस हमारी मदद करती है।"
       },
       "tags": [
         "beginner",
@@ -1730,6 +1779,11 @@
         "te": "వెలుతురు మరియు వేడిని ఇచ్చే మండే జ్వాలలు",
         "hi": "जलती हुई लपटें जो रोशनी और गर्मी देती हैं"
       },
+      "example": {
+        "en": "Do not touch the fire.",
+        "te": "మంటను ముట్టుకోవద్దు.",
+        "hi": "आग को मत छुओ।"
+      },
       "tags": [
         "beginner",
         "daily",
@@ -1753,6 +1807,11 @@
         "en": "To help someone learn something new",
         "te": "ఎవరైనా కొత్తగా నేర్చుకోవడానికి సహాయపడటం",
         "hi": "किसी को कुछ नया सीखने में मदद करना"
+      },
+      "example": {
+        "en": "Our teacher will teach us a new song today.",
+        "te": "మా టీచర్ ఈరోజు మాకు కొత్త పాట నేర్పుతారు.",
+        "hi": "हमारी शिक्षिका आज हमें नया गाना सिखाएँगी।"
       },
       "tags": [
         "beginner",
@@ -1778,6 +1837,11 @@
         "te": "చెక్క మోడు మరియు కొమ్మలతో ఉండే పొడవాటి మొక్క",
         "hi": "लकड़ी के तने और शाखाओं वाला एक लंबा पौधा"
       },
+      "example": {
+        "en": "A big tree gives us shade.",
+        "te": "పెద్ద చెట్టు మనకు నీడ ఇస్తుంది.",
+        "hi": "बड़ा पेड़ हमें छाया देता है।"
+      },
       "tags": [
         "beginner",
         "nature",
@@ -1801,6 +1865,11 @@
         "en": "Not dirty; neat and tidy",
         "te": "మురికి లేని; చక్కగా మరియు శుభ్రంగా",
         "hi": "गंदा नहीं; साफ और सुव्यवस्थित"
+      },
+      "example": {
+        "en": "Keep your desk clean.",
+        "te": "మీ బల్లను శుభ్రంగా ఉంచండి.",
+        "hi": "अपनी मेज़ साफ रखो।"
       },
       "tags": [
         "beginner",
@@ -1826,6 +1895,11 @@
         "te": "చెత్తను పడేయడానికి ఉపయోగించే బుట్ట",
         "hi": "कचरा फेंकने के लिए इस्तेमाल किया जाने वाला डब्बा"
       },
+      "example": {
+        "en": "Throw the paper in the dustbin.",
+        "te": "కాగితాన్ని చెత్తబుట్టలో వేయండి.",
+        "hi": "काग़ज़ को कूड़ेदान में डालो।"
+      },
       "tags": [
         "beginner",
         "school",
@@ -1849,6 +1923,11 @@
         "en": "The clear liquid we drink and use for washing",
         "te": "మనం త్రాగడానికి మరియు కడగడానికి ఉపయోగించే స్వచ్ఛమైన ద్రవం",
         "hi": "वह साफ तरल जिसे हम पीते हैं और धोने के लिए इस्तेमाल करते हैं"
+      },
+      "example": {
+        "en": "Drink water after you play.",
+        "te": "ఆడిన తర్వాత నీరు తాగండి.",
+        "hi": "खेलने के बाद पानी पियो।"
       },
       "tags": [
         "beginner",
@@ -1875,6 +1954,11 @@
         "te": "ఉత్తేజకరమైన లేదా అసాధారణమైన అనుభవం",
         "hi": "एक रोमांचक या असामान्य अनुभव"
       },
+      "example": {
+        "en": "The trek to the waterfall was a real adventure.",
+        "te": "జలపాతానికి చేసిన ప్రయాణం నిజమైన సాహసం.",
+        "hi": "झरने तक की यात्रा एक सच्चा साहसिक काम था।"
+      },
       "tags": [
         "nature",
         "intermediate"
@@ -1898,6 +1982,11 @@
         "en": "To find something new or hidden",
         "te": "కొత్తగా లేదా దాచిన దేనినైనా కనుగొనడం",
         "hi": "कुछ नया या छिपा हुआ खोजना"
+      },
+      "example": {
+        "en": "Scientists discover new plants every year.",
+        "te": "శాస్త్రవేత్తలు ప్రతి సంవత్సరం కొత్త మొక్కలను కనుగొంటారు.",
+        "hi": "वैज्ञानिक हर साल नए पौधों की खोज करते हैं।"
       },
       "tags": [
         "nature",
@@ -1924,6 +2013,11 @@
         "te": "ఎవరినైనా లేదా దేనినైనా హాని జరగకుండా సురక్షితంగా ఉంచడం",
         "hi": "किसी को या किसी चीज़ को नुकसान से सुरक्षित रखना"
       },
+      "example": {
+        "en": "We must protect the trees around our school.",
+        "te": "మన పాఠశాల చుట్టూ ఉన్న చెట్లను మనం రక్షించాలి.",
+        "hi": "हमें अपने स्कूल के आसपास के पेड़ों की रक्षा करनी चाहिए।"
+      },
       "tags": [
         "nature",
         "verbs",
@@ -1949,6 +2043,11 @@
         "te": "ఆరోగ్యంగా ఉండటానికి మరియు ఎదగడానికి మీరు తినే ఆహారం",
         "hi": "वह भोजन जो आप स्वस्थ रहने और बढ़ने के लिए खाते हैं"
       },
+      "example": {
+        "en": "Good nutrition helps children grow strong.",
+        "te": "మంచి పోషణ పిల్లలు బలంగా ఎదగడానికి సహాయపడుతుంది.",
+        "hi": "अच्छा पोषण बच्चों को मजबूत बनने में मदद करता है।"
+      },
       "tags": [
         "health",
         "intermediate"
@@ -1972,6 +2071,11 @@
         "en": "To work together to get something done",
         "te": "ఒక పనిని పూర్తి చేయడానికి కలిసి పనిచేయడం",
         "hi": "किसी काम को पूरा करने के लिए एक साथ मिलकर काम करना"
+      },
+      "example": {
+        "en": "If we cooperate, the work will finish quickly.",
+        "te": "మనం సహకరిస్తే పని త్వరగా పూర్తవుతుంది.",
+        "hi": "अगर हम सहयोग करें तो काम जल्दी पूरा होगा।"
       },
       "tags": [
         "community",
@@ -1998,6 +2102,11 @@
         "te": "ఇతరులకు మార్గనిర్దేశం చేసే వ్యక్తి",
         "hi": "एक व्यक्ति जो दूसरों का मार्गदर्शन करता है"
       },
+      "example": {
+        "en": "A good leader listens to everyone.",
+        "te": "మంచి నాయకుడు అందరి మాట వింటాడు.",
+        "hi": "अच्छा नेता सबकी बात सुनता है।"
+      },
       "tags": [
         "leadership",
         "intermediate"
@@ -2021,6 +2130,11 @@
         "en": "Believing in yourself and your abilities",
         "te": "మీపై మరియు మీ సామర్థ్యాలపై నమ్మకం ఉంచడం",
         "hi": "खुद पर और अपनी क्षमताओं पर विश्वास करना"
+      },
+      "example": {
+        "en": "She answered the question with confidence.",
+        "te": "ఆమె ఆత్మవిశ్వాసంతో ప్రశ్నకు సమాధానం ఇచ్చింది.",
+        "hi": "उसने आत्मविश्वास के साथ प्रश्न का उत्तर दिया।"
       },
       "tags": [
         "leadership",
@@ -2046,6 +2160,11 @@
         "te": "ఏదైనా సృష్టించడానికి ఎవరితోనైనా కలిసి పనిచేయడం",
         "hi": "कुछ बनाने के लिए किसी के साथ मिलकर काम करना"
       },
+      "example": {
+        "en": "The project was finished through collaboration between two classes.",
+        "te": "రెండు తరగతుల సహకారంతో ప్రాజెక్ట్ పూర్తయింది.",
+        "hi": "दो कक्षाओं के सहयोग से परियोजना पूरी हुई।"
+      },
       "tags": [
         "teamwork",
         "intermediate"
@@ -2070,6 +2189,11 @@
         "te": "ఒక కొత్త ఆలోచన, పద్ధతి లేదా పరికరం",
         "hi": "एक नया विचार, तरीका या उपकरण"
       },
+      "example": {
+        "en": "The solar lamp was a simple but useful innovation.",
+        "te": "సౌర దీపం సరళమైన కానీ ఉపయోగకరమైన ఆవిష్కరణ.",
+        "hi": "सौर लैंप एक सरल पर उपयोगी नवाचार था।"
+      },
       "tags": [
         "technology",
         "intermediate"
@@ -2093,6 +2217,11 @@
         "en": "To look carefully to find out the truth",
         "te": "నిజం తెలుసుకోవడానికి జాగ్రత్తగా పరిశీలించడం",
         "hi": "सच पता लगाने के लिए ध्यान से देखना"
+      },
+      "example": {
+        "en": "The teacher will investigate who broke the window.",
+        "te": "కిటికీ ఎవరు పగలగొట్టారో ఉపాధ్యాయుడు దర్యాప్తు చేస్తారు.",
+        "hi": "शिक्षक जांच करेंगे कि खिड़की किसने तोड़ी।"
       },
       "tags": [
         "mystery",
@@ -2119,6 +2248,11 @@
         "te": "ఎవరైనా వెళ్తున్న ప్రదేశం",
         "hi": "वह स्थान जहाँ कोई जा रहा है"
       },
+      "example": {
+        "en": "Our destination was a small village near the river.",
+        "te": "మా గమ్యస్థానం నది దగ్గరి చిన్న గ్రామం.",
+        "hi": "हमारी मंजिल नदी के पास एक छोटा गाँव थी।"
+      },
       "tags": [
         "travel",
         "intermediate"
@@ -2142,6 +2276,11 @@
         "en": "Traditions and old buildings from the past",
         "te": "గత కాలం నాటి సంప్రదాయాలు మరియు పాత భవనాలు",
         "hi": "अतीत की परंपराएं और पुरानी इमारतें"
+      },
+      "example": {
+        "en": "The old fort is part of our heritage.",
+        "te": "పాత కోట మన వారసత్వంలో భాగం.",
+        "hi": "पुराना किला हमारी विरासत का हिस्सा है।"
       },
       "tags": [
         "travel",
@@ -2167,6 +2306,11 @@
         "te": "ఖర్చులకు చెల్లించిన తర్వాత వ్యాపారం నుండి సంపాదించిన డబ్బు",
         "hi": "लागत चुकाने के बाद व्यवसाय से कमाया गया धन"
       },
+      "example": {
+        "en": "The shop made a small profit last month.",
+        "te": "గత నెలలో దుకాణానికి కొద్దిపాటి లాభం వచ్చింది.",
+        "hi": "पिछले महीने दुकान को थोड़ा मुनाफ़ा हुआ।"
+      },
       "tags": [
         "business",
         "intermediate"
@@ -2190,6 +2334,11 @@
         "en": "Energy that never runs out, like sunlight or wind",
         "te": "సూర్యరశ్మి లేదా గాలి లాగా ఎప్పటికీ అయిపోని శక్తి",
         "hi": "ऐसी ऊर्जा जो कभी खत्म नहीं होती, जैसे सूरज की रोशनी या हवा"
+      },
+      "example": {
+        "en": "Sunlight is a renewable source of energy.",
+        "te": "సూర్యరశ్మి పునరుత్పాదక శక్తి వనరు.",
+        "hi": "सूर्य का प्रकाश ऊर्जा का नवीकरणीय स्रोत है।"
       },
       "tags": [
         "environment",
@@ -2361,7 +2510,11 @@
   "$schema": "../schemas/antonyms.schema.json",
   "schemaVersion": "1.0.0",
   "fileType": "antonyms",
-  "languages": ["en", "te", "hi"],
+  "languages": [
+    "en",
+    "te",
+    "hi"
+  ],
   "updated": "2026-08-01",
   "description": "Class-tagged opposite-word sets. The true-false generator uses `falseStatement` to emit a deliberately wrong pairing half the time.",
   "idPrefix": "gen-ant",
@@ -2370,15 +2523,29 @@
       "id": "pick-antonym-mcq",
       "questionType": "mcq",
       "category": "Vocabulary Building",
-      "addTags": ["generated", "antonyms"],
+      "addTags": [
+        "generated",
+        "antonyms"
+      ],
       "weight": 2,
       "prompt": {
         "en": "Which word is the opposite of \"{{headword.en}}\"?",
         "te": "\"{{headword.en}}\" కు వ్యతిరేక పదం ఏది?",
         "hi": "\"{{headword.en}}\" का विलोम शब्द कौन सा है?"
       },
-      "answer": { "path": "antonyms", "pick": "random" },
-      "distractors": { "count": 3, "from": { "path": "headword" }, "scope": "siblings", "pool": "same-class", "poolFallback": "widen" },
+      "answer": {
+        "path": "antonyms",
+        "pick": "random"
+      },
+      "distractors": {
+        "count": 3,
+        "from": {
+          "path": "headword"
+        },
+        "scope": "siblings",
+        "pool": "same-class",
+        "poolFallback": "widen"
+      },
       "explanation": {
         "en": "\"{{headword.en}}\" and \"{{answer}}\" describe opposite ends of the same idea.",
         "te": "\"{{headword.en}}\", \"{{answer}}\" ఒకే భావనకు రెండు వ్యతిరేక కొనలను సూచిస్తాయి.",
@@ -2389,127 +2556,273 @@
       "id": "antonym-true-false",
       "questionType": "true-false",
       "category": "Vocabulary Building",
-      "addTags": ["generated", "antonyms", "quick-check"],
+      "addTags": [
+        "generated",
+        "antonyms",
+        "quick-check"
+      ],
       "prompt": {
         "en": "\"{{answer}}\" is the opposite of \"{{headword.en}}\".",
         "te": "\"{{answer}}\" అనేది \"{{headword.en}}\" కు వ్యతిరేక పదం.",
         "hi": "\"{{answer}}\" शब्द \"{{headword.en}}\" का विलोम है।"
       },
-      "answer": { "path": "antonyms", "pick": "random" },
+      "answer": {
+        "path": "antonyms",
+        "pick": "random"
+      },
       "falseStatement": {
-        "en": "\"{{headword.en}}\" is the opposite of \"{{headword.en}}\".",
-        "te": "\"{{headword.en}}\" అనేది \"{{headword.en}}\" కు వ్యతిరేక పదం.",
-        "hi": "\"{{headword.en}}\" शब्द \"{{headword.en}}\" का विलोम है।"
+        "en": "\"{{distractor.en}}\" is the opposite of \"{{headword.en}}\".",
+        "te": "\"{{distractor.te}}\" అనేది \"{{headword.en}}\" కు వ్యతిరేక పదం.",
+        "hi": "\"{{distractor.hi}}\" शब्द \"{{headword.en}}\" का विलोम है।"
+      },
+      "distractors": {
+        "count": 1,
+        "from": {
+          "path": "headword"
+        },
+        "scope": "siblings",
+        "pool": "same-class",
+        "poolFallback": "widen"
       }
     }
   ],
   "entries": [
     {
       "id": "ant-happy",
-      "classes": [5],
-      "headword": { "en": "happy", "te": "సంతోషం", "hi": "ख़ुश" },
+      "classes": [
+        5
+      ],
+      "headword": {
+        "en": "happy",
+        "te": "సంతోషం",
+        "hi": "ख़ुश"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["sad", "unhappy", "miserable"],
-        "te": ["విచారంగా", "సంతోషం లేని", "దుఃఖంగా"],
-        "hi": ["उदास", "नाख़ुश", "दुखी"]
+        "en": [
+          "sad",
+          "unhappy",
+          "miserable"
+        ],
+        "te": [
+          "విచారంగా",
+          "సంతోషం లేని",
+          "దుఃఖంగా"
+        ],
+        "hi": [
+          "उदास",
+          "नाख़ुश",
+          "दुखी"
+        ]
       },
       "example": {
         "en": "He was happy in the morning but sad by evening.",
         "te": "ఉదయం అతను సంతోషంగా ఉన్నాడు, సాయంత్రానికి విచారంగా మారాడు.",
         "hi": "सुबह वह ख़ुश था पर शाम तक उदास हो गया।"
       },
-      "tags": ["emotions", "daily", "beginner"],
+      "tags": [
+        "emotions",
+        "daily",
+        "beginner"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-big",
-      "classes": [5],
-      "headword": { "en": "big", "te": "పెద్ద", "hi": "बड़ा" },
+      "classes": [
+        5
+      ],
+      "headword": {
+        "en": "big",
+        "te": "పెద్ద",
+        "hi": "बड़ा"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["small", "tiny", "little"],
-        "te": ["చిన్న", "అతి చిన్న", "కొద్దిపాటి"],
-        "hi": ["छोटा", "नन्हा", "थोड़ा"]
+        "en": [
+          "small",
+          "tiny",
+          "little"
+        ],
+        "te": [
+          "చిన్న",
+          "అతి చిన్న",
+          "కొద్దిపాటి"
+        ],
+        "hi": [
+          "छोटा",
+          "नन्हा",
+          "थोड़ा"
+        ]
       },
       "example": {
         "en": "A big elephant and a tiny ant walked past.",
         "te": "ఒక పెద్ద ఏనుగు, ఒక అతి చిన్న చీమ పక్కనుంచి వెళ్ళాయి.",
         "hi": "एक बड़ा हाथी और एक नन्ही चींटी पास से गुज़रे।"
       },
-      "tags": ["daily", "beginner", "adjectives"],
+      "tags": [
+        "daily",
+        "beginner",
+        "adjectives"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-fast",
-      "classes": [5, 6],
-      "headword": { "en": "fast", "te": "వేగం", "hi": "तेज़" },
+      "classes": [
+        5,
+        6
+      ],
+      "headword": {
+        "en": "fast",
+        "te": "వేగం",
+        "hi": "तेज़"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["slow", "sluggish", "gradual"],
-        "te": ["నెమ్మదిగా", "మందకొడిగా", "క్రమంగా"],
-        "hi": ["धीमा", "सुस्त", "क्रमिक"]
+        "en": [
+          "slow",
+          "sluggish",
+          "gradual"
+        ],
+        "te": [
+          "నెమ్మదిగా",
+          "మందకొడిగా",
+          "క్రమంగా"
+        ],
+        "hi": [
+          "धीमा",
+          "सुस्त",
+          "क्रमिक"
+        ]
       },
       "example": {
         "en": "The train was fast, but the bus was slow.",
         "te": "రైలు వేగంగా ఉంది, కానీ బస్సు నెమ్మదిగా ఉంది.",
         "hi": "रेलगाड़ी तेज़ थी, पर बस धीमी थी।"
       },
-      "tags": ["daily", "travel", "intermediate"],
+      "tags": [
+        "daily",
+        "travel",
+        "intermediate"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-ancient",
-      "classes": [8],
-      "headword": { "en": "ancient", "te": "ప్రాచీన", "hi": "प्राचीन" },
+      "classes": [
+        8
+      ],
+      "headword": {
+        "en": "ancient",
+        "te": "ప్రాచీన",
+        "hi": "प्राचीन"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["modern", "recent", "new"],
-        "te": ["ఆధునిక", "ఇటీవలి", "కొత్త"],
-        "hi": ["आधुनिक", "हालिया", "नया"]
+        "en": [
+          "modern",
+          "recent",
+          "new"
+        ],
+        "te": [
+          "ఆధునిక",
+          "ఇటీవలి",
+          "కొత్త"
+        ],
+        "hi": [
+          "आधुनिक",
+          "हालिया",
+          "नया"
+        ]
       },
       "example": {
         "en": "The museum keeps ancient coins beside modern ones.",
         "te": "మ్యూజియంలో ప్రాచీన నాణేలను ఆధునిక నాణేల పక్కనే ఉంచారు.",
         "hi": "संग्रहालय में प्राचीन सिक्के आधुनिक सिक्कों के साथ रखे हैं।"
       },
-      "tags": ["history", "advanced"],
+      "tags": [
+        "history",
+        "advanced"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-generous",
-      "classes": [8],
-      "headword": { "en": "generous", "te": "ఉదారమైన", "hi": "उदार" },
+      "classes": [
+        8
+      ],
+      "headword": {
+        "en": "generous",
+        "te": "ఉదారమైన",
+        "hi": "उदार"
+      },
       "partOfSpeech": "adjective",
       "antonyms": {
-        "en": ["selfish", "stingy", "greedy"],
-        "te": ["స్వార్థపరుడు", "పిసినారి", "అత్యాశపరుడు"],
-        "hi": ["स्वार्थी", "कंजूस", "लालची"]
+        "en": [
+          "selfish",
+          "stingy",
+          "greedy"
+        ],
+        "te": [
+          "స్వార్థపరుడు",
+          "పిసినారి",
+          "అత్యాశపరుడు"
+        ],
+        "hi": [
+          "स्वार्थी",
+          "कंजूस",
+          "लालची"
+        ]
       },
       "example": {
         "en": "A generous friend shares; a selfish one hides.",
         "te": "ఉదారమైన స్నేహితుడు పంచుకుంటాడు; స్వార్థపరుడు దాచుకుంటాడు.",
         "hi": "उदार मित्र बाँटता है; स्वार्थी छिपाता है।"
       },
-      "tags": ["values", "advanced"],
+      "tags": [
+        "values",
+        "advanced"
+      ],
       "categoryHint": "Vocabulary Building"
     },
     {
       "id": "ant-victory",
-      "classes": [8],
-      "headword": { "en": "victory", "te": "విజయం", "hi": "जीत" },
+      "classes": [
+        8
+      ],
+      "headword": {
+        "en": "victory",
+        "te": "విజయం",
+        "hi": "जीत"
+      },
       "partOfSpeech": "noun",
       "antonyms": {
-        "en": ["defeat", "loss", "failure"],
-        "te": ["ఓటమి", "నష్టం", "వైఫల్యం"],
-        "hi": ["हार", "नुक़सान", "असफलता"]
+        "en": [
+          "defeat",
+          "loss",
+          "failure"
+        ],
+        "te": [
+          "ఓటమి",
+          "నష్టం",
+          "వైఫల్యం"
+        ],
+        "hi": [
+          "हार",
+          "नुक़सान",
+          "असफलता"
+        ]
       },
       "example": {
         "en": "One defeat cannot erase a season of victory.",
         "te": "ఒక ఓటమి ఒక సీజన్ విజయాన్ని చెరిపివేయలేదు.",
         "hi": "एक हार पूरे सत्र की जीत को नहीं मिटा सकती।"
       },
-      "tags": ["sports", "advanced"],
+      "tags": [
+        "sports",
+        "advanced"
+      ],
       "categoryHint": "Vocabulary Building"
     }
   ]

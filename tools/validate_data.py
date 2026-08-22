@@ -312,7 +312,15 @@ def validate_generator(gen, entries, where0, gid_seen):
             if lang not in LANGS or src not in LANGS:
                 fail(where, f"{label}.display has an unknown language: {lang}->{src}")
 
-    # template tokens must resolve against a real entry field + language
+    # Template tokens must resolve for EVERY eligible entry, not just one.
+    #
+    # Checking `any(...)` was not enough: a token like {{example.en}} resolves
+    # for the handful of entries that carry `example` and leaks as literal
+    # "{{example.en}}" for the rest. The generator now drops such an
+    # explanation at runtime, so the visible symptom is a question quietly
+    # losing its explanation — which is exactly the kind of thing that should
+    # be reported here rather than discovered in a demo.
+    seen_tokens = set()
     for field in ("prompt", "explanation", "falseStatement"):
         node = gen.get(field)
         if not node:
@@ -322,10 +330,42 @@ def validate_generator(gen, entries, where0, gid_seen):
                 if token == "answer":
                     continue
                 head, _, tail = token.partition(".")
+
+                # `distractor` is supplied by the generator, not read off an
+                # entry — but it only exists if the generator asks for one.
+                if head == "distractor":
+                    if not gen.get("distractors"):
+                        fail(where, f"{field}.{lang}: uses {{{{{token}}}}} but the "
+                                    f"generator declares no `distractors`, so it "
+                                    f"can never be filled")
+                    continue
+
                 if tail and tail not in LANGS:
                     fail(where, f"{field}.{lang}: token {{{{{token}}}}} has unknown language '{tail}'")
-                elif not any(head in e for e in eligible):
+                    continue
+
+                have = [e for e in eligible if head in e]
+                if not have:
                     fail(where, f"{field}.{lang}: token {{{{{token}}}}} names no entry field")
+                    continue
+
+                # Report each (field, token) once, not once per language.
+                key = (field, head)
+                if key in seen_tokens:
+                    continue
+                seen_tokens.add(key)
+
+                lacking = [e for e in eligible if head not in e]
+                if lacking:
+                    ids = ", ".join(e["id"] for e in lacking[:4])
+                    more = f" and {len(lacking) - 4} more" if len(lacking) > 4 else ""
+                    consequence = ("the question is skipped entirely"
+                                   if field == "prompt"
+                                   else "those questions lose their " + field)
+                    note(where,
+                         f"{field} uses {{{{{head}.*}}}} but {len(lacking)} of "
+                         f"{len(eligible)} entries have no '{head}' -> "
+                         f"{consequence} ({ids}{more})")
 
 
 def validate_source_file(filename, filetype):
@@ -505,7 +545,7 @@ def main():
 
     print()
     if notes:
-        print(f"{len(notes)} note(s) - expected with a small sample, no action needed:\n")
+        print(f"{len(notes)} note(s) - not failures, but worth reading:\n")
         for n in notes:
             print(f"  - {n}")
         print()

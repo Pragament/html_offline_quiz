@@ -97,7 +97,10 @@ static bank and the generated bank concatenate directly. Generated ids are
 ```
 
 **Template tokens** are `{{field.lang}}` — `{{word.en}}`, `{{headword.te}}`, `{{cloze.en}}`.
-`{{answer}}` resolves to the correct option text in the column being rendered. Double braces
+Two are supplied by the generator rather than read off the entry: `{{answer}}` resolves
+to the correct option text in the column being rendered, and `{{distractor.lang}}`
+resolves to a word borrowed from a sibling entry — used by `falseStatement` to name
+something that is deliberately *not* the answer. Double braces
 never collide with Telugu or Hindi text. The validator checks that every token names a real
 entry field and a real language.
 
@@ -145,12 +148,12 @@ before giving up.
 | `table` | `columns[]` + `rows[][]` (row length must equal column count) |
 | `tips` | `items[].tip` |
 
-Two hooks tie it back to the rest of the app:
+Two fields are carried for the app to use, but **neither is wired up yet**:
 
-- **`quizLink: { category, tags }`** — a "Quiz me on this" button hands these straight to the
-  question-bank filter.
+- **`quizLink: { category, tags }`** — intended to drive a "Quiz me on this" button that hands
+  these straight to the question-bank filter. The data carries it; no UI reads it.
 - **`sourceId`** — points at the matching entry in the vocabulary or phrases file so the two stay
-  in step. The validator fails on a `sourceId` that resolves to nothing.
+  in step. The validator fails on a `sourceId` that resolves to nothing, but the app ignores it.
 
 ---
 

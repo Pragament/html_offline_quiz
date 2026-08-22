@@ -46,7 +46,7 @@ vocabulary, synonym, antonym, proverb and phrase dictionaries.
 | `assets/` | CSS and the framework-free JS modules (see below). |
 | `data/` | Question bank, generator sources, cheatsheet content. |
 | `schemas/` | JSON Schemas for every data file. |
-| `tools/` | `server.py` (dev server), `validate_data.py` (data checks), `build_offline.py` (offline build), plus small `check_*.py` helpers. |
+| `tools/` | `server.py` (dev server), `validate_data.py` (data checks), `check_project.py` (wiring checks), `build_offline.py` (offline build). |
 | `test/generators-test.html` | Dev harness: previews what each generator produces. |
 | `test_home.html` | Dev harness: catches JS errors thrown by the setup page. |
 | `legacy/quizmaster-v1.html` | The original single-file prototype, kept for reference. |
@@ -117,6 +117,26 @@ Checks what JSON Schema cannot: parallel-array lengths across languages, answer
 indices in range, drag-drop orders being real permutations, generator template
 tokens resolving, cross-file `sourceId` references, and UTF-8 BOMs.
 
+### Checking how the pages are wired
+
+```bash
+py -3 tools/check_project.py
+```
+
+`validate_data.py` checks what is *in* `data/`; this checks how the pages hang
+together, which is where the quieter bugs live:
+
+- every local `href`/`src` resolves — a missing icon, stylesheet or script shows
+  up here instead of as a 404 in someone's console
+- no duplicate element ids on a page
+- every `getElementById()` a page's scripts call exists on that page
+- every CSS variable used is defined, and every `url()` resolves
+- the embedded offline JSON still matches `data/` (i.e. whether you owe a
+  `build_offline.py` run)
+
+Both scripts exit non-zero on failure, so they drop straight into a pre-commit
+hook or CI.
+
 ---
 
 ## 🧭 How it works
@@ -128,17 +148,26 @@ and navigates to `quiz.html`, which reads it back. The quiz page never needs the
 questions from `en-te-hi-questions.json` with questions produced by the generators in
 the five source files, de-duplicates by id, applies the category and tag filters, then
 shuffles with a seed derived from the student index — so each student on a shared
-device gets a different order. Class 5 currently yields 50 questions (5 hand-written,
-45 generated).
+device gets a different order. Class 5 currently yields 110 questions (5 hand-written,
+105 generated).
 
-**Endless mode.** A question is not just a word — it is a word plus the options shown
-with it. Each generator is seeded from its entry id, so it normally yields one fixed
-question per entry. Endless mode re-runs the generators with an incrementing `variant`
-folded into that seed, producing different distractors and (where `pick` is `random`) a
-different correct answer each time. New questions are appended when the bank drops to
-five remaining, and a content fingerprint stops anything repeating while an unused
-combination exists. Class 5 has about 1,000 such combinations; once they are gone the
-engine re-serves the questions seen longest ago rather than stopping.
+**Endless mode.** Each generator is seeded from its entry id, so it normally yields one
+fixed question per entry. Endless mode re-runs the generators with an incrementing
+`variant` folded into that seed, producing different distractors and (where `pick` is
+`random`) a different correct answer. New questions are appended when the bank drops to
+five remaining.
+
+Two things stop it feeling repetitive. A content fingerprint blocks an identical
+question returning at all, and — more importantly — top-ups track the **subject** behind
+each question: which generator ran over which entry. A first pass accepts only subjects
+the student has not met, so every word, phrase and proverb in the class is covered
+before any of them comes round again. Without that, re-rolling a variant produced the
+same stem with new distractors, which passes the fingerprint test but reads as the same
+question to a student.
+
+Aggregate generators (match-pairs) pick a random set of entries per variant, so they
+count as one subject per generator rather than one per draw — otherwise the same
+"Match each …" prompt returns on every top-up.
 
 **Storage keys.**
 
@@ -183,7 +212,9 @@ Two shapes, easy to confuse:
 **Working and verified** by an end-to-end audit: the full setup → quiz → results →
 cheatsheet flow; all five question types interactive, with `+3` / `−1` / `0` confirmed
 for each and no scoring discrepancies over ~90 answered questions; the timer;
-category, tag and language filtering; endless mode; multi-student turns with separate
+category, tag and language filtering; endless mode checked class by class (classes 1–5
+and 8 serve 50 distinct questions before anything repeats; 6 and 9 repeat sooner only
+because they have 22 and 3 subjects); multi-student turns with separate
 banks, scores and timers; results persistence across a reload; all 10 cheatsheet
 sections on both classes; the empty-class and zero-answer edge cases; and no
 horizontal scrolling at 360 px in either colour scheme.
@@ -194,13 +225,31 @@ do not exist on the page, undefined CSS variables, embedded offline data driftin
 
 **Known gaps:**
 
-- **Content only exists for Class 5 and Class 8.** The other eight classes produce
-  "No questions available". This is the main thing to work on, and it needs no code —
-  add entries to the data files.
-- **Endless mode gives variety, not new content.** The quiz never runs out, but the
-  variations are built from the same entries — roughly 17 items for Class 5. A student
-  meets every concept in the first 20–40 questions; after that it is drilling the same
-  material with different wrong options. More entries is still the real fix.
+- **Class coverage is uneven.** Classes 1–5 and 8 are usable. Classes 6 and 9 have
+  only a handful of entries, and 7 and 10 have none — those two show
+  "No questions available" and cannot be quizzed at all. Filling them needs no code,
+  only data.
+
+  | Class | Distinct subjects | Endless usable? |
+  |---|---|---|
+  | 1 | 78 | yes |
+  | 2 | 79 | yes |
+  | 3 | 63 | yes |
+  | 4 | 63 | yes |
+  | 5 | 112 | yes |
+  | 6 | 22 | thin |
+  | 7 | 0 | no content |
+  | 8 | 55 | yes |
+  | 9 | 3 | unusable — one vocabulary entry |
+  | 10 | 0 | no content |
+
+  Synonyms, antonyms and proverbs still only cover classes 5, 6 and 8; the cheatsheet
+  only classes 5 and 8.
+- **Endless mode gives variety, not unlimited new content.** Once a class's subjects are
+  exhausted the same material returns with different wrong options. For classes 1–5 and
+  8 the first 50 questions are all distinct, so a normal session never repeats. Classes 6
+  and 9 run out sooner — after 22 and 3 questions respectively — because that is all the
+  content they have. More entries is the only real fix.
 - **Results are not exportable.** They persist locally but there is no CSV/JSON
   download, and starting a new session overwrites the previous session's
   question-level detail (its summary survives in the history).

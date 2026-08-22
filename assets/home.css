@@ -416,19 +416,6 @@ a.btn {
 .banner p { margin: 0; font-size: .88rem; }
 .banner-actions { display: flex; gap: 8px; }
 
-/* ── Hand-off preview ──────────────────────────────────────────────────── */
-
-.handoff pre {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px;
-  overflow-x: auto;             /* long JSON lines scroll, page never does */
-  font-size: .8rem;
-  line-height: 1.45;
-  margin: 0;
-  max-height: 340px;
-}
 code {
   background: var(--surface-2);
   border: 1px solid var(--border);

@@ -87,6 +87,58 @@
     }
   }
 
+  /** label + value, built as text rather than innerHTML. */
+  function detailRow(label, value) {
+    var row = document.createElement('div');
+    row.className = 'review-detail-row';
+    var l = document.createElement('span');
+    l.className = 'review-label';
+    l.textContent = label + ': ';
+    row.appendChild(l);
+    row.appendChild(document.createTextNode(value));
+    return row;
+  }
+
+  /** One line per language the student chose, skipping duplicates. */
+  function appendLocalized(container, localized) {
+    var langs = (currentConfig && currentConfig.languages) || ['en'];
+    var seen = [];
+    ['en', 'te', 'hi'].forEach(function (lang) {
+      if (lang !== 'en' && langs.indexOf(lang) === -1) return;
+      var text = localized[lang];
+      if (!text || seen.indexOf(text) !== -1) return;
+      seen.push(text);
+      var div = document.createElement('div');
+      if (lang !== 'en') {
+        div.style.fontSize = '0.9rem';
+        div.style.color = 'var(--text-muted)';
+      }
+      div.textContent = text;
+      container.appendChild(div);
+    });
+  }
+
+  /** Human-readable correct answer for any question type. */
+  function correctAnswerText(q) {
+    var o = q.options || {};
+    var a = q.correctAnswer;
+    try {
+      if (q.type === 'mcq') return o.en[a];
+      if (q.type === 'flip-card') return o.choices.en[a];
+      if (q.type === 'true-false') return a ? (o.en[0] || 'True') : (o.en[1] || 'False');
+      if (q.type === 'drag-drop') {
+        if (o.target && o.target.en) return o.target.en;
+        return a.map(function (i) { return o.tokens.en[i]; }).join(' ');
+      }
+      if (q.type === 'match-pairs') {
+        return a.map(function (pair) {
+          return o.left.en[pair[0]] + ' → ' + o.right.en[pair[1]];
+        }).join(';  ');
+      }
+    } catch (e) { /* malformed question — fall through */ }
+    return '';
+  }
+
   function renderReview(history) {
     els.reviewList.innerHTML = '';
     
@@ -120,16 +172,20 @@
       var body = document.createElement('div');
       body.className = 'review-body hidden';
       
-      // Question original details
-      var typeRow = document.createElement('div');
-      typeRow.className = 'review-detail-row';
-      typeRow.innerHTML = '<span class="review-label">Type:</span> ' + q.type;
-      body.appendChild(typeRow);
-      
-      if (q.explanation && q.explanation.en) {
+      body.appendChild(detailRow('Type', q.type));
+
+      // The whole point of a review is finding out what you should have put.
+      var answer = correctAnswerText(q);
+      if (answer) body.appendChild(detailRow('Correct answer', answer));
+
+      if (q.explanation) {
         var expRow = document.createElement('div');
         expRow.className = 'review-detail-row';
-        expRow.innerHTML = '<span class="review-label">Explanation:</span> ' + q.explanation.en;
+        var expLabel = document.createElement('span');
+        expLabel.className = 'review-label';
+        expLabel.textContent = 'Explanation: ';
+        expRow.appendChild(expLabel);
+        appendLocalized(expRow, q.explanation);
         body.appendChild(expRow);
       }
       
